@@ -13,7 +13,7 @@
     <div class="grid md:grid-cols-4 gap-4">
         <div class="bg-white rounded-lg border p-6">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm text-slate-600">Total Comercios</span>
+                <span class="text-sm text-slate-600">Total Comercios Activos</span>
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                 </svg>
@@ -59,7 +59,7 @@
     <!-- Recent Businesses -->
     <div class="bg-white rounded-lg border">
         <div class="p-6 border-b flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-slate-900">Comercios Recientes</h3>
+            <h3 class="text-lg font-semibold text-slate-900">Comercios Activos Recientes</h3>
             <a href="{{ route('comercios.index') }}" class="text-sm text-blue-600 hover:underline">
                 Ver Todos
             </a>
@@ -100,7 +100,7 @@
                     @empty
                     <tr>
                         <td colspan="5" class="px-6 py-8 text-center text-slate-500">
-                            No hay comercios registrados
+                            No hay comercios activos
                         </td>
                     </tr>
                     @endforelse
