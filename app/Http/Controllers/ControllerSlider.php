@@ -7,18 +7,17 @@ use App\Models\Slider;
 
 class ControllerSlider extends Controller
 {
-    /**
-     * Muestra todos los sliders.
-     */
     public function index()
     {
         $sliders = Slider::all();
-        return view('sliders.index', compact('sliders'));
+        return view('admin.sliders.index', compact('sliders'));
     }
 
-    /**
-     * Guarda un nuevo slider.
-     */
+    public function create()
+    {
+        return view('admin.sliders.create');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -36,18 +35,18 @@ class ControllerSlider extends Controller
         return redirect()->route('sliders.index')->with('success', 'Slider creado exitosamente.');
     }
 
-    /**
-     * Muestra el formulario de edición.
-     */
+    public function show($id)
+    {
+        $slider = Slider::findOrFail($id);
+        return view('admin.sliders.show', compact('slider'));
+    }
+
     public function edit($id)
     {
         $slider = Slider::findOrFail($id);
-        return view('sliders.edit', compact('slider'));
+        return view('admin.sliders.edit', compact('slider'));
     }
 
-    /**
-     * Actualiza un slider existente.
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -62,9 +61,6 @@ class ControllerSlider extends Controller
         return redirect()->route('sliders.index')->with('success', 'Slider actualizado correctamente.');
     }
 
-    /**
-     * Elimina un slider.
-     */
     public function destroy($id)
     {
         $slider = Slider::findOrFail($id);

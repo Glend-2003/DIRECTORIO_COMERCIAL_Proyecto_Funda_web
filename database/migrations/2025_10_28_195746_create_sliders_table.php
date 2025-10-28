@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('DSC_NOMBRE', 100);
             $table->text('DSC_DESCRIPCION')->nullable();
             $table->string('IMG_URL', 255)->nullable();
+            $table->boolean('ESTADO')->nullable();
             $table->timestamps(); // Campos created_at y updated_at
         });
     }
