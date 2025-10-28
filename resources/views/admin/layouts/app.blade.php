@@ -65,18 +65,6 @@
 
         <!-- Main Content -->
         <main class="flex-1 p-8">
-            @if(session('success'))
-            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-                {{ session('success') }}
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
-                {{ session('error') }}
-            </div>
-            @endif
-
             @yield('content')
         </main>
     </div>
