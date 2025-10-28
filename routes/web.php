@@ -1,18 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ComercioController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
-// Rutas para el recurso Comercio
-//Route::resource('comercios', App\Http\Controllers\ComercioController::class);   
-Route::get('/debug-comercios', function () {
-    $comercios = \App\Models\Comercio::all();
-    
-    dd([
-        'total' => $comercios->count(),
-        'comercios' => $comercios->toArray()
-    ]);
-});
+Route::get('/dashboard', function () {
+    $totalComercios = \App\Models\Comercio::count();
+    $comerciosRecientes = \App\Models\Comercio::latest()->take(5)->get();
+    return view('admin.dashboard', compact('totalComercios', 'comerciosRecientes'));
+})->name('dashboard');
+
+Route::resource('comercios', ComercioController::class);

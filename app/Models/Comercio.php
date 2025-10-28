@@ -10,7 +10,6 @@ class Comercio extends Model
     use HasFactory;
 
     protected $table = 'tb_comercio';
-
     protected $primaryKey = 'ID_COMERCIO';
 
     protected $fillable = [
@@ -25,8 +24,8 @@ class Comercio extends Model
         'IMG_DESTACADA',
     ];
 
-    public $timestamps = false;
-
+    public $timestamps = false; 
+    
     const CREATED_AT = 'FEC_CREACION';
     const UPDATED_AT = null; 
 
