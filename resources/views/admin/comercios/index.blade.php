@@ -5,11 +5,11 @@
 @section('content')
 <div class="space-y-6">
     <!-- Breadcrumb -->
-    <nav class="text-sm text-slate-600">
-        <a href="{{ route('dashboard') }}" class="hover:text-slate-900">Dashboard</a>
-        <span class="mx-2"></span>
-        <span class="text-slate-900">Comercios</span>
-    </nav>
+    <nav class="flex items-center text-sm text-slate-600 mb-6">
+    <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Dashboard</a>
+    <span class="mx-2 text-slate-400">></span>
+    <span class="text-slate-900 font-medium">Comercios</span>
+</nav>
 
     <!-- Header -->
     <div class="flex items-center justify-between">
@@ -93,9 +93,15 @@
                             <div class="text-xs text-slate-500">{{ $comercio->DSC_CORREO ?? '-' }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                                Activo
-                            </span>
+                            @if($comercio->NUM_ESTADO == 1)
+                                <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                    Activo
+                                </span>
+                            @else
+                                <span class="px-3 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                                    Inactivo
+                                </span>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
@@ -113,7 +119,8 @@
                                         data-latitud="{{ $comercio->NUM_LATITUD }}"
                                         data-longitud="{{ $comercio->NUM_LONGITUD }}"
                                         data-imagen="{{ $comercio->IMG_DESTACADA }}"
-                                        data-fecha="{{ $comercio->FEC_CREACION }}">
+                                        data-fecha="{{ $comercio->FEC_CREACION }}"
+                                        data-estado="{{ $comercio->NUM_ESTADO }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -132,7 +139,8 @@
                                         data-facebook="{{ $comercio->DSC_FACEBOOK }}"
                                         data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
                                         data-latitud="{{ $comercio->NUM_LATITUD }}"
-                                        data-longitud="{{ $comercio->NUM_LONGITUD }}">
+                                        data-longitud="{{ $comercio->NUM_LONGITUD }}"
+                                        data-estado="{{ $comercio->NUM_ESTADO }}">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
@@ -224,7 +232,8 @@ function openEditModal(button) {
         DSC_FACEBOOK: button.getAttribute('data-facebook'),
         DSC_INSTAGRAM: button.getAttribute('data-instagram'),
         NUM_LATITUD: button.getAttribute('data-latitud'),
-        NUM_LONGITUD: button.getAttribute('data-longitud')
+        NUM_LONGITUD: button.getAttribute('data-longitud'),
+        NUM_ESTADO: button.getAttribute('data-estado')
     };
     
     console.log('Datos para editar:', comercio);
@@ -238,6 +247,7 @@ function openEditModal(button) {
     document.getElementById('edit_DSC_INSTAGRAM').value = comercio.DSC_INSTAGRAM || '';
     document.getElementById('edit_NUM_LATITUD').value = comercio.NUM_LATITUD || '';
     document.getElementById('edit_NUM_LONGITUD').value = comercio.NUM_LONGITUD || '';
+    document.getElementById('edit_NUM_ESTADO').value = comercio.NUM_ESTADO || '1';
     
     document.getElementById('editModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -301,6 +311,14 @@ function openViewModal(button) {
     
     document.getElementById('viewModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+
+    if (comercio.NUM_ESTADO == '1') {
+    document.getElementById('view_NUM_ESTADO').textContent = 'Activo';
+    document.getElementById('view_NUM_ESTADO').className = 'text-green-600 font-semibold mt-1';
+} else {
+    document.getElementById('view_NUM_ESTADO').textContent = 'Inactivo';
+    document.getElementById('view_NUM_ESTADO').className = 'text-red-600 font-semibold mt-1';
+}
 }
 
 function closeViewModal() {

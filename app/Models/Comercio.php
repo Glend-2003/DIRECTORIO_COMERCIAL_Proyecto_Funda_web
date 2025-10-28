@@ -22,6 +22,7 @@ class Comercio extends Model
         'NUM_LATITUD',
         'NUM_LONGITUD',
         'IMG_DESTACADA',
+        'NUM_ESTADO', 
     ];
 
     public $timestamps = false; 
@@ -33,5 +34,6 @@ class Comercio extends Model
         'NUM_LATITUD' => 'decimal:8',
         'NUM_LONGITUD' => 'decimal:8',
         'FEC_CREACION' => 'datetime',
+        'NUM_ESTADO' => 'integer',
     ];
 }

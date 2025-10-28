@@ -81,6 +81,11 @@
                 </div>
             </div>
 
+            <div>
+                <label class="text-sm font-medium text-slate-500">Estado</label>
+                <p id="view_NUM_ESTADO" class="text-slate-900 mt-1"></p>
+            </div>
+
             <div class="border-t pt-6"></div>
 
             <!-- Metadata -->
