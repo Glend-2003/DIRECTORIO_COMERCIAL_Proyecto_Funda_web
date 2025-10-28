@@ -17,10 +17,20 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    //Tabla en Base de datos
+    protected $table = 'tb_administrador';
+
+    //ID
+    protected $primaryKey = 'ID_ADMINISTRADOR';
+
+
+
+
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'DSC_NOMBRE',
+        'DSC_CORREO',
+        'DSC_CONTRASENIA',
     ];
 
     /**
@@ -29,9 +39,21 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'DSC_CONTRASENIA',
         'remember_token',
     ];
+
+    //Mapear el campo de contraseña
+    public function getAuthPassword()
+    {
+        return $this->DSC_CONTRASENIA;
+    }
+    
+    //Mapear el campo de email
+    public function getEmailForPasswordReset()
+    {
+        return $this->DSC_CORREO;
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -41,8 +63,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'FEC_CREACION' => 'datetime',
+            'DSC_CONTRASENIA' => 'hashed'
         ];
     }
 }
