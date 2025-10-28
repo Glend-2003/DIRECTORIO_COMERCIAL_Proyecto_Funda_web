@@ -3,12 +3,18 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ControllerSlider;
+
+use App\Http\Controllers\ComercioController;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $totalComercios = \App\Models\Comercio::count();
+    $comerciosRecientes = \App\Models\Comercio::latest()->take(5)->get();
+    return view('admin.dashboard', compact('totalComercios', 'comerciosRecientes'));
 })->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -18,3 +24,7 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::resource('comercios', ComercioController::class);
+
+Route::resource('sliders', ControllerSlider::class);
