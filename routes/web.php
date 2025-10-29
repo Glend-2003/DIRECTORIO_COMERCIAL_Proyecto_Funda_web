@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ControllerSlider;
 
 use App\Http\Controllers\ComercioController;
+use App\Http\Controllers\CategoriaController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -26,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('comercios', ComercioController::class);
     Route::resource('sliders', ControllerSlider::class);
+    Route::resource('categorias', CategoriaController::class);
 });
 
 require __DIR__.'/auth.php';
