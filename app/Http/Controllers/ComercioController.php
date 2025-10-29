@@ -40,6 +40,7 @@ class ComercioController extends Controller
         'NUM_LATITUD' => 'nullable|numeric|between:-90,90',
         'NUM_LONGITUD' => 'nullable|numeric|between:-180,180',
         'IMG_DESTACADA' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'NUM_ESTADO' => 'required|integer|in:0,1',
     ]);
 
     if ($validator->fails()) {
@@ -50,6 +51,8 @@ class ComercioController extends Controller
 
     try {
         $data = $request->except('IMG_DESTACADA');
+
+        $data['NUM_ESTADO'] = $request->NUM_ESTADO ? 1 : 0;
         
         // Manejar la imagen
         if ($request->hasFile('IMG_DESTACADA')) {
@@ -103,6 +106,7 @@ class ComercioController extends Controller
         'NUM_LATITUD' => 'nullable|numeric|between:-90,90',
         'NUM_LONGITUD' => 'nullable|numeric|between:-180,180',
         'IMG_DESTACADA' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'NUM_ESTADO' => 'required|integer|in:0,1',
     ]);
 
     if ($validator->fails()) {
@@ -114,6 +118,8 @@ class ComercioController extends Controller
     try {
         $comercio = Comercio::findOrFail($id);
         $data = $request->except('IMG_DESTACADA');
+
+        $data['NUM_ESTADO'] = $request->NUM_ESTADO ? 1 : 0;
         
         // Manejar la imagen
         if ($request->hasFile('IMG_DESTACADA')) {

@@ -131,6 +131,17 @@
                     </div>
                 </div>
 
+                <!-- Estado -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Estado
+                    </label>
+                    <select name="NUM_ESTADO" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
+
                 <!-- Imagen Destacada -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
@@ -147,7 +158,7 @@
             <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
                 
                 <button type="submit" 
-                        class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+                    class="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
                     Guardar Comercio
                 </button>
             </div>

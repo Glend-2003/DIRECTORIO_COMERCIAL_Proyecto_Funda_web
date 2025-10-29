@@ -12,20 +12,22 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $totalComercios = \App\Models\Comercio::where('NUM_ESTADO', 1)->count();
+    $comerciosRecientes = \App\Models\Comercio::where('NUM_ESTADO', 1)
+                                            ->latest()
+                                            ->take(5)
+                                            ->get();
+    return view('admin.dashboard', compact('totalComercios', 'comerciosRecientes'));
 })->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    $totalComercios = \App\Models\Comercio::count();
-    $comerciosRecientes = \App\Models\Comercio::latest()->take(5)->get();
-    return view('admin.dashboard', compact('totalComercios', 'comerciosRecientes'));
-})->name('dashboard');
+});
+
+require __DIR__.'/auth.php';
 
 Route::resource('comercios', ComercioController::class);
 
 Route::resource('sliders', ControllerSlider::class);
-
-require __DIR__.'/auth.php';
