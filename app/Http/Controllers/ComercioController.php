@@ -29,36 +29,49 @@ class ComercioController extends Controller
      * Guardar nuevo comercio
      */
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'DSC_COMERCIO' => 'nullable|string|max:500',
-            'DSC_DIRECCION' => 'nullable|string|max:500',
-            'NUM_TELEFONO' => 'nullable|string|max:25',
-            'DSC_CORREO' => 'nullable|email|max:100',
-            'DSC_INSTAGRAM' => 'nullable|string',
-            'DSC_FACEBOOK' => 'nullable|string',
-            'NUM_LATITUD' => 'nullable|numeric|between:-90,90',
-            'NUM_LONGITUD' => 'nullable|numeric|between:-180,180',
-            'IMG_DESTACADA' => 'nullable|string',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'DSC_COMERCIO' => 'nullable|string|max:500',
+        'DSC_DIRECCION' => 'nullable|string|max:500',
+        'NUM_TELEFONO' => 'nullable|string|max:25',
+        'DSC_CORREO' => 'nullable|email|max:100',
+        'DSC_INSTAGRAM' => 'nullable|string',
+        'DSC_FACEBOOK' => 'nullable|string',
+        'NUM_LATITUD' => 'nullable|numeric|between:-90,90',
+        'NUM_LONGITUD' => 'nullable|numeric|between:-180,180',
+        'IMG_DESTACADA' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'NUM_ESTADO' => 'required|integer|in:0,1',
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        try {
-            Comercio::create($request->all());
-
-            return redirect()->route('comercios.index')
-                ->with('success', 'Comercio creado exitosamente');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Error al crear el comercio: ' . $e->getMessage())
-                ->withInput();
-        }
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+
+    try {
+        $data = $request->except('IMG_DESTACADA');
+
+        $data['NUM_ESTADO'] = $request->NUM_ESTADO ? 1 : 0;
+        
+        // Manejar la imagen
+        if ($request->hasFile('IMG_DESTACADA')) {
+            $imagen = $request->file('IMG_DESTACADA');
+            $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+            $imagen->move(public_path('images/comercios'), $nombreImagen);
+            $data['IMG_DESTACADA'] = 'images/comercios/' . $nombreImagen;
+        }
+
+        Comercio::create($data);
+
+        return redirect()->route('comercios.index')
+            ->with('success', 'Comercio creado exitosamente');
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Error al crear el comercio: ' . $e->getMessage())
+            ->withInput();
+    }
+}
 
     /**
      * Mostrar un comercio específico
@@ -82,37 +95,55 @@ class ComercioController extends Controller
      * Actualizar comercio
      */
     public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'DSC_COMERCIO' => 'nullable|string|max:500',
-            'DSC_DIRECCION' => 'nullable|string|max:500',
-            'NUM_TELEFONO' => 'nullable|string|max:25',
-            'DSC_CORREO' => 'nullable|email|max:100',
-            'DSC_INSTAGRAM' => 'nullable|string',
-            'DSC_FACEBOOK' => 'nullable|string',
-            'NUM_LATITUD' => 'nullable|numeric|between:-90,90',
-            'NUM_LONGITUD' => 'nullable|numeric|between:-180,180',
-            'IMG_DESTACADA' => 'nullable|string',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'DSC_COMERCIO' => 'nullable|string|max:500',
+        'DSC_DIRECCION' => 'nullable|string|max:500',
+        'NUM_TELEFONO' => 'nullable|string|max:25',
+        'DSC_CORREO' => 'nullable|email|max:100',
+        'DSC_INSTAGRAM' => 'nullable|string',
+        'DSC_FACEBOOK' => 'nullable|string',
+        'NUM_LATITUD' => 'nullable|numeric|between:-90,90',
+        'NUM_LONGITUD' => 'nullable|numeric|between:-180,180',
+        'IMG_DESTACADA' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'NUM_ESTADO' => 'required|integer|in:0,1',
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        try {
-            $comercio = Comercio::findOrFail($id);
-            $comercio->update($request->all());
-
-            return redirect()->route('comercios.index')
-                ->with('success', 'Comercio actualizado exitosamente');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Error al actualizar el comercio: ' . $e->getMessage())
-                ->withInput();
-        }
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+
+    try {
+        $comercio = Comercio::findOrFail($id);
+        $data = $request->except('IMG_DESTACADA');
+
+        $data['NUM_ESTADO'] = $request->NUM_ESTADO ? 1 : 0;
+        
+        // Manejar la imagen
+        if ($request->hasFile('IMG_DESTACADA')) {
+            // Eliminar imagen anterior si existe
+            if ($comercio->IMG_DESTACADA && file_exists(public_path($comercio->IMG_DESTACADA))) {
+                unlink(public_path($comercio->IMG_DESTACADA));
+            }
+            
+            $imagen = $request->file('IMG_DESTACADA');
+            $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+            $imagen->move(public_path('images/comercios'), $nombreImagen);
+            $data['IMG_DESTACADA'] = 'images/comercios/' . $nombreImagen;
+        }
+
+        $comercio->update($data);
+
+        return redirect()->route('comercios.index')
+            ->with('success', 'Comercio actualizado exitosamente');
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Error al actualizar el comercio: ' . $e->getMessage())
+            ->withInput();
+    }
+}
 
     /**
      * Eliminar comercio

@@ -1,115 +1,144 @@
-@extends('admin.layouts.app')
-
-@section('title', 'Editar Comercio')
-
-@section('content')
-<div class="max-w-4xl">
-    <div class="mb-6">
-        <h2 class="text-2xl font-bold text-slate-900 mb-1">Editar Comercio</h2>
-        <p class="text-slate-600">Modifica los datos del comercio</p>
-    </div>
-
-    <div class="bg-white rounded-lg border p-6">
-        <form action="{{ route('comercios.update', $comercio->ID_COMERCIO) }}" method="POST">
+<!-- Modal EDITAR -->
+<div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <form id="editForm" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+            
+            <!-- Header del Modal -->
+            <div class="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
+                <h3 class="text-xl font-bold text-slate-900">Editar Comercio</h3>
+                <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
 
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Nombre -->
-                <div class="md:col-span-2">
+            <!-- Contenido del Modal -->
+            <div class="p-6 space-y-4">
+                <!-- Nombre del Comercio -->
+                <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Nombre del Comercio *
                     </label>
                     <input type="text" 
+                           id="edit_DSC_COMERCIO"
                            name="DSC_COMERCIO" 
-                           value="{{ old('DSC_COMERCIO', $comercio->DSC_COMERCIO) }}"
-                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('DSC_COMERCIO') border-red-500 @enderror"
+                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            required>
-                    @error('DSC_COMERCIO')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
-                <!-- Teléfono -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Teléfono
-                    </label>
-                    <input type="text" 
-                           name="NUM_TELEFONO" 
-                           value="{{ old('NUM_TELEFONO', $comercio->NUM_TELEFONO) }}"
-                           placeholder="+506 2222-3333"
-                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('NUM_TELEFONO') border-red-500 @enderror">
-                    @error('NUM_TELEFONO')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Email
-                    </label>
-                    <input type="email" 
-                           name="DSC_CORREO" 
-                           value="{{ old('DSC_CORREO', $comercio->DSC_CORREO) }}"
-                           placeholder="info@comercio.com"
-                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('DSC_CORREO') border-red-500 @enderror">
-                    @error('DSC_CORREO')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                <!-- Teléfono y Email -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Teléfono
+                        </label>
+                        <input type="text" 
+                               id="edit_NUM_TELEFONO"
+                               name="NUM_TELEFONO" 
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Email
+                        </label>
+                        <input type="email" 
+                               id="edit_DSC_CORREO"
+                               name="DSC_CORREO" 
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
                 </div>
 
                 <!-- Dirección -->
-                <div class="md:col-span-2">
+                <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Dirección
                     </label>
-                    <textarea name="DSC_DIRECCION" 
-                              rows="3"
-                              class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('DSC_DIRECCION') border-red-500 @enderror">{{ old('DSC_DIRECCION', $comercio->DSC_DIRECCION) }}</textarea>
-                    @error('DSC_DIRECCION')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <textarea id="edit_DSC_DIRECCION"
+                              name="DSC_DIRECCION" 
+                              rows="2"
+                              class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
 
-                <!-- Instagram -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Instagram
-                    </label>
-                    <input type="text" 
-                           name="DSC_INSTAGRAM" 
-                           value="{{ old('DSC_INSTAGRAM', $comercio->DSC_INSTAGRAM) }}"
-                           placeholder="@comercio"
-                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <!-- Facebook e Instagram -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Facebook
+                        </label>
+                        <input type="text" 
+                               id="edit_DSC_FACEBOOK"
+                               name="DSC_FACEBOOK" 
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Instagram
+                        </label>
+                        <input type="text" 
+                               id="edit_DSC_INSTAGRAM"
+                               name="DSC_INSTAGRAM" 
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
                 </div>
 
-                <!-- Facebook -->
+                <!-- Coordenadas GPS -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Latitud
+                        </label>
+                        <input type="number" 
+                               id="edit_NUM_LATITUD"
+                               name="NUM_LATITUD" 
+                               step="0.00000001"
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Longitud
+                        </label>
+                        <input type="number" 
+                               id="edit_NUM_LONGITUD"
+                               name="NUM_LONGITUD" 
+                               step="0.00000001"
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <!-- Estado -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Facebook
+                        Estado
                     </label>
-                    <input type="text" 
-                           name="DSC_FACEBOOK" 
-                           value="{{ old('DSC_FACEBOOK', $comercio->DSC_FACEBOOK) }}"
-                           placeholder="facebook.com/comercio"
-                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <select name="NUM_ESTADO" id="edit_NUM_ESTADO" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
+
+                <!-- Imagen Destacada -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Imagen Destacada
+                    </label>
+                    <input type="file" 
+                           name="IMG_DESTACADA" 
+                           accept="image/*"
+                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
+                    <p class="mt-1 text-xs text-slate-500">Deja vacío si no deseas cambiar la imagen actual</p>
                 </div>
             </div>
 
-            <!-- Buttons -->
-            <div class="flex gap-3 mt-6">
+            <!-- Footer del Modal -->
+            <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
                 <button type="submit" 
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    class="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
                     Actualizar Comercio
                 </button>
-                <a href="{{ route('comercios.index') }}" 
-                   class="px-6 py-2 border rounded-lg hover:bg-slate-50">
-                    Cancelar
-                </a>
             </div>
         </form>
     </div>
 </div>
-@endsection
