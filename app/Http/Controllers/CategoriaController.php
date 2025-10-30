@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class CategoriaController extends Controller
 {
@@ -11,7 +14,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-          $categorias = Categoria::latest()->paginate(10);
+        $categorias = Categoria::latest()->paginate(10);
         return view('admin.categorias.index', compact('categorias'));
     }
 
@@ -20,7 +23,8 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-        return view('admin.categorias.form');
+        // Ya no necesitas esta vista, el modal se abre desde index
+        return redirect()->route('categorias.index');
     }
 
     /**
@@ -28,39 +32,54 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-         $validator = Validator::make($request->all(), [
-        'DSC_NOMBRE' => 'nullable|string|max:500',
-        'DSC_DESCRIPCION' => 'nullable|string|max:500',
-        'IMG_URL' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+        $validator = Validator::make($request->all(), [
+            'DSC_NOMBRE' => 'required|string|max:500',
+            'DSC_DESCRIPCION' => 'nullable|string|max:500',
+            'IMG_URL' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'DSC_NOMBRE.required' => 'El nombre de la categoría es obligatorio',
+            'IMG_URL.image' => 'El archivo debe ser una imagen',
+            'IMG_URL.max' => 'La imagen no debe superar los 2MB',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-    }
-
-    try {
-        $data = $request->except('IMG_URL');
-
-        
-        // Manejar la imagen
-       if ($request->hasFile('IMG_URL')) {
-              $imagen = $request->file('IMG_URL');
-                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-                $imagen->move(public_path('images/categorias'), $nombreImagen);
-                $data['IMG_URL'] = 'images/categorias/' . $nombreImagen;
+        if ($validator->fails()) {
+            return redirect()->route('categorias.index')
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Por favor corrige los errores del formulario');
         }
 
-        Categoria::create($data);
+        try {
+            $data = $request->only(['DSC_NOMBRE', 'DSC_DESCRIPCION']);
+            
+            // Estado activo por defecto
+            $data['NUM_ESTADO'] = 1;
 
-        return redirect()->route('categorias.index')
-            ->with('success', 'Categoría creada exitosamente');
-    } catch (\Exception $e) {
-        return redirect()->back()
-            ->with('error', 'Error al crear la Categoría: ' . $e->getMessage())
-            ->withInput();
-    }
+            // Manejar la imagen
+            if ($request->hasFile('IMG_URL')) {
+                $imagen = $request->file('IMG_URL');
+                $nombreImagen = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
+                
+                // Crear directorio si no existe
+                $rutaCarpeta = public_path('images/categorias');
+                if (!File::exists($rutaCarpeta)) {
+                    File::makeDirectory($rutaCarpeta, 0755, true);
+                }
+                
+                $imagen->move($rutaCarpeta, $nombreImagen);
+                $data['IMG_URL'] = 'images/categorias/' . $nombreImagen;
+            }
+
+            Categoria::create($data);
+
+            return redirect()->route('categorias.index')
+                ->with('success', 'Categoría creada exitosamente');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('categorias.index')
+                ->with('error', 'Error al crear la categoría: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**
@@ -68,8 +87,8 @@ class CategoriaController extends Controller
      */
     public function show(string $id)
     {
-         $categoria = Categoria::findOrFail($id);
-        return view('admin.categorias.show', compact('categoria'));
+        // Ya no necesitas esta vista, el modal se abre desde index
+        return redirect()->route('categorias.index');
     }
 
     /**
@@ -77,8 +96,8 @@ class CategoriaController extends Controller
      */
     public function edit(string $id)
     {
-         $categoria = Categoria::findOrFail($id);
-        return view('admin.categorias.edit', compact('categoria'));
+        // Ya no necesitas esta vista, el modal se abre desde index
+        return redirect()->route('categorias.index');
     }
 
     /**
@@ -87,43 +106,59 @@ class CategoriaController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-        'DSC_NOMBRE' => 'nullable|string|max:500',
-        'DSC_DESCRIPCION' => 'nullable|string|max:500',
-        'IMG_URL' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+            'DSC_NOMBRE' => 'required|string|max:500',
+            'DSC_DESCRIPCION' => 'nullable|string|max:500',
+            'IMG_URL' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'NUM_ESTADO' => 'required|in:0,1',
+        ], [
+            'DSC_NOMBRE.required' => 'El nombre de la categoría es obligatorio',
+            'IMG_URL.image' => 'El archivo debe ser una imagen',
+            'IMG_URL.max' => 'La imagen no debe superar los 2MB',
+            'NUM_ESTADO.required' => 'El estado es obligatorio',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-    }
-
-    try {
-        $categoria = Categoria::findOrFail($id);
-        $data = $request->except('IMG_URL');
-
-        if ($request->hasFile('IMG_URL')) {
-            // Eliminar imagen anterior si existe
-            if ($categoria->IMG_URL && file_exists(public_path($categoria->IMG_URL))) {
-                unlink(public_path($categoria->IMG_URL));
-            }
-            
-             $imagen = $request->file('IMG_URL');
-                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-                $imagen->move(public_path('images/categorias'), $nombreImagen);
-                $data['IMG_URL'] = 'images/categorias/' . $nombreImagen;
+        if ($validator->fails()) {
+            return redirect()->route('categorias.index')
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Por favor corrige los errores del formulario');
         }
 
-       
-        Categoria::create($data);
+        try {
+            $categoria = Categoria::findOrFail($id);
+            $data = $request->only(['DSC_NOMBRE', 'DSC_DESCRIPCION', 'NUM_ESTADO']);
 
-        return redirect()->route('categorias.index')
-            ->with('success', 'Categoría actualizada exitosamente');
-    } catch (\Exception $e) {
-        return redirect()->back()
-            ->with('error', 'Error al crear la Categoría: ' . $e->getMessage())
-            ->withInput();
-    }
+            // Manejar la imagen
+            if ($request->hasFile('IMG_URL')) {
+                // Eliminar imagen anterior si existe
+                if ($categoria->IMG_URL && File::exists(public_path($categoria->IMG_URL))) {
+                    File::delete(public_path($categoria->IMG_URL));
+                }
+                
+                $imagen = $request->file('IMG_URL');
+                $nombreImagen = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
+                
+                // Crear directorio si no existe
+                $rutaCarpeta = public_path('images/categorias');
+                if (!File::exists($rutaCarpeta)) {
+                    File::makeDirectory($rutaCarpeta, 0755, true);
+                }
+                
+                $imagen->move($rutaCarpeta, $nombreImagen);
+                $data['IMG_URL'] = 'images/categorias/' . $nombreImagen;
+            }
+
+            // Actualizar la categoría (CORREGIDO: era create, debe ser update)
+            $categoria->update($data);
+
+            return redirect()->route('categorias.index')
+                ->with('success', 'Categoría actualizada exitosamente');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('categorias.index')
+                ->with('error', 'Error al actualizar la categoría: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**
@@ -131,15 +166,22 @@ class CategoriaController extends Controller
      */
     public function destroy(string $id)
     {
-          try {
+        try {
             $categoria = Categoria::findOrFail($id);
+            
+            // Eliminar imagen si existe
+            if ($categoria->IMG_URL && File::exists(public_path($categoria->IMG_URL))) {
+                File::delete(public_path($categoria->IMG_URL));
+            }
+            
             $categoria->delete();
 
             return redirect()->route('categorias.index')
                 ->with('success', 'Categoría eliminada exitosamente');
+                
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Error al eliminar la Categoría: ' . $e->getMessage());
+            return redirect()->route('categorias.index')
+                ->with('error', 'Error al eliminar la categoría: ' . $e->getMessage());
         }
     }
 }
