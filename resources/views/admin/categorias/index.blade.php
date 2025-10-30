@@ -1,28 +1,28 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Gestión de Comercios')
+@section('title', 'Gestión de Categorías')
 
 @section('content')
 <div class="space-y-6">
     <!-- Breadcrumb -->
     <nav class="flex items-center text-sm text-slate-600 mb-6">
-    <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Dashboard</a>
-    <span class="mx-2 text-slate-400">></span>
-    <span class="text-slate-900 font-medium">Comercios</span>
-</nav>
+        <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Dashboard</a>
+        <span class="mx-2 text-slate-400">></span>
+        <span class="text-slate-900 font-medium">Categorías</span>
+    </nav>
 
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-1">Gestión de Comercios</h2>
-            <p class="text-slate-600">Administra todos los comercios del directorio</p>
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Gestión de Categorías</h2>
+            <p class="text-slate-600">Administra todas las categorías del directorio</p>
         </div>
         <button onclick="openCreateModal()" 
                 class="inline-flex items-center px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
-            Nuevo Comercio
+            Nueva Categoría
         </button>
     </div>
 
@@ -59,7 +59,7 @@
                 </svg>
                 <input type="text" 
                        id="searchInput"
-                       placeholder="Buscar comercios..."
+                       placeholder="Buscar categorías..."
                        class="w-full md:w-96 pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50">
             </div>
         </div>
@@ -69,25 +69,29 @@
             <table class="w-full">
                 <thead class="bg-slate-50 border-b">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Comercio</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Imagen</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Categoría</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Contacto</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Descripción</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Imágen</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Estado</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y" id="comerciosTableBody">
-                    @forelse($comercios as $comercio)
-                    <tr class="hover:bg-slate-50 comercio-row" data-search="{{ strtolower($comercio->DSC_COMERCIO . ' ' . $comercio->NUM_TELEFONO . ' ' . $comercio->DSC_CORREO . ' ' . $comercio->DSC_DIRECCION) }}">
+                    @forelse($categorias as $categoria)
+                    <tr class="hover:bg-slate-50 comercio-row" data-search="{{ strtolower($categoria->DSC_NOMBRE . ' ' . $categoria->DSC_DESCRIPCION) }}">
                         <td class="px-6 py-4">
-                            <div class="font-medium text-slate-900">{{ $comercio->DSC_COMERCIO ?? 'Sin nombre' }}</div>
-                            <div class="text-xs text-slate-500">{{ $comercio->FEC_CREACION ? $comercio->FEC_CREACION->format('Y-m-d') : 'N/A' }}</div>
+                            <div class="font-medium text-slate-900">{{ $categoria->DSC_NOMBRE ?? 'Sin nombre' }}</div>
+                            <div class="text-xs text-slate-500">{{ $categoria->FEC_CREACION ? $categoria->FEC_CREACION->format('Y-m-d') : 'N/A' }}</div>
                         </td>
+
                         <td class="px-6 py-4">
-                            @if($comercio->IMG_DESTACADA)
-                                <img src="{{ asset($comercio->IMG_DESTACADA) }}" 
-                                     alt="{{ $comercio->DSC_COMERCIO }}" 
+                            <div class="text-sm text-slate-900">{{ $categoria->DSC_DESCRIPCION ?? '-' }}</div>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            @if($categoria->IMG_URL)
+                                <img src="{{ asset($categoria->IMG_URL) }}" 
+                                     alt="{{ $categoria->DSC_DESCRIPCION }}" 
                                      class="w-12 h-12 rounded-lg object-cover border border-slate-200">
                             @else
                                 <div class="w-12 h-12 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center">
@@ -97,17 +101,9 @@
                                 </div>
                             @endif
                         </td>
+                      
                         <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-                                General
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-slate-900">{{ $comercio->NUM_TELEFONO ?? '-' }}</div>
-                            <div class="text-xs text-slate-500">{{ $comercio->DSC_CORREO ?? '-' }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            @if($comercio->NUM_ESTADO == 1)
+                            @if($categoria->NUM_ESTADO == 1)
                                 <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
                                     Activo
                                 </span>
@@ -123,18 +119,13 @@
                                 <button type="button" 
                                         class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors view-btn"
                                         title="Ver detalles"
-                                        data-id="{{ $comercio->ID_COMERCIO }}"
-                                        data-nombre="{{ $comercio->DSC_COMERCIO }}"
-                                        data-telefono="{{ $comercio->NUM_TELEFONO }}"
-                                        data-email="{{ $comercio->DSC_CORREO }}"
-                                        data-direccion="{{ $comercio->DSC_DIRECCION }}"
-                                        data-facebook="{{ $comercio->DSC_FACEBOOK }}"
-                                        data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
-                                        data-latitud="{{ $comercio->NUM_LATITUD }}"
-                                        data-longitud="{{ $comercio->NUM_LONGITUD }}"
-                                        data-imagen="{{ $comercio->IMG_DESTACADA }}"
-                                        data-fecha="{{ $comercio->FEC_CREACION }}"
-                                        data-estado="{{ $comercio->NUM_ESTADO }}">
+                                        data-id="{{ $categoria->ID_CATEGORIA }}"
+                                        data-nombre="{{ $categoria->DSC_NOMBRE }}"
+                                        data-descripcion="{{ $categoria->DSC_DESCRIPCION }}"
+                                        data-imagen="{{ $categoria->IMG_URL }}"
+                                        data-fecha="{{ $categoria->FEC_CREACION }}"
+                                        data-estado="{{ $categoria->NUM_ESTADO }}"
+                                        onclick="openViewModal(this)">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -145,16 +136,13 @@
                                 <button type="button" 
                                         class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors edit-btn"
                                         title="Editar"
-                                        data-id="{{ $comercio->ID_COMERCIO }}"
-                                        data-nombre="{{ $comercio->DSC_COMERCIO }}"
-                                        data-telefono="{{ $comercio->NUM_TELEFONO }}"
-                                        data-email="{{ $comercio->DSC_CORREO }}"
-                                        data-direccion="{{ $comercio->DSC_DIRECCION }}"
-                                        data-facebook="{{ $comercio->DSC_FACEBOOK }}"
-                                        data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
-                                        data-latitud="{{ $comercio->NUM_LATITUD }}"
-                                        data-longitud="{{ $comercio->NUM_LONGITUD }}"
-                                        data-estado="{{ $comercio->NUM_ESTADO }}">
+                                        data-id="{{ $categoria->ID_CATEGORIA }}"
+                                        data-nombre="{{ $categoria->DSC_NOMBRE }}"
+                                        data-descripcion="{{ $categoria->DSC_DESCRIPCION }}"
+                                        data-imagen="{{ $categoria->IMG_URL }}"
+                                        data-fecha="{{ $categoria->FEC_CREACION }}"
+                                        data-estado="{{ $categoria->NUM_ESTADO }}"
+                                        onclick="openEditModal(this)">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
@@ -162,7 +150,7 @@
                                 
                                 <!-- Botón Eliminar -->
                                 <button type="button" 
-                                        onclick="confirmDelete({{ $comercio->ID_COMERCIO }})" 
+                                        onclick="confirmDelete({{ $categoria->ID_CATEGORIA }})" 
                                         class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                         title="Eliminar">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -171,8 +159,8 @@
                                 </button>
                                 
                                 <!-- Formulario oculto para eliminar -->
-                                <form id="deleteForm{{ $comercio->ID_COMERCIO }}" 
-                                      action="{{ route('comercios.destroy', $comercio->ID_COMERCIO) }}" 
+                                <form id="deleteForm{{ $categoria->ID_CATEGORIA }}" 
+                                      action="{{ route('categorias.destroy', $categoria->ID_CATEGORIA) }}" 
                                       method="POST" 
                                       class="hidden">
                                     @csrf
@@ -187,7 +175,7 @@
                             <svg class="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                             </svg>
-                            <p class="mb-2">No hay comercios registrados</p>
+                            <p class="mb-2">No hay Categorías registradas</p>
                             <button onclick="openCreateModal()" class="text-blue-600 hover:underline font-medium">
                                 Crear el primero
                             </button>
@@ -198,24 +186,22 @@
             </table>
         </div>
         
-        @if($comercios->hasPages())
+        @if($categorias->hasPages())
         <div class="px-6 py-4 border-t">
-            {{ $comercios->links() }}
+            {{ $categorias->links() }}
         </div>
         @endif
     </div>
 </div>
 
 {{-- Incluir los modales --}}
-
-@include('admin.comercios.edit')
-@include('admin.comercios.create')
-@include('admin.comercios.view')
+@include('admin.categorias.form', ['tipo' => 'create', 'categoria' => new stdClass()])
+@include('admin.categorias.form', ['tipo' => 'edit', 'categoria' => new stdClass()])
+@include('admin.categorias.form', ['tipo' => 'view', 'categoria' => new stdClass()])
 @include('admin.comercios.delete')
 
 <script>
-// Variable para almacenar el ID del comercio a eliminar
-let deleteComercioId = null;
+let deleteCategoriaId = null;
 
 // Auto-cerrar alertas después de 5 segundos
 setTimeout(() => {
@@ -225,7 +211,7 @@ setTimeout(() => {
     if (errorAlert) errorAlert.remove();
 }, 5000);
 
-// Funciones para Modal CREAR
+// FUNCIONES MODAL CREAR
 function openCreateModal() {
     document.getElementById('createModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -234,117 +220,112 @@ function openCreateModal() {
 function closeCreateModal() {
     document.getElementById('createModal').classList.add('hidden');
     document.body.style.overflow = 'auto';
+    // Limpiar formulario
+    document.getElementById('createModal').querySelector('form').reset();
 }
 
-// Funciones para Modal EDITAR
+//FUNCIONES MODAL EDITAR
 function openEditModal(button) {
-    const comercio = {
-        ID_COMERCIO: button.getAttribute('data-id'),
-        DSC_COMERCIO: button.getAttribute('data-nombre'),
-        NUM_TELEFONO: button.getAttribute('data-telefono'),
-        DSC_CORREO: button.getAttribute('data-email'),
-        DSC_DIRECCION: button.getAttribute('data-direccion'),
-        DSC_FACEBOOK: button.getAttribute('data-facebook'),
-        DSC_INSTAGRAM: button.getAttribute('data-instagram'),
-        NUM_LATITUD: button.getAttribute('data-latitud'),
-        NUM_LONGITUD: button.getAttribute('data-longitud'),
-        NUM_ESTADO: button.getAttribute('data-estado')
-    };
+    const modal = document.getElementById('editModal');
+    const form = modal.querySelector('form');
     
-    console.log('Datos para editar:', comercio);
+    // Obtener datos del botón
+    const id = button.getAttribute('data-id');
+    const nombre = button.getAttribute('data-nombre');
+    const descripcion = button.getAttribute('data-descripcion');
+    const imagen = button.getAttribute('data-imagen');
+    const estado = button.getAttribute('data-estado');
     
-    document.getElementById('editForm').action = `/comercios/${comercio.ID_COMERCIO}`;
-    document.getElementById('edit_DSC_COMERCIO').value = comercio.DSC_COMERCIO || '';
-    document.getElementById('edit_NUM_TELEFONO').value = comercio.NUM_TELEFONO || '';
-    document.getElementById('edit_DSC_CORREO').value = comercio.DSC_CORREO || '';
-    document.getElementById('edit_DSC_DIRECCION').value = comercio.DSC_DIRECCION || '';
-    document.getElementById('edit_DSC_FACEBOOK').value = comercio.DSC_FACEBOOK || '';
-    document.getElementById('edit_DSC_INSTAGRAM').value = comercio.DSC_INSTAGRAM || '';
-    document.getElementById('edit_NUM_LATITUD').value = comercio.NUM_LATITUD || '';
-    document.getElementById('edit_NUM_LONGITUD').value = comercio.NUM_LONGITUD || '';
-    document.getElementById('edit_NUM_ESTADO').value = comercio.NUM_ESTADO || '1';
+    // Actualizar la acción del formulario
+    form.action = `/categorias/${id}`;
     
-    document.getElementById('editModal').classList.remove('hidden');
+    // Llenar campos del formulario
+    form.querySelector('[name="DSC_NOMBRE"]').value = nombre || '';
+    form.querySelector('[name="DSC_DESCRIPCION"]').value = descripcion || '';
+    
+    // Solo actualizar estado si existe el campo
+    const estadoField = form.querySelector('[name="NUM_ESTADO"]');
+    if (estadoField) {
+        estadoField.value = estado || '1';
+    }
+    
+    // Mostrar imagen actual si existe
+    const imagenPreview = document.getElementById('imagen-preview-editModal');
+    if (imagenPreview && imagen && imagen !== 'null' && imagen !== '') {
+        const imgElement = imagenPreview.querySelector('img');
+        imgElement.src = '/' + imagen;
+        imgElement.alt = nombre;
+        imagenPreview.classList.remove('hidden');
+    } else if (imagenPreview) {
+        imagenPreview.classList.add('hidden');
+    }
+    
+    // Mostrar modal
+    modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
 
 function closeEditModal() {
-    document.getElementById('editModal').classList.add('hidden');
+    const modal = document.getElementById('editModal');
+    modal.classList.add('hidden');
     document.body.style.overflow = 'auto';
+    
+    // Ocultar preview de imagen al cerrar
+    const imagenPreview = document.getElementById('imagen-preview-editModal');
+    if (imagenPreview) {
+        imagenPreview.classList.add('hidden');
+    }
 }
 
-// Funciones para Modal VER
+//FUNCIONES MODAL VER
 function openViewModal(button) {
-    const comercio = {
-        ID_COMERCIO: button.getAttribute('data-id'),
-        DSC_COMERCIO: button.getAttribute('data-nombre'),
-        NUM_TELEFONO: button.getAttribute('data-telefono'),
-        DSC_CORREO: button.getAttribute('data-email'),
-        DSC_DIRECCION: button.getAttribute('data-direccion'),
-        DSC_FACEBOOK: button.getAttribute('data-facebook'),
-        DSC_INSTAGRAM: button.getAttribute('data-instagram'),
-        NUM_LATITUD: button.getAttribute('data-latitud'),
-        NUM_LONGITUD: button.getAttribute('data-longitud'),
-        IMG_DESTACADA: button.getAttribute('data-imagen'),
-        FEC_CREACION: button.getAttribute('data-fecha')
-    };
+    const modal = document.getElementById('viewModal');
+    const form = modal.querySelector('form');
     
-    console.log('Datos para ver:', comercio);
+    // Obtener datos del botón
+    const nombre = button.getAttribute('data-nombre');
+    const descripcion = button.getAttribute('data-descripcion');
+    const imagen = button.getAttribute('data-imagen');
+    const estado = button.getAttribute('data-estado');
     
-    document.getElementById('view_DSC_COMERCIO').textContent = comercio.DSC_COMERCIO || 'Sin nombre';
-    document.getElementById('view_NUM_TELEFONO').textContent = comercio.NUM_TELEFONO || '-';
-    document.getElementById('view_DSC_CORREO').textContent = comercio.DSC_CORREO || '-';
-    document.getElementById('view_DSC_DIRECCION').textContent = comercio.DSC_DIRECCION || '-';
-    document.getElementById('view_DSC_FACEBOOK').textContent = comercio.DSC_FACEBOOK || '-';
-    document.getElementById('view_DSC_INSTAGRAM').textContent = comercio.DSC_INSTAGRAM || '-';
-    document.getElementById('view_NUM_LATITUD').textContent = comercio.NUM_LATITUD || '-';
-    document.getElementById('view_NUM_LONGITUD').textContent = comercio.NUM_LONGITUD || '-';
-    
-    // Fecha de creación
-    if (comercio.FEC_CREACION) {
-        try {
-            const fecha = new Date(comercio.FEC_CREACION);
-            document.getElementById('view_FEC_CREACION').textContent = fecha.toLocaleDateString('es-ES', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } catch (e) {
-            document.getElementById('view_FEC_CREACION').textContent = comercio.FEC_CREACION;
-        }
-    } else {
-        document.getElementById('view_FEC_CREACION').textContent = 'N/A';
+    // Llenar campos del formulario (readonly)
+    form.querySelector('[name="DSC_NOMBRE"]').value = nombre || '';
+    form.querySelector('[name="DSC_DESCRIPCION"]').value = descripcion || '';
+    if (form.querySelector('[name="NUM_ESTADO"]')) {
+        form.querySelector('[name="NUM_ESTADO"]').value = estado || '1';
     }
     
-    // Imagen destacada
-    if (comercio.IMG_DESTACADA) {
-        document.getElementById('view_imagen_container').classList.remove('hidden');
-        document.getElementById('view_IMG_DESTACADA').src = '/storage/' + comercio.IMG_DESTACADA;
-    } else {
-        document.getElementById('view_imagen_container').classList.add('hidden');
+    // Mostrar imagen si existe
+    const imagenPreview = document.getElementById('imagen-preview-viewModal');
+    if (imagenPreview && imagen && imagen !== 'null' && imagen !== '') {
+        const imgElement = imagenPreview.querySelector('img');
+        imgElement.src = '/' + imagen;
+        imgElement.alt = nombre;
+        imagenPreview.classList.remove('hidden');
+    } else if (imagenPreview) {
+        imagenPreview.classList.add('hidden');
     }
     
-    document.getElementById('viewModal').classList.remove('hidden');
+    // Mostrar modal
+    modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-
-    if (comercio.NUM_ESTADO == '1') {
-    document.getElementById('view_NUM_ESTADO').textContent = 'Activo';
-    document.getElementById('view_NUM_ESTADO').className = 'text-green-600 font-semibold mt-1';
-} else {
-    document.getElementById('view_NUM_ESTADO').textContent = 'Inactivo';
-    document.getElementById('view_NUM_ESTADO').className = 'text-red-600 font-semibold mt-1';
-}
 }
 
 function closeViewModal() {
-    document.getElementById('viewModal').classList.add('hidden');
+    const modal = document.getElementById('viewModal');
+    modal.classList.add('hidden');
     document.body.style.overflow = 'auto';
+    
+    // Ocultar preview de imagen al cerrar
+    const imagenPreview = document.getElementById('imagen-preview-viewModal');
+    if (imagenPreview) {
+        imagenPreview.classList.add('hidden');
+    }
 }
 
-// Funciones para Modal ELIMINAR
+// FUNCIONES MODAL ELIMINAR
 function confirmDelete(id) {
-    console.log('Confirmando eliminación:', id);
-    deleteComercioId = id;
+    deleteCategoriaId = id;
     document.getElementById('deleteModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
@@ -352,16 +333,16 @@ function confirmDelete(id) {
 function closeDeleteModal() {
     document.getElementById('deleteModal').classList.add('hidden');
     document.body.style.overflow = 'auto';
-    deleteComercioId = null;
+    deleteCategoriaId = null;
 }
 
 function executeDelete() {
-    if (deleteComercioId) {
-        document.getElementById('deleteForm' + deleteComercioId).submit();
+    if (deleteCategoriaId) {
+        document.getElementById('deleteForm' + deleteCategoriaId).submit();
     }
 }
 
-// Funcionalidad de Búsqueda y Event Listeners
+// FUNCIONALIDAD DE BÚSQUEDA
 document.addEventListener('DOMContentLoaded', function() {
     // Buscador
     const searchInput = document.getElementById('searchInput');
@@ -387,20 +368,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // Event listeners para botones de editar
-    document.querySelectorAll('.edit-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            openEditModal(this);
-        });
-    });
-
-    // Event listeners para botones de ver
-    document.querySelectorAll('.view-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            openViewModal(this);
-        });
-    });
 
     // Cerrar modales al hacer clic fuera
     const modals = ['createModal', 'editModal', 'viewModal', 'deleteModal'];
@@ -440,6 +407,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-console.log('JavaScript de comercios cargado correctamente');
+console.log('JavaScript de categorías cargado correctamente');
 </script>
 @endsection
