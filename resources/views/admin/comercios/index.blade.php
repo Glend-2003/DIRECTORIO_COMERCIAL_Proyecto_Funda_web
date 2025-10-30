@@ -263,7 +263,7 @@ function openEditModal(button) {
     document.getElementById('edit_NUM_LATITUD').value = comercio.NUM_LATITUD || '';
     document.getElementById('edit_NUM_LONGITUD').value = comercio.NUM_LONGITUD || '';
     document.getElementById('edit_NUM_ESTADO').value = comercio.NUM_ESTADO || '1';
-    
+    document.getElementById('edit_IMG_DESTACADA').value = comercio.IMG_DESTACADA || '';
     document.getElementById('editModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }

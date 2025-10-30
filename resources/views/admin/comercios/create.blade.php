@@ -23,7 +23,7 @@
                     </label>
                     <input type="text" 
                            name="DSC_COMERCIO" 
-                           placeholder="Nombre"
+                           placeholder="Nombre del comercio"
                            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            required>
                 </div>
@@ -142,21 +142,26 @@
                     </select>
                 </div>
 
-                <!-- Imagen Destacada -->
+                <!-- Imagen Destacada (URL) -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Imagen Destacada
+                        URL de la Imagen Destacada
                     </label>
-                    <input type="file" 
+                    <input type="text" 
                            name="IMG_DESTACADA" 
-                           accept="image/*"
-                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
+                           placeholder="https://ejemplo.com/imagen.jpg"
+                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <p class="mt-1 text-xs text-slate-500">Ingresa la URL completa de la imagen (ej: https://tudominio.com/imagen.jpg)</p>
                 </div>
             </div>
 
             <!-- Footer del Modal -->
             <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
-                
+                <button type="button" 
+                        onclick="closeCreateModal()" 
+                        class="px-4 py-2 text-slate-700 hover:text-slate-900 font-medium">
+                    Cancelar
+                </button>
                 <button type="submit" 
                     class="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
                     Guardar Comercio
