@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ControllerSlider;
 use App\Http\Controllers\ComercioController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\DirectorioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,9 @@ use App\Http\Controllers\CategoriaController;
 |--------------------------------------------------------------------------
 */
 
-// Página principal - Directorio Comercial
-Route::get('/', function () {
-    return view('cliente.directorio');
-})->name('directorio.home');
+// Página principal - Directorio Comercial (usando el controlador)
+Route::get('/', [DirectorioController::class, 'index'])->name('directorio.home');
+Route::get('/directorio', [DirectorioController::class, 'index'])->name('directorio.index');
 
 /*
 |--------------------------------------------------------------------------

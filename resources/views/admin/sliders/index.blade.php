@@ -72,12 +72,13 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Nombre</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Descripción</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Imagen</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Estado</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y" id="slidersTableBody">
                     @forelse($sliders as $slider)
-                    <tr class="hover:bg-slate-50 slider-row" data-search="{{ strtolower($slider->DSC_NOMBRE . ' ' . $slider->DSC_DESCRIPCION) }}">
+                    <tr class="hover:bg-slate-50 slider-row" data-search="{{ strtolower($slider->DSC_NOMBRE . ' ' . $slider->DSC_DESCRIPCION . ' ' . ($slider->ESTADO == 1 ? 'activo' : 'inactivo')) }}">
                         <td class="px-6 py-4">
                             <div class="font-medium text-slate-900">{{ $slider->DSC_NOMBRE }}</div>
                         </td>
@@ -92,6 +93,23 @@
                             @endif
                         </td>
                         <td class="px-6 py-4">
+                            @if($slider->ESTADO == 1)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Activo
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Inactivo
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
                                 <!-- Botón Ver -->
                                 <button type="button" 
@@ -100,7 +118,9 @@
                                             'DSC_NOMBRE': '{{ addslashes($slider->DSC_NOMBRE) }}',
                                             'DSC_DESCRIPCION': '{{ addslashes($slider->DSC_DESCRIPCION) }}',
                                             'IMG_URL': '{{ addslashes($slider->IMG_URL) }}',
-                                            'created_at': '{{ $slider->created_at }}'
+                                            'ESTADO': {{ $slider->ESTADO }},
+                                            'created_at': '{{ $slider->created_at }}',
+                                            'updated_at': '{{ $slider->updated_at }}'
                                         })"
                                         class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                         title="Ver detalles">
@@ -116,7 +136,8 @@
                                             'ID_SLIDER': {{ $slider->ID_SLIDER }},
                                             'DSC_NOMBRE': '{{ addslashes($slider->DSC_NOMBRE) }}',
                                             'DSC_DESCRIPCION': '{{ addslashes($slider->DSC_DESCRIPCION) }}',
-                                            'IMG_URL': '{{ addslashes($slider->IMG_URL) }}'
+                                            'IMG_URL': '{{ addslashes($slider->IMG_URL) }}',
+                                            'ESTADO': {{ $slider->ESTADO }}
                                         })"
                                         class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
                                         title="Editar">
@@ -139,7 +160,7 @@
                     </tr>
                     @empty
                     <tr id="emptyRow">
-                        <td colspan="4" class="px-6 py-12 text-center text-slate-500">
+                        <td colspan="5" class="px-6 py-12 text-center text-slate-500">
                             <svg class="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>

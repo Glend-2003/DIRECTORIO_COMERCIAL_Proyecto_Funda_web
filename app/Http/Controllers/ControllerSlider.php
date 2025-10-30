@@ -24,10 +24,12 @@ class ControllerSlider extends Controller
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
             'IMG_URL' => 'required|url',
+            'ESTADO' => 'required|boolean',
         ], [
             'DSC_NOMBRE.required' => 'El nombre es obligatorio.',
             'IMG_URL.required' => 'Debe ingresar una URL para la imagen.',
             'IMG_URL.url' => 'El formato de la URL no es válido.',
+            'ESTADO.required' => 'El estado es obligatorio.',
         ]);
 
         Slider::create($request->all());
@@ -53,6 +55,7 @@ class ControllerSlider extends Controller
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
             'IMG_URL' => 'required|url',
+            'ESTADO' => 'required|boolean',
         ]);
 
         $slider = Slider::findOrFail($id);
