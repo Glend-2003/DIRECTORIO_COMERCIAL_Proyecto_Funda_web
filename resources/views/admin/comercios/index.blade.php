@@ -209,6 +209,7 @@
 {{-- Incluir los modales --}}
 
 @include('admin.comercios.edit')
+@include('admin.comercios.create')
 @include('admin.comercios.view')
 @include('admin.comercios.delete')
 
