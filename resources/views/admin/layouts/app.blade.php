@@ -78,6 +78,7 @@
         <!-- Main Content -->
         <main class="flex-1 p-8">
             @yield('content')
+            @stack('scripts')
         </main>
     </div>
 </body>
