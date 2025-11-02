@@ -121,31 +121,44 @@
                     </div>
                 </div>
 
-                <!-- Coordenadas GPS -->
+                <!-- MAPA INTERACTIVO -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Ubicación en el Mapa *
+                    </label>
+                    <div id="createMap" class="w-full h-80 rounded-lg border-2 border-slate-300 mb-2"></div>
+                    <p class="text-xs text-slate-500">
+                        Haz clic en el mapa o arrastra el marcador rojo para seleccionar la ubicación
+                    </p>
+                </div>
+
+                <!-- Coordenadas GPS (readonly) -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Latitud
+                            Latitud *
                         </label>
                         <input type="number" 
+                               id="create_NUM_LATITUD"
                                name="NUM_LATITUD" 
                                step="0.00000001"
-                               placeholder="9.9281"
-                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-slate-50"
+                               required
+                               readonly>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Longitud
+                            Longitud *
                         </label>
                         <input type="number" 
+                               id="create_NUM_LONGITUD"
                                name="NUM_LONGITUD" 
                                step="0.00000001"
-                               placeholder="-84.0907"
-                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-slate-50"
+                               required
+                               readonly>
                     </div>
                 </div>
-
-                <!-- Estado -->
 
                 <!-- Imagen Destacada (URL) -->
                 <div>

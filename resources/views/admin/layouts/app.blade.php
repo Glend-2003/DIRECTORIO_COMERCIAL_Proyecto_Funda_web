@@ -8,6 +8,25 @@
     <title>@yield('title', 'Panel Administrativo')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <!-- 🗺️ LEAFLET CSS - OBLIGATORIO PARA MAPAS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+    
+    <!-- 🗺️ LEAFLET JS - OBLIGATORIO PARA MAPAS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+    
+    <style>
+        /* Asegurar que los contenedores de mapas tengan altura */
+        .leaflet-container {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+    </style>
 </head>
 
 <body class="bg-slate-50">

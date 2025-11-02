@@ -502,5 +502,293 @@ document.addEventListener('keydown', function(e) {
 });
 
 console.log('JavaScript de comercios cargado correctamente');
-</script
+
+let createMap, editMap, viewMap;
+let createMarker, editMarker, viewMarker;
+
+// Coordenadas por defecto (Barva, Heredia, Costa Rica)
+const defaultLat = 10.0297;
+const defaultLng = -84.1303;
+
+// ==================== MAPA DE CREAR ====================
+function initCreateMap() {
+    // Limpiar mapa existente si hay
+    if (createMap) {
+        createMap.remove();
+    }
+    
+    // Crear el mapa centrado en Barva
+    createMap = L.map('createMap').setView([defaultLat, defaultLng], 13);
+    
+    // Agregar capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 8
+    }).addTo(createMap);
+    
+    // Crear marcador inicial personalizado
+    const customIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+    createMarker = L.marker([defaultLat, defaultLng], {
+        draggable: true,
+        icon: customIcon
+    }).addTo(createMap);
+    
+    // Popup inicial
+    createMarker.bindPopup('<b>📍 Nueva ubicación</b><br>Arrastra el marcador o haz clic en el mapa').openPopup();
+    
+    // Actualizar coordenadas al crear
+    updateCreateCoordinates(defaultLat, defaultLng);
+    
+    // Evento: clic en el mapa
+    createMap.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        
+        // Mover el marcador
+        createMarker.setLatLng([lat, lng]);
+        createMarker.bindPopup('<b>✓ Ubicación seleccionada</b>').openPopup();
+        
+        // Actualizar inputs
+        updateCreateCoordinates(lat, lng);
+    });
+    
+    // Evento: arrastrar el marcador
+    createMarker.on('dragstart', function() {
+        createMarker.closePopup();
+    });
+    
+    createMarker.on('dragend', function(e) {
+        const lat = e.target.getLatLng().lat;
+        const lng = e.target.getLatLng().lng;
+        updateCreateCoordinates(lat, lng);
+        createMarker.bindPopup('<b>✓ Ubicación actualizada</b>').openPopup();
+    });
+    
+    // Forzar renderizado correcto
+    setTimeout(() => {
+        createMap.invalidateSize();
+        createMap.setView([defaultLat, defaultLng], 13);
+    }, 200);
+}
+
+function updateCreateCoordinates(lat, lng) {
+    document.getElementById('create_NUM_LATITUD').value = lat.toFixed(8);
+    document.getElementById('create_NUM_LONGITUD').value = lng.toFixed(8);
+}
+
+// ==================== MAPA DE EDITAR ====================
+function initEditMap(lat, lng) {
+    // Limpiar mapa existente
+    if (editMap) {
+        editMap.remove();
+    }
+    
+    // Validar y usar coordenadas
+    const mapLat = (lat && !isNaN(lat)) ? parseFloat(lat) : defaultLat;
+    const mapLng = (lng && !isNaN(lng)) ? parseFloat(lng) : defaultLng;
+    
+    console.log('Inicializando mapa de edición con:', mapLat, mapLng);
+    
+    // Crear el mapa
+    editMap = L.map('editMap').setView([mapLat, mapLng], 15);
+    
+    // Agregar capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 8
+    }).addTo(editMap);
+    
+    // Icono personalizado
+    const customIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+    // Crear marcador
+    editMarker = L.marker([mapLat, mapLng], {
+        draggable: true,
+        icon: customIcon
+    }).addTo(editMap);
+    
+    editMarker.bindPopup('<b>📍 Ubicación actual</b><br>Arrastra para cambiar').openPopup();
+    
+    // Evento: clic en el mapa
+    editMap.on('click', function(e) {
+        const newLat = e.latlng.lat;
+        const newLng = e.latlng.lng;
+        
+        // Mover el marcador
+        editMarker.setLatLng([newLat, newLng]);
+        editMarker.bindPopup('<b>✓ Nueva ubicación</b>').openPopup();
+        
+        // Actualizar inputs
+        updateEditCoordinates(newLat, newLng);
+    });
+    
+    // Evento: arrastrar el marcador
+    editMarker.on('dragstart', function() {
+        editMarker.closePopup();
+    });
+    
+    editMarker.on('dragend', function(e) {
+        const newLat = e.target.getLatLng().lat;
+        const newLng = e.target.getLatLng().lng;
+        updateEditCoordinates(newLat, newLng);
+        editMarker.bindPopup('<b>✓ Ubicación actualizada</b>').openPopup();
+    });
+    
+    // Forzar renderizado correcto
+    setTimeout(() => {
+        editMap.invalidateSize();
+        editMap.setView([mapLat, mapLng], 15);
+    }, 200);
+}
+
+function updateEditCoordinates(lat, lng) {
+    document.getElementById('edit_NUM_LATITUD').value = lat.toFixed(8);
+    document.getElementById('edit_NUM_LONGITUD').value = lng.toFixed(8);
+}
+
+// ==================== MAPA DE VER ====================
+function initViewMap(lat, lng) {
+    // Limpiar mapa existente
+    if (viewMap) {
+        viewMap.remove();
+    }
+    
+    // Validar y usar coordenadas
+    const mapLat = (lat && !isNaN(lat)) ? parseFloat(lat) : defaultLat;
+    const mapLng = (lng && !isNaN(lng)) ? parseFloat(lng) : defaultLng;
+    
+    console.log('Inicializando mapa de vista con:', mapLat, mapLng);
+    
+    // Crear el mapa (solo lectura pero con navegación)
+    viewMap = L.map('viewMap', {
+        dragging: true,
+        touchZoom: true,
+        scrollWheelZoom: false,
+        doubleClickZoom: true,
+        boxZoom: false,
+        keyboard: false,
+        zoomControl: true
+    }).setView([mapLat, mapLng], 16);
+    
+    // Agregar capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 8
+    }).addTo(viewMap);
+    
+    // Icono personalizado verde
+    const customIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+    // Crear marcador (no arrastrable)
+    viewMarker = L.marker([mapLat, mapLng], {
+        icon: customIcon
+    }).addTo(viewMap);
+    
+    viewMarker.bindPopup('<b>📍 Ubicación del comercio</b>').openPopup();
+    
+    // Forzar renderizado correcto
+    setTimeout(() => {
+        viewMap.invalidateSize();
+        viewMap.setView([mapLat, mapLng], 16);
+    }, 200);
+}
+
+// ==================== INTEGRACIÓN CON MODALES ====================
+// Sobrescribir las funciones de abrir/cerrar modales para incluir mapas
+
+// Guardar las funciones originales
+const _originalOpenCreateModal = openCreateModal;
+const _originalCloseCreateModal = closeCreateModal;
+const _originalOpenEditModal = openEditModal;
+const _originalCloseEditModal = closeEditModal;
+const _originalOpenViewModal = openViewModal;
+const _originalCloseViewModal = closeViewModal;
+
+// CREAR: Nueva función con mapa
+openCreateModal = function() {
+    _originalOpenCreateModal();
+    setTimeout(() => {
+        initCreateMap();
+    }, 200);
+};
+
+// CREAR: Cerrar y limpiar mapa
+closeCreateModal = function() {
+    if (createMap) {
+        createMap.remove();
+        createMap = null;
+    }
+    _originalCloseCreateModal();
+};
+
+// EDITAR: Nueva función con mapa
+openEditModal = function(button) {
+    _originalOpenEditModal(button);
+    
+    const lat = button.getAttribute('data-latitud');
+    const lng = button.getAttribute('data-longitud');
+    
+    setTimeout(() => {
+        initEditMap(lat, lng);
+    }, 200);
+};
+
+// EDITAR: Cerrar y limpiar mapa
+closeEditModal = function() {
+    if (editMap) {
+        editMap.remove();
+        editMap = null;
+    }
+    _originalCloseEditModal();
+};
+
+// VER: Nueva función con mapa
+openViewModal = function(button) {
+    _originalOpenViewModal(button);
+    
+    const lat = button.getAttribute('data-latitud');
+    const lng = button.getAttribute('data-longitud');
+    
+    setTimeout(() => {
+        initViewMap(lat, lng);
+    }, 200);
+};
+
+// VER: Cerrar y limpiar mapa
+closeViewModal = function() {
+    if (viewMap) {
+        viewMap.remove();
+        viewMap = null;
+    }
+    _originalCloseViewModal();
+};
+
+console.log('✅ Sistema de mapas Leaflet cargado correctamente');
+console.log('✅ Mapas: Crear (rojo) | Editar (azul) | Ver (verde)');
+</script>
 @endsection
