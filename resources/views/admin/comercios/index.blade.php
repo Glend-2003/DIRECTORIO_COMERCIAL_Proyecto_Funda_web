@@ -123,42 +123,45 @@
                             <div class="flex items-center justify-end gap-2">
                                 <!-- Botón Ver -->
                                 <button type="button" 
-                                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors view-btn"
-                                        title="Ver detalles"
-                                        data-id="{{ $comercio->ID_COMERCIO }}"
-                                        data-nombre="{{ $comercio->DSC_COMERCIO }}"
-                                        data-telefono="{{ $comercio->NUM_TELEFONO }}"
-                                        data-email="{{ $comercio->DSC_CORREO }}"
-                                        data-direccion="{{ $comercio->DSC_DIRECCION }}"
-                                        data-facebook="{{ $comercio->DSC_FACEBOOK }}"
-                                        data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
-                                        data-latitud="{{ $comercio->NUM_LATITUD }}"
-                                        data-longitud="{{ $comercio->NUM_LONGITUD }}"
-                                        data-imagen="{{ $comercio->IMG_DESTACADA }}"
-                                        data-fecha="{{ $comercio->FEC_CREACION }}"
-                                        data-estado="{{ $comercio->NUM_ESTADO }}">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
+                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors view-btn"
+                                    title="Ver detalles"
+                                    data-id="{{ $comercio->ID_COMERCIO }}"
+                                    data-nombre="{{ $comercio->DSC_COMERCIO }}"
+                                    data-telefono="{{ $comercio->NUM_TELEFONO }}"
+                                    data-email="{{ $comercio->DSC_CORREO }}"
+                                    data-direccion="{{ $comercio->DSC_DIRECCION }}"
+                                    data-facebook="{{ $comercio->DSC_FACEBOOK }}"
+                                    data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
+                                    data-latitud="{{ $comercio->NUM_LATITUD }}"
+                                    data-longitud="{{ $comercio->NUM_LONGITUD }}"
+                                    data-imagen="{{ $comercio->IMG_DESTACADA }}"
+                                    data-fecha="{{ $comercio->FEC_CREACION }}"
+                                    data-estado="{{ $comercio->NUM_ESTADO }}"
+                                    data-categorias-nombres="{{ $comercio->categorias->pluck('DSC_NOMBRE')->implode(', ') }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
                                 </button>
                                 
                                 <!-- Botón Editar -->
                                 <button type="button" 
-                                        class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors edit-btn"
-                                        title="Editar"
-                                        data-id="{{ $comercio->ID_COMERCIO }}"
-                                        data-nombre="{{ $comercio->DSC_COMERCIO }}"
-                                        data-telefono="{{ $comercio->NUM_TELEFONO }}"
-                                        data-email="{{ $comercio->DSC_CORREO }}"
-                                        data-direccion="{{ $comercio->DSC_DIRECCION }}"
-                                        data-facebook="{{ $comercio->DSC_FACEBOOK }}"
-                                        data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
-                                        data-latitud="{{ $comercio->NUM_LATITUD }}"
-                                        data-longitud="{{ $comercio->NUM_LONGITUD }}"
-                                        data-estado="{{ $comercio->NUM_ESTADO }}">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors edit-btn"
+                                    title="Editar"
+                                    data-id="{{ $comercio->ID_COMERCIO }}"
+                                    data-nombre="{{ $comercio->DSC_COMERCIO }}"
+                                    data-telefono="{{ $comercio->NUM_TELEFONO }}"
+                                    data-email="{{ $comercio->DSC_CORREO }}"
+                                    data-direccion="{{ $comercio->DSC_DIRECCION }}"
+                                    data-facebook="{{ $comercio->DSC_FACEBOOK }}"
+                                    data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
+                                    data-latitud="{{ $comercio->NUM_LATITUD }}"
+                                    data-longitud="{{ $comercio->NUM_LONGITUD }}"
+                                    data-estado="{{ $comercio->NUM_ESTADO }}"
+                                    data-imagen="{{ $comercio->IMG_DESTACADA }}"
+                                    data-categorias="{{ $comercio->categorias->pluck('ID_CATEGORIA')->implode(',') }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
                                 </button>
                                 
@@ -250,7 +253,9 @@ function openEditModal(button) {
         DSC_INSTAGRAM: button.getAttribute('data-instagram'),
         NUM_LATITUD: button.getAttribute('data-latitud'),
         NUM_LONGITUD: button.getAttribute('data-longitud'),
-        NUM_ESTADO: button.getAttribute('data-estado')
+        NUM_ESTADO: button.getAttribute('data-estado'),
+        IMG_DESTACADA: button.getAttribute('data-imagen'),
+        categorias: button.getAttribute('data-categorias') ? button.getAttribute('data-categorias').split(',') : []
     };
     
     console.log('Datos para editar:', comercio);
@@ -266,8 +271,42 @@ function openEditModal(button) {
     document.getElementById('edit_NUM_LONGITUD').value = comercio.NUM_LONGITUD || '';
     document.getElementById('edit_NUM_ESTADO').value = comercio.NUM_ESTADO || '1';
     document.getElementById('edit_IMG_DESTACADA').value = comercio.IMG_DESTACADA || '';
+    
+    // Cargar categorías
+    loadCategoriasForEdit(comercio.categorias);
+    
     document.getElementById('editModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+}
+
+// Nueva función para cargar categorías en el modal de editar
+function loadCategoriasForEdit(categoriasSeleccionadas) {
+    const container = document.getElementById('edit_categorias_container');
+    container.innerHTML = ''; // Limpiar contenido previo
+    
+    @if(isset($categorias) && count($categorias) > 0)
+        const categorias = @json($categorias);
+        
+        categorias.forEach(categoria => {
+            const isChecked = categoriasSeleccionadas.includes(categoria.ID_CATEGORIA.toString());
+            
+            const label = document.createElement('label');
+            label.className = 'flex items-center space-x-3 cursor-pointer hover:bg-slate-50 p-2 rounded';
+            
+            label.innerHTML = `
+                <input type="checkbox" 
+                    name="categorias[]" 
+                    value="${categoria.ID_CATEGORIA}"
+                    class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                    ${isChecked ? 'checked' : ''}>
+                <span class="text-sm text-slate-700">${categoria.DSC_NOMBRE}</span>
+            `;
+            
+            container.appendChild(label);
+        });
+    @else
+        container.innerHTML = '<p class="text-sm text-slate-500">No hay categorías disponibles</p>';
+    @endif
 }
 
 function closeEditModal() {
@@ -288,7 +327,9 @@ function openViewModal(button) {
         NUM_LATITUD: button.getAttribute('data-latitud'),
         NUM_LONGITUD: button.getAttribute('data-longitud'),
         IMG_DESTACADA: button.getAttribute('data-imagen'),
-        FEC_CREACION: button.getAttribute('data-fecha')
+        FEC_CREACION: button.getAttribute('data-fecha'),
+        NUM_ESTADO: button.getAttribute('data-estado'),
+        categorias: button.getAttribute('data-categorias-nombres') || ''
     };
     
     console.log('Datos para ver:', comercio);
@@ -318,24 +359,42 @@ function openViewModal(button) {
         document.getElementById('view_FEC_CREACION').textContent = 'N/A';
     }
     
-    // Imagen destacada
     if (comercio.IMG_DESTACADA) {
         document.getElementById('view_imagen_container').classList.remove('hidden');
-        document.getElementById('view_IMG_DESTACADA').src = '/storage/' + comercio.IMG_DESTACADA;
+        document.getElementById('view_IMG_DESTACADA').src = comercio.IMG_DESTACADA; 
     } else {
         document.getElementById('view_imagen_container').classList.add('hidden');
     }
     
+    // Estado
+    if (comercio.NUM_ESTADO == '1') {
+        document.getElementById('view_NUM_ESTADO').textContent = 'Activo';
+        document.getElementById('view_NUM_ESTADO').className = 'text-green-600 font-semibold mt-1';
+    } else {
+        document.getElementById('view_NUM_ESTADO').textContent = 'Inactivo';
+        document.getElementById('view_NUM_ESTADO').className = 'text-red-600 font-semibold mt-1';
+    }
+    
+    // Categorías
+    const categoriasContainer = document.getElementById('view_categorias');
+    categoriasContainer.innerHTML = '';
+    
+    if (comercio.categorias) {
+        const categoriasArray = comercio.categorias.split(',');
+        categoriasArray.forEach(categoria => {
+            if (categoria.trim()) {
+                const badge = document.createElement('span');
+                badge.className = 'px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full';
+                badge.textContent = categoria.trim();
+                categoriasContainer.appendChild(badge);
+            }
+        });
+    } else {
+        categoriasContainer.innerHTML = '<span class="text-sm text-slate-500">Sin categorías</span>';
+    }
+    
     document.getElementById('viewModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-
-    if (comercio.NUM_ESTADO == '1') {
-    document.getElementById('view_NUM_ESTADO').textContent = 'Activo';
-    document.getElementById('view_NUM_ESTADO').className = 'text-green-600 font-semibold mt-1';
-} else {
-    document.getElementById('view_NUM_ESTADO').textContent = 'Inactivo';
-    document.getElementById('view_NUM_ESTADO').className = 'text-red-600 font-semibold mt-1';
-}
 }
 
 function closeViewModal() {
@@ -443,5 +502,5 @@ document.addEventListener('keydown', function(e) {
 });
 
 console.log('JavaScript de comercios cargado correctamente');
-</script>
+</script
 @endsection
