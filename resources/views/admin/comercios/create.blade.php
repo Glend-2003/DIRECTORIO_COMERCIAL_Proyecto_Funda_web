@@ -29,16 +29,30 @@
                 </div>
 
                 <!-- Categoría -->
-                <div>
+                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Categoría
+                        Categorías *
                     </label>
-                    <select name="categoria" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="">Seleccionar categoría</option>
-                        <option value="restaurante">Restaurante</option>
-                        <option value="hotel">Hotel</option>
-                        <option value="comercio">Comercio</option>
-                    </select>
+                    <div class="border border-slate-300 rounded-lg p-4 max-h-40 overflow-y-auto space-y-2">
+                        @if(isset($categorias) && count($categorias) > 0)
+    @foreach($categorias as $categoria)
+                        <label class="flex items-center space-x-3 cursor-pointer hover:bg-slate-50 p-2 rounded">
+                            <input type="checkbox" 
+                                name="categorias[]" 
+                                value="{{ $categoria->ID_CATEGORIA }}"
+                                class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                                {{ old('categorias') && in_array($categoria->ID_CATEGORIA, old('categorias')) ? 'checked' : '' }}>
+                            <span class="text-sm text-slate-700">{{ $categoria->DSC_NOMBRE }}</span>
+                        </label>
+                    @endforeach
+                @else
+    <p class="text-sm text-slate-500">No hay categorías disponibles</p>
+@endif
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">Selecciona al menos una categoría</p>
+                    @error('categorias')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Descripción -->
@@ -132,15 +146,6 @@
                 </div>
 
                 <!-- Estado -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Estado
-                    </label>
-                    <select name="NUM_ESTADO" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                </div>
 
                 <!-- Imagen Destacada (URL) -->
                 <div>

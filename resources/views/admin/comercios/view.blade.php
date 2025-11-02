@@ -26,6 +26,12 @@
 
             <div class="border-t pt-6"></div>
 
+            <div>
+                <label class="text-sm font-medium text-slate-500">Categorías</label>
+                <div id="view_categorias" class="flex flex-wrap gap-2 mt-2">
+                </div>
+            </div>
+
             <!-- Información de Contacto -->
             <div>
                 <h4 class="text-sm font-semibold text-slate-900 mb-3">Información de Contacto</h4>

@@ -41,6 +41,17 @@
                            maxlength="500">
                 </div>
 
+                <!-- Categoría -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Categorías *
+                    </label>
+                    <div id="edit_categorias_container" class="border border-slate-300 rounded-lg p-4 max-h-40 overflow-y-auto space-y-2">
+                        <!-- Las categorías se cargarán dinámicamente con JavaScript -->
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">Selecciona al menos una categoría</p>
+                </div>
+
                 <!-- Teléfono y Email -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
