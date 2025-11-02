@@ -35,12 +35,14 @@ class Categoria extends Model
      * Relación muchos a muchos con Comercio
      */
     public function comercios()
-    {
-        return $this->belongsToMany(
-            Comercio::class,
-            'tb_categoria_comercio',
-            'ID_CATEGORIA',
-            'ID_COMERCIO'
-        )->withTimestamps();
-    }
+{
+    return $this->belongsToMany(
+        Comercio::class,
+        'tb_categoria_comercio',
+        'ID_CATEGORIA',      
+        'ID_COMERCIO'        
+    )
+    ->using(CategoriaComercio::class)
+    ->withPivot('FEC_CREACION', 'NUM_ESTADO');
+}
 }

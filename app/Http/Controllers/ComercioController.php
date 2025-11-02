@@ -91,6 +91,12 @@ public function store(Request $request)
             // Crear el comercio
             $comercio = Comercio::create($data);
 
+            $categoriasSync = [];
+            foreach ($request->categorias as $categoriaId) {
+            $categoriasSync[$categoriaId] = ['FEC_CREACION' => now(),
+            'NUM_ESTADO' => 1];
+            }
+
             $comercio->categorias()->attach($request->categorias);
 
             return redirect()->route('comercios.index')
@@ -182,6 +188,12 @@ public function store(Request $request)
             
             $data = $request->except('categorias');
             $comercio->update($data);
+
+            $categoriasSync = [];
+            foreach ($request->categorias as $categoriaId) {
+            $categoriasSync[$categoriaId] = ['FEC_CREACION' => now(),
+            'NUM_ESTADO' => 1];
+            }
 
             $comercio->categorias()->sync($request->categorias);
 
