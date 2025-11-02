@@ -1,196 +1,251 @@
 <!-- Modal para Crear Slider -->
-<div id="createModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onclick="closeCreateModal()"></div>
+<div id="createModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <form action="{{ route('sliders.store') }}" method="POST">
+            @csrf
 
-        <div
-            class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-            <div class="mb-6">
+            <!-- Header del Modal -->
+            <div class="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
                 <h3 class="text-xl font-bold text-slate-900">Crear Nuevo Slider</h3>
-                <p class="text-slate-600">Complete los datos del slider</p>
+                <button type="button" onclick="closeCreateModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
 
-            <form action="{{ route('sliders.store') }}" method="POST">
-                @csrf
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Nombre del Slider *
-                        </label>
-                        <input type="text" name="DSC_NOMBRE" value="{{ old('DSC_NOMBRE') }}"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('DSC_NOMBRE') border-red-500 @enderror"
-                            required>
-                        @error('DSC_NOMBRE')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Descripción
-                        </label>
-                        <textarea name="DSC_DESCRIPCION" rows="3"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('DSC_DESCRIPCION') border-red-500 @enderror">{{ old('DSC_DESCRIPCION') }}</textarea>
-                        @error('DSC_DESCRIPCION')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                            URL de la Imagen *
-                        </label>
-                        <input type="url" name="IMG_URL" value="{{ old('IMG_URL') }}"
-                            placeholder="https://ejemplo.com/imagen.jpg"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('IMG_URL') border-red-500 @enderror"
-                            required>
-                        @error('IMG_URL')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        Guardar Slider
-                    </button>
-                    <button type="button" onclick="closeCreateModal()"
-                        class="px-6 py-2 border rounded-lg hover:bg-slate-50">
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para Editar Slider -->
-<div id="editModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onclick="closeEditModal()"></div>
-
-        <div
-            class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-            <div class="mb-6">
-                <h3 class="text-xl font-bold text-slate-900">Editar Slider</h3>
-                <p class="text-slate-600">Modifica los datos del slider</p>
-            </div>
-
-            <form id="editForm" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Nombre del Slider *
-                        </label>
-                        <input type="text" name="DSC_NOMBRE" id="edit_DSC_NOMBRE"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Descripción
-                        </label>
-                        <textarea name="DSC_DESCRIPCION" id="edit_DSC_DESCRIPCION" rows="3"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                            URL de la Imagen *
-                        </label>
-                        <input type="url" name="IMG_URL" id="edit_IMG_URL"
-                            placeholder="https://ejemplo.com/imagen.jpg"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
-                    </div>
-                </div>
-
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        Actualizar Slider
-                    </button>
-                    <button type="button" onclick="closeEditModal()"
-                        class="px-6 py-2 border rounded-lg hover:bg-slate-50">
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para Ver Slider -->
-<div id="viewModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onclick="closeViewModal()"></div>
-
-        <div
-            class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-            <div class="mb-6">
-                <h3 class="text-xl font-bold text-slate-900">Detalles del Slider</h3>
-                <p class="text-slate-600">Información completa del slider</p>
-            </div>
-
-            <div class="space-y-4">
+            <!-- Contenido del Modal -->
+            <div class="p-6 space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Nombre del Slider
+                        Nombre del Slider *
                     </label>
-                    <p id="view_DSC_NOMBRE" class="w-full px-4 py-2 bg-slate-50 rounded-lg text-slate-900"></p>
+                    <input type="text" name="DSC_NOMBRE" value="{{ old('DSC_NOMBRE') }}"
+                        placeholder="Nombre del slider"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('DSC_NOMBRE') border-red-500 @enderror"
+                        required>
+                    @error('DSC_NOMBRE')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Descripción
                     </label>
-                    <p id="view_DSC_DESCRIPCION" class="w-full px-4 py-2 bg-slate-50 rounded-lg text-slate-900"></p>
+                    <textarea name="DSC_DESCRIPCION" rows="3" placeholder="Descripción del slider"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('DSC_DESCRIPCION') border-red-500 @enderror">{{ old('DSC_DESCRIPCION') }}</textarea>
+                    @error('DSC_DESCRIPCION')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        URL de la Imagen
+                        Estado *
                     </label>
-                    <p id="view_IMG_URL" class="w-full px-4 py-2 bg-slate-50 rounded-lg text-slate-900 break-words"></p>
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Vista Previa
-                        </label>
-                        <img id="view_IMG_PREVIEW" src="" alt="Vista previa"
-                            class="max-w-full h-auto rounded-lg border">
-                    </div>
+                    <select name="ESTADO"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('ESTADO') border-red-500 @enderror"
+                        required>
+                        <option value="1" {{ old('ESTADO') == 1 ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ old('ESTADO') == 0 ? 'selected' : '' }}>Inactivo</option>
+                    </select>
+                    @error('ESTADO')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Fecha de Creación
+                        URL de la Imagen *
                     </label>
-                    <p id="view_CREATED_AT" class="w-full px-4 py-2 bg-slate-50 rounded-lg text-slate-900"></p>
+                    <input type="url" name="IMG_URL" value="{{ old('IMG_URL') }}"
+                        placeholder="https://ejemplo.com/imagen.jpg"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('IMG_URL') border-red-500 @enderror"
+                        required>
+                    @error('IMG_URL')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
-            <div class="flex gap-3 mt-6">
-                <button type="button" onclick="closeViewModal()"
-                    class="px-6 py-2 border rounded-lg hover:bg-slate-50">
-                    Cerrar
+            <!-- Footer del Modal -->
+            <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
+                <button type="button" onclick="closeCreateModal()"
+                    class="px-6 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 font-medium">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
+                    Guardar Slider
                 </button>
             </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Editar Slider -->
+<div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <form id="editForm" method="POST">
+            @csrf
+            @method('PUT')
+
+            <!-- Header del Modal -->
+            <div class="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
+                <h3 class="text-xl font-bold text-slate-900">Editar Slider</h3>
+                <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Contenido del Modal -->
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Nombre del Slider *
+                    </label>
+                    <input type="text" name="DSC_NOMBRE" id="edit_DSC_NOMBRE"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Descripción
+                    </label>
+                    <textarea name="DSC_DESCRIPCION" id="edit_DSC_DESCRIPCION" rows="3"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Estado *
+                    </label>
+                    <select name="ESTADO" id="edit_ESTADO"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        URL de la Imagen *
+                    </label>
+                    <input type="url" name="IMG_URL" id="edit_IMG_URL" placeholder="https://ejemplo.com/imagen.jpg"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+            </div>
+
+            <!-- Footer del Modal -->
+            <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
+                <button type="button" onclick="closeEditModal()"
+                    class="px-6 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 font-medium">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
+                    Actualizar Slider
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Ver Slider -->
+<div id="viewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Header del Modal -->
+        <div class="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
+            <h3 class="text-xl font-bold text-slate-900">Detalles del Slider</h3>
+            <button type="button" onclick="closeViewModal()" class="text-slate-400 hover:text-slate-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Contenido del Modal -->
+        <div class="p-6 space-y-6">
+            <!-- Información Básica -->
+            <div>
+                <label class="text-sm font-medium text-slate-500">Nombre del Slider</label>
+                <p id="view_DSC_NOMBRE" class="text-lg font-semibold text-slate-900 mt-1"></p>
+            </div>
+
+            <div class="border-t pt-6"></div>
+
+            <!-- Estado -->
+            <div>
+                <label class="text-sm font-medium text-slate-500">Estado</label>
+                <p id="view_ESTADO" class="text-slate-900 mt-1"></p>
+            </div>
+
+            <div class="border-t pt-6"></div>
+
+            <!-- Descripción -->
+            <div>
+                <label class="text-sm font-medium text-slate-500">Descripción</label>
+                <p id="view_DSC_DESCRIPCION" class="text-slate-900 mt-1"></p>
+            </div>
+
+            <div class="border-t pt-6"></div>
+
+            <!-- URL de Imagen -->
+            <div>
+                <label class="text-sm font-medium text-slate-500">URL de la Imagen</label>
+                <p id="view_IMG_URL" class="text-slate-900 mt-1 break-words"></p>
+            </div>
+
+            <!-- Vista Previa -->
+            <div>
+                <label class="text-sm font-medium text-slate-500">Vista Previa</label>
+                <div class="mt-2">
+                    <img id="view_IMG_PREVIEW" src="" alt="Vista previa"
+                        class="max-w-full h-auto rounded-lg border">
+                </div>
+            </div>
+
+            <div class="border-t pt-6"></div>
+
+            <!-- Fecha de Creación -->
+            <div>
+                <label class="text-sm font-medium text-slate-500">Fecha de Creación</label>
+                <p id="view_CREATED_AT" class="text-slate-900 mt-1"></p>
+            </div>
+        </div>
+
+        <!-- Footer del Modal -->
+        <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
+            <button type="button" onclick="closeViewModal()"
+                class="px-6 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 font-medium">
+                Cerrar
+            </button>
         </div>
     </div>
 </div>
 
 <!-- Modal para Eliminar Slider -->
-<div id="deleteModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onclick="closeDeleteModal()"></div>
-
-        <div
-            class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-            <div class="mb-6">
-                <h3 class="text-xl font-bold text-slate-900">Eliminar Slider</h3>
-                <p class="text-slate-600">¿Estás seguro de que quieres eliminar este slider?</p>
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
             </div>
-
+            <h3 class="text-lg font-bold text-slate-900 text-center mb-2">¿Eliminar slider?</h3>
+            <p class="text-sm text-slate-600 text-center mb-6">
+                Esta acción no se puede deshacer. El slider será eliminado permanentemente.
+            </p>
             <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <div class="flex items-center">
                     <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,13 +260,14 @@
             <form id="deleteForm" method="POST">
                 @csrf
                 @method('DELETE')
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                        Sí, Eliminar
-                    </button>
+                <div class="flex gap-3">
                     <button type="button" onclick="closeDeleteModal()"
-                        class="px-6 py-2 border rounded-lg hover:bg-slate-50">
+                        class="flex-1 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 font-medium">
                         Cancelar
+                    </button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium">
+                        Eliminar
                     </button>
                 </div>
             </form>
@@ -220,154 +276,182 @@
 </div>
 
 <script>
-// Verificar que el DOM esté cargado
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Modal scripts loaded successfully');
-});
+    // Verificar que el DOM esté cargado
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Modal scripts loaded successfully');
+    });
 
-// Funciones para el modal de crear
-function openCreateModal() {
-    console.log('Opening create modal');
-    const modal = document.getElementById('createModal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        console.log('Create modal should be visible now');
-    } else {
-        console.error('Create modal not found');
+    // Funciones para el modal de crear
+    function openCreateModal() {
+        console.log('Opening create modal');
+        const modal = document.getElementById('createModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            console.log('Create modal should be visible now');
+        } else {
+            console.error('Create modal not found');
+        }
     }
-}
 
-function closeCreateModal() {
-    const modal = document.getElementById('createModal');
-    if (modal) modal.classList.add('hidden');
-}
+    function closeCreateModal() {
+        const modal = document.getElementById('createModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    }
 
-// Funciones para el modal de editar - VERSIÓN SIMPLIFICADA Y SEGURA
-function openEditModal(slider) {
-    console.log('Opening edit modal with data:', slider);
-    
-    try {
-        // Verificar que el modal existe
+    // Funciones para el modal de editar
+    function openEditModal(slider) {
+        console.log('Opening edit modal with data:', slider);
+
+        try {
+            const modal = document.getElementById('editModal');
+            if (!modal) {
+                console.error('Edit modal element not found');
+                return;
+            }
+
+            const nombreInput = document.getElementById('edit_DSC_NOMBRE');
+            const descripcionInput = document.getElementById('edit_DSC_DESCRIPCION');
+            const estadoSelect = document.getElementById('edit_ESTADO');
+            const urlInput = document.getElementById('edit_IMG_URL');
+            const editForm = document.getElementById('editForm');
+
+            if (nombreInput) nombreInput.value = slider.DSC_NOMBRE || '';
+            if (descripcionInput) descripcionInput.value = slider.DSC_DESCRIPCION || '';
+            if (estadoSelect) estadoSelect.value = slider.ESTADO || 1;
+            if (urlInput) urlInput.value = slider.IMG_URL || '';
+
+            if (editForm && slider.ID_SLIDER) {
+                editForm.action = '/sliders/' + slider.ID_SLIDER;
+                console.log('Edit form action:', editForm.action);
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            console.log('Edit modal opened successfully');
+
+        } catch (error) {
+            console.error('Error opening edit modal:', error);
+        }
+    }
+
+    function closeEditModal() {
         const modal = document.getElementById('editModal');
-        if (!modal) {
-            console.error('Edit modal element not found');
-            return;
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
         }
-        
-        // Asignar valores de forma segura
-        const nombreInput = document.getElementById('edit_DSC_NOMBRE');
-        const descripcionInput = document.getElementById('edit_DSC_DESCRIPCION');
-        const urlInput = document.getElementById('edit_IMG_URL');
-        const editForm = document.getElementById('editForm');
-        
-        if (nombreInput) nombreInput.value = slider.DSC_NOMBRE || '';
-        if (descripcionInput) descripcionInput.value = slider.DSC_DESCRIPCION || '';
-        if (urlInput) urlInput.value = slider.IMG_URL || '';
-        
-        if (editForm && slider.ID_SLIDER) {
-            editForm.action = '/sliders/' + slider.ID_SLIDER;
-            console.log('Edit form action:', editForm.action);
-        }
-        
-        modal.classList.remove('hidden');
-        console.log('Edit modal opened successfully');
-        
-    } catch (error) {
-        console.error('Error opening edit modal:', error);
     }
-}
 
-function closeEditModal() {
-    const modal = document.getElementById('editModal');
-    if (modal) modal.classList.add('hidden');
-}
+    // Funciones para el modal de ver
+    function openViewModal(slider) {
+        console.log('Opening view modal with data:', slider);
 
-// Funciones para el modal de ver - VERSIÓN SIMPLIFICADA Y SEGURA
-function openViewModal(slider) {
-    console.log('Opening view modal with data:', slider);
-    
-    try {
-        // Verificar que el modal existe
+        try {
+            const modal = document.getElementById('viewModal');
+            if (!modal) {
+                console.error('View modal element not found');
+                return;
+            }
+
+            const nombreElement = document.getElementById('view_DSC_NOMBRE');
+            const estadoElement = document.getElementById('view_ESTADO');
+            const descripcionElement = document.getElementById('view_DSC_DESCRIPCION');
+            const urlElement = document.getElementById('view_IMG_URL');
+            const previewElement = document.getElementById('view_IMG_PREVIEW');
+            const createdAtElement = document.getElementById('view_CREATED_AT');
+            const updatedAtElement = document.getElementById('view_UPDATED_AT');
+
+            if (nombreElement) nombreElement.textContent = slider.DSC_NOMBRE || 'No disponible';
+            if (estadoElement) estadoElement.textContent = (slider.ESTADO == 1 ? 'Activo' : 'Inactivo') || 'No disponible';
+            if (descripcionElement) descripcionElement.textContent = slider.DSC_DESCRIPCION || 'No disponible';
+            if (urlElement) urlElement.textContent = slider.IMG_URL || 'No disponible';
+
+            if (previewElement && slider.IMG_URL) {
+                previewElement.src = slider.IMG_URL;
+                previewElement.style.display = 'block';
+            } else if (previewElement) {
+                previewElement.style.display = 'none';
+            }
+
+            if (createdAtElement && slider.created_at) {
+                const date = new Date(slider.created_at);
+                createdAtElement.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES');
+            } else if (createdAtElement) {
+                createdAtElement.textContent = 'No disponible';
+            }
+
+            if (updatedAtElement && slider.updated_at) {
+                const date = new Date(slider.updated_at);
+                updatedAtElement.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES');
+            } else if (updatedAtElement) {
+                updatedAtElement.textContent = 'No disponible';
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            console.log('View modal opened successfully');
+
+        } catch (error) {
+            console.error('Error opening view modal:', error);
+        }
+    }
+
+    function closeViewModal() {
         const modal = document.getElementById('viewModal');
-        if (!modal) {
-            console.error('View modal element not found');
-            return;
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
         }
-        
-        // Asignar valores de forma segura
-        const nombreElement = document.getElementById('view_DSC_NOMBRE');
-        const descripcionElement = document.getElementById('view_DSC_DESCRIPCION');
-        const urlElement = document.getElementById('view_IMG_URL');
-        const previewElement = document.getElementById('view_IMG_PREVIEW');
-        const createdAtElement = document.getElementById('view_CREATED_AT');
-        
-        if (nombreElement) nombreElement.textContent = slider.DSC_NOMBRE || 'No disponible';
-        if (descripcionElement) descripcionElement.textContent = slider.DSC_DESCRIPCION || 'No disponible';
-        if (urlElement) urlElement.textContent = slider.IMG_URL || 'No disponible';
-        
-        if (previewElement && slider.IMG_URL) {
-            previewElement.src = slider.IMG_URL;
-            previewElement.style.display = 'block';
-        } else if (previewElement) {
-            previewElement.style.display = 'none';
-        }
-        
-        if (createdAtElement && slider.created_at) {
-            const date = new Date(slider.created_at);
-            createdAtElement.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES');
-        } else if (createdAtElement) {
-            createdAtElement.textContent = 'No disponible';
-        }
-        
-        modal.classList.remove('hidden');
-        console.log('View modal opened successfully');
-        
-    } catch (error) {
-        console.error('Error opening view modal:', error);
     }
-}
 
-function closeViewModal() {
-    const modal = document.getElementById('viewModal');
-    if (modal) modal.classList.add('hidden');
-}
+    // Funciones para el modal de eliminar
+    function openDeleteModal(sliderId, sliderName) {
+        const nameElement = document.getElementById('deleteSliderName');
+        const formElement = document.getElementById('deleteForm');
+        const modal = document.getElementById('deleteModal');
 
-// Funciones para el modal de eliminar
-function openDeleteModal(sliderId, sliderName) {
-    const nameElement = document.getElementById('deleteSliderName');
-    const formElement = document.getElementById('deleteForm');
-    const modal = document.getElementById('deleteModal');
-    
-    if (nameElement) nameElement.textContent = 'Slider: ' + sliderName;
-    if (formElement) formElement.action = '/sliders/' + sliderId;
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closeDeleteModal() {
-    const modal = document.getElementById('deleteModal');
-    if (modal) modal.classList.add('hidden');
-}
-
-// Cerrar modales con ESC
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        closeCreateModal();
-        closeEditModal();
-        closeViewModal();
-        closeDeleteModal();
+        if (nameElement) nameElement.textContent = 'Slider: ' + sliderName;
+        if (formElement) formElement.action = '/sliders/' + sliderId;
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
     }
-});
 
-// Cerrar modales haciendo clic fuera
-document.addEventListener('click', function(event) {
-    const createModal = document.getElementById('createModal');
-    const editModal = document.getElementById('editModal');
-    const viewModal = document.getElementById('viewModal');
-    const deleteModal = document.getElementById('deleteModal');
-    
-    if (event.target === createModal) closeCreateModal();
-    if (event.target === editModal) closeEditModal();
-    if (event.target === viewModal) closeViewModal();
-    if (event.target === deleteModal) closeDeleteModal();
-});
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // Cerrar modales con ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeCreateModal();
+            closeEditModal();
+            closeViewModal();
+            closeDeleteModal();
+        }
+    });
+
+    // Cerrar modales haciendo clic fuera
+    document.addEventListener('click', function(event) {
+        const modals = ['createModal', 'editModal', 'viewModal', 'deleteModal'];
+
+        modals.forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (modal && event.target === modal) {
+                if (modalId === 'createModal') closeCreateModal();
+                if (modalId === 'editModal') closeEditModal();
+                if (modalId === 'viewModal') closeViewModal();
+                if (modalId === 'deleteModal') closeDeleteModal();
+            }
+        });
+    });
 </script>

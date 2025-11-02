@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ControllerSlider;
 use App\Http\Controllers\ComercioController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\DirectorioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,9 @@ use App\Http\Controllers\CategoriaController;
 |--------------------------------------------------------------------------
 */
 
-// Página principal - Directorio Comercial
-Route::get('/', function () {
-    return view('cliente.directorio');
-})->name('directorio.home');
+// Página principal - Directorio Comercial (usando el controlador)
+Route::get('/', [DirectorioController::class, 'index'])->name('directorio.home');
+Route::get('/directorio', [DirectorioController::class, 'index'])->name('directorio.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +28,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $totalComercios = \App\Models\Comercio::where('NUM_ESTADO', 1)->count();
     $comerciosRecientes = \App\Models\Comercio::where('NUM_ESTADO', 1)
-                                            ->latest()
-                                            ->take(5)
-                                            ->get();
+        ->latest()
+        ->take(5)
+        ->get();
     return view('admin.dashboard', compact('totalComercios', 'comerciosRecientes'));
 })->middleware('auth')->name('dashboard');
 
