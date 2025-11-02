@@ -78,11 +78,18 @@
                             @endif
                         </td>
 
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-                                General
+                        <td>
+                <div id="view_categorias" class="flex flex-wrap gap-2 mt-2">
+                    @if($comercio->categorias->isNotEmpty())
+                        @foreach($comercio->categorias as $categoria)
+                            <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                                {{ $categoria->DSC_NOMBRE }}
                             </span>
-                        </td>
+                        @endforeach
+                    @else
+                        <span class="text-sm text-slate-500">Sin categorías</span>
+                    @endif
+            </td>
                         
                         <td class="px-6 py-4">
                             <div class="text-sm text-slate-900">{{ $comercio->NUM_TELEFONO ?? '-' }}</div>
