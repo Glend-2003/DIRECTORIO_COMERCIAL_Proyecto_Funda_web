@@ -20,7 +20,7 @@
                     <nav class="hidden md:flex gap-6">
                         <a href="{{ route('directorio.index') }}"
                             class="text-slate-600 hover:text-blue-600 transition">Inicio</a>
-                        <a href="#" class="text-slate-600 hover:text-blue-600 transition">Categorías</a>
+                        <a href="{{ route('cliente.categorias.index') }}" class="text-slate-600 hover:text-blue-600 transition">Categorías</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Comercios</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Contacto</a>
                     </nav>
@@ -138,137 +138,75 @@
             </div>
         </div>
 
-        <!-- Recent Businesses -->
-        <div class="container mx-auto px-4 py-12">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h2 class="text-3xl font-bold text-slate-900">Comercios Recientes</h2>
-                    <p class="text-slate-600 mt-1">Últimos negocios registrados en el directorio</p>
-                </div>
-                <button class="px-4 py-2 border border-slate-300 rounded-md hover:bg-slate-50 transition">
-                    Ver Todos
-                </button>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Business Card 1 -->
-                <div
-                    class="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition cursor-pointer group">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1759419038843-29749ac4cd2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-                            alt="La Brasserie Elegante"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        <span class="absolute top-3 right-3 px-2 py-1 bg-blue-600 text-white text-xs rounded-md">
-                            Restaurantes
-                        </span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-2">La Brasserie Elegante</h3>
-                        <div class="flex items-center gap-2 text-slate-600 text-sm mb-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            San José Centro
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-1">
-                                <svg class="w-4 h-4 fill-yellow-400 text-yellow-400" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
-                                    </path>
-                                </svg>
-                                <span class="text-sm font-medium">4.8</span>
-                            </div>
-                            <button class="px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 rounded transition">
-                                Ver Detalles →
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Business Card 2 -->
-                <div
-                    class="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition cursor-pointer group">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1759134198561-e2041049419c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-                            alt="Estilo Barbershop"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        <span class="absolute top-3 right-3 px-2 py-1 bg-blue-600 text-white text-xs rounded-md">
-                            Barberías
-                        </span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-2">Estilo Barbershop</h3>
-                        <div class="flex items-center gap-2 text-slate-600 text-sm mb-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            Escazú
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-1">
-                                <svg class="w-4 h-4 fill-yellow-400 text-yellow-400" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
-                                    </path>
-                                </svg>
-                                <span class="text-sm font-medium">4.9</span>
-                            </div>
-                            <button class="px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 rounded transition">
-                                Ver Detalles →
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Business Card 3 -->
-                <div
-                    class="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition cursor-pointer group">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-                            alt="Grand Palace Hotel"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        <span class="absolute top-3 right-3 px-2 py-1 bg-blue-600 text-white text-xs rounded-md">
-                            Hoteles
-                        </span>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-2">Grand Palace Hotel</h3>
-                        <div class="flex items-center gap-2 text-slate-600 text-sm mb-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            Santa Ana
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-1">
-                                <svg class="w-4 h-4 fill-yellow-400 text-yellow-400" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
-                                    </path>
-                                </svg>
-                                <span class="text-sm font-medium">4.7</span>
-                            </div>
-                            <button class="px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 rounded transition">
-                                Ver Detalles →
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Recent Businesses -->
+<div class="container mx-auto px-4 py-12">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-slate-900">Comercios Recientes</h2>
+            <p class="text-slate-600 mt-1">Últimos negocios registrados en el directorio</p>
         </div>
+        <button class="px-4 py-2 border border-slate-300 rounded-md hover:bg-slate-50 transition">
+            Ver Todos
+        </button>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        @forelse($comerciosRecientes as $comercio)
+            <!-- Business Card -->
+            <div class="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition cursor-pointer group">
+                <div class="relative h-48 overflow-hidden">
+                    <img src="{{ $comercio->IMG_DESTACADA }}" 
+                         alt="{{ $comercio->DSC_COMERCIO }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                         onerror="this.src='https://images.unsplash.com/photo-1464854860390-e95991b46441?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400'">
+                    
+                    @if($comercio->categorias->isNotEmpty())
+                        <span class="absolute top-3 right-3 px-2 py-1 bg-blue-600 text-white text-xs rounded-md">
+                            {{ $comercio->categorias->first()->DSC_NOMBRE }}
+                        </span>
+                    @endif
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ $comercio->DSC_COMERCIO }}</h3>
+                    <div class="flex items-center gap-2 text-slate-600 text-sm mb-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        {{ Str::limit($comercio->DSC_DIRECCION, 30) }}
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-slate-600 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                </path>
+                            </svg>
+                            {{ $comercio->NUM_TELEFONO }}
+                        </div>
+                        <button class="px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 rounded transition">
+                            Ver Detalles →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <!-- Mensaje cuando no hay comercios -->
+            <div class="col-span-3 text-center py-12">
+                <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                    </path>
+                </svg>
+                <h3 class="text-xl font-semibold text-slate-900 mb-2">No hay comercios registrados aún</h3>
+                <p class="text-slate-600">Sé el primero en registrar tu negocio</p>
+            </div>
+        @endforelse
+    </div>
+</div>
 
         <!-- Categories -->
         <div class="bg-white py-12">
