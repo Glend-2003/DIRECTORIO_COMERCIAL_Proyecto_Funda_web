@@ -23,22 +23,36 @@
                     </label>
                     <input type="text" 
                            name="DSC_COMERCIO" 
-                           placeholder="Nombre"
+                           placeholder="Nombre del comercio"
                            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            required>
                 </div>
 
                 <!-- Categoría -->
-                <div>
+                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Categoría
+                        Categorías *
                     </label>
-                    <select name="categoria" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="">Seleccionar categoría</option>
-                        <option value="restaurante">Restaurante</option>
-                        <option value="hotel">Hotel</option>
-                        <option value="comercio">Comercio</option>
-                    </select>
+                    <div class="border border-slate-300 rounded-lg p-4 max-h-40 overflow-y-auto space-y-2">
+                        @if(isset($categorias) && count($categorias) > 0)
+    @foreach($categorias as $categoria)
+                        <label class="flex items-center space-x-3 cursor-pointer hover:bg-slate-50 p-2 rounded">
+                            <input type="checkbox" 
+                                name="categorias[]" 
+                                value="{{ $categoria->ID_CATEGORIA }}"
+                                class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                                {{ old('categorias') && in_array($categoria->ID_CATEGORIA, old('categorias')) ? 'checked' : '' }}>
+                            <span class="text-sm text-slate-700">{{ $categoria->DSC_NOMBRE }}</span>
+                        </label>
+                    @endforeach
+                @else
+    <p class="text-sm text-slate-500">No hay categorías disponibles</p>
+@endif
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">Selecciona al menos una categoría</p>
+                    @error('categorias')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Descripción -->
@@ -107,56 +121,65 @@
                     </div>
                 </div>
 
-                <!-- Coordenadas GPS -->
+                <!-- MAPA INTERACTIVO -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Ubicación en el Mapa *
+                    </label>
+                    <div id="createMap" class="w-full h-80 rounded-lg border-2 border-slate-300 mb-2"></div>
+                    <p class="text-xs text-slate-500">
+                        Haz clic en el mapa o arrastra el marcador rojo para seleccionar la ubicación
+                    </p>
+                </div>
+
+                <!-- Coordenadas GPS (readonly) -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Latitud
+                            Latitud *
                         </label>
                         <input type="number" 
+                               id="create_NUM_LATITUD"
                                name="NUM_LATITUD" 
                                step="0.00000001"
-                               placeholder="9.9281"
-                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-slate-50"
+                               required
+                               readonly>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Longitud
+                            Longitud *
                         </label>
                         <input type="number" 
+                               id="create_NUM_LONGITUD"
                                name="NUM_LONGITUD" 
                                step="0.00000001"
-                               placeholder="-84.0907"
-                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-slate-50"
+                               required
+                               readonly>
                     </div>
                 </div>
 
-                <!-- Estado -->
+                <!-- Imagen Destacada (URL) -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Estado
+                        URL de la Imagen Destacada
                     </label>
-                    <select name="NUM_ESTADO" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                </div>
-
-                <!-- Imagen Destacada -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Imagen Destacada
-                    </label>
-                    <input type="file" 
+                    <input type="text" 
                            name="IMG_DESTACADA" 
-                           accept="image/*"
-                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
+                           placeholder="https://ejemplo.com/imagen.jpg"
+                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <p class="mt-1 text-xs text-slate-500">Ingresa la URL completa de la imagen (ej: https://tudominio.com/imagen.jpg)</p>
                 </div>
             </div>
 
             <!-- Footer del Modal -->
             <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
-                
+                <button type="button" 
+                        onclick="closeCreateModal()" 
+                        class="px-4 py-2 text-slate-700 hover:text-slate-900 font-medium">
+                    Cancelar
+                </button>
                 <button type="submit" 
                     class="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
                     Guardar Comercio

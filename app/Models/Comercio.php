@@ -36,4 +36,19 @@ class Comercio extends Model
         'FEC_CREACION' => 'datetime',
         'NUM_ESTADO' => 'integer',
     ];
+
+    /**
+     * Relación muchos a muchos con Categoria
+     */
+    public function categorias()
+{
+    return $this->belongsToMany(
+        Categoria::class,
+        'tb_categoria_comercio',
+        'ID_COMERCIO',      
+        'ID_CATEGORIA'     
+    )
+    ->using(CategoriaComercio::class)
+    ->withPivot('FEC_CREACION', 'NUM_ESTADO');
+}
 }

@@ -41,6 +41,17 @@
                            maxlength="500">
                 </div>
 
+                <!-- Categoría -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Categorías *
+                    </label>
+                    <div id="edit_categorias_container" class="border border-slate-300 rounded-lg p-4 max-h-40 overflow-y-auto space-y-2">
+                        <!-- Las categorías se cargarán dinámicamente con JavaScript -->
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">Selecciona al menos una categoría</p>
+                </div>
+
                 <!-- Teléfono y Email -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -52,7 +63,6 @@
                                name="NUM_TELEFONO" 
                                class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                     </div>
-
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">
@@ -102,31 +112,46 @@
                     </div>
                 </div>
 
+                 <!-- MAPA INTERACTIVO -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Ubicación en el Mapa *
+                    </label>
+                    <div id="editMap" class="w-full h-80 rounded-lg border-2 border-slate-300 mb-2"></div>
+                    <p class="text-xs text-slate-500">
+                        Haz clic en el mapa o arrastra el marcador azul para cambiar la ubicación
+                    </p>
+                </div>
+
                 <!-- Coordenadas GPS -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Latitud
+                            Latitud *
                         </label>
                         <input type="number" 
                                id="edit_NUM_LATITUD"
                                name="NUM_LATITUD" 
                                step="0.00000001"
-                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-slate-50"
                                min="-90"
-                               max="90">
+                               max="90"
+                               required
+                               readonly>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                            Longitud
+                            Longitud *
                         </label>
                         <input type="number" 
                                id="edit_NUM_LONGITUD"
                                name="NUM_LONGITUD" 
                                step="0.00000001"
-                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg bg-slate-50"
                                min="-180"
-                               max="180">
+                               max="180"
+                               required
+                               readonly>
                     </div>
                 </div>
 
@@ -141,22 +166,27 @@
                     </select>
                 </div>
 
-                <!-- Imagen Destacada -->
+                <!-- Imagen Destacada (URL) -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        Imagen Destacada
+                        URL de la Imagen Destacada
                     </label>
-                    <input type="file" 
+                    <input type="text" 
+                           id="edit_IMG_DESTACADA"
                            name="IMG_DESTACADA" 
-                           accept="image/*"
-                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
-                    <p class="mt-1 text-xs text-slate-500">Deja vacío si no deseas cambiar la imagen actual. Formatos permitidos: JPEG, PNG, JPG, GIF. Tamaño máximo: 2MB</p>
+                           placeholder="https://ejemplo.com/imagen.jpg"
+                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <p class="mt-1 text-xs text-slate-500">Ingresa la URL completa de la imagen. Deja vacío para mantener la imagen actual.</p>
                 </div>
             </div>
 
             <!-- Footer del Modal -->
             <div class="flex items-center justify-end gap-3 p-6 border-t bg-slate-50 sticky bottom-0">
-                
+                <button type="button" 
+                        onclick="closeEditModal()" 
+                        class="px-4 py-2 text-slate-700 hover:text-slate-900 font-medium">
+                    Cancelar
+                </button>
                 <button type="submit" 
                     class="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium">
                     Actualizar Comercio
