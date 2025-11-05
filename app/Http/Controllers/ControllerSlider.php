@@ -26,8 +26,13 @@ class ControllerSlider extends Controller
         $request->validate([
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
-            'IMG_URL' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'ESTADO' => 'required|boolean',
+            'IMG_URL' => 'required|url',
+            'NUM_ESTADO' => 'required|boolean',
+        ], [
+            'DSC_NOMBRE.required' => 'El nombre es obligatorio.',
+            'IMG_URL.required' => 'Debe ingresar una URL para la imagen.',
+            'IMG_URL.url' => 'El formato de la URL no es válido.',
+            'NUM_ESTADO.required' => 'El estado es obligatorio.',
         ]);
 
         try {
@@ -143,10 +148,10 @@ class ControllerSlider extends Controller
         }
 
         // Después de crear el slider, agrega:
-Log::info('=== VERIFICACIÓN FINAL ===');
-Log::info('Slider creado con ID: ' . $slider->ID_SLIDER);
-Log::info('URL de imagen: ' . $slider->IMG_URL);
-Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudinary.com') ? 'Sí' : 'No'));
+        Log::info('=== VERIFICACIÓN FINAL ===');
+        Log::info('Slider creado con ID: ' . $slider->ID_SLIDER);
+        Log::info('URL de imagen: ' . $slider->IMG_URL);
+        Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudinary.com') ? 'Sí' : 'No'));
     }
 
     public function show($id)
@@ -166,8 +171,8 @@ Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudin
         $request->validate([
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
-            'IMG_URL' => 'sometimes|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'ESTADO' => 'required|boolean',
+            'IMG_URL' => 'required|url',
+            'NUM_ESTADO' => 'required|boolean',
         ]);
 
         $slider = Slider::findOrFail($id);
