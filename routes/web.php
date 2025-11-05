@@ -8,6 +8,7 @@ use App\Http\Controllers\ComercioController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\DirectorioController;
 
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas - Directorio Comercial

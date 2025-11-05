@@ -1,7 +1,7 @@
 <!-- Modal para Crear Slider -->
 <div id="createModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <form action="{{ route('sliders.store') }}" method="POST">
+        <form action="{{ route('sliders.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <!-- Header del Modal -->
@@ -58,15 +58,26 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        URL de la Imagen *
+                        Imagen del Slider *
                     </label>
-                    <input type="url" name="IMG_URL" value="{{ old('IMG_URL') }}"
-                        placeholder="https://ejemplo.com/imagen.jpg"
-                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('IMG_URL') border-red-500 @enderror"
-                        required>
+                    <input type="file" 
+                           name="IMG_URL" 
+                           id="create_IMG_URL"
+                           accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 @error('IMG_URL') border-red-500 @enderror"
+                           required>
+                    <p class="mt-1 text-sm text-slate-500">
+                        Formatos aceptados: JPEG, PNG, JPG, GIF, WEBP. Tamaño máximo: 5MB
+                    </p>
                     @error('IMG_URL')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+                    
+                    <!-- Vista previa de imagen -->
+                    <div id="createImagePreview" class="mt-3 hidden">
+                        <p class="text-sm font-medium text-slate-700 mb-2">Vista previa:</p>
+                        <img id="createPreview" class="max-w-xs rounded-lg border shadow-sm">
+                    </div>
                 </div>
             </div>
 
@@ -88,7 +99,7 @@
 <!-- Modal para Editar Slider -->
 <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <form id="editForm" method="POST">
+        <form id="editForm" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -135,12 +146,41 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">
-                        URL de la Imagen *
-                    </label>
-                    <input type="url" name="IMG_URL" id="edit_IMG_URL" placeholder="https://ejemplo.com/imagen.jpg"
-                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                        required>
+                    <!-- Imagen Actual -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Imagen Actual
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <img id="editCurrentImage" src="" 
+                                 alt="Imagen actual" 
+                                 class="h-20 w-auto rounded-lg border shadow-sm">
+                            <span class="text-sm text-slate-500">
+                                Imagen actual del slider
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Nueva Imagen -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                            Nueva Imagen (Opcional)
+                        </label>
+                        <input type="file" 
+                               name="IMG_URL" 
+                               id="edit_IMG_URL"
+                               accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p class="mt-1 text-sm text-slate-500">
+                            Deje vacío para mantener la imagen actual. Formatos: JPEG, PNG, JPG, GIF, WEBP. Máx: 5MB
+                        </p>
+                        
+                        <!-- Vista previa de nueva imagen -->
+                        <div id="editImagePreview" class="mt-3 hidden">
+                            <p class="text-sm font-medium text-slate-700 mb-2">Vista previa de nueva imagen:</p>
+                            <img id="editPreview" class="max-w-xs rounded-lg border shadow-sm">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -197,12 +237,6 @@
             </div>
 
             <div class="border-t pt-6"></div>
-
-            <!-- URL de Imagen -->
-            <div>
-                <label class="text-sm font-medium text-slate-500">URL de la Imagen</label>
-                <p id="view_IMG_URL" class="text-slate-900 mt-1 break-words"></p>
-            </div>
 
             <!-- Vista Previa -->
             <div>
@@ -279,6 +313,46 @@
     // Verificar que el DOM esté cargado
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Modal scripts loaded successfully');
+
+        // Vista previa de imagen en modal de crear
+        document.getElementById('create_IMG_URL')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('createPreview');
+            const imagePreview = document.getElementById('createImagePreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                }
+                
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.classList.add('hidden');
+            }
+        });
+
+        // Vista previa de imagen en modal de editar
+        document.getElementById('edit_IMG_URL')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('editPreview');
+            const imagePreview = document.getElementById('editImagePreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                }
+                
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.classList.add('hidden');
+            }
+        });
     });
 
     // Funciones para el modal de crear
@@ -316,13 +390,23 @@
             const nombreInput = document.getElementById('edit_DSC_NOMBRE');
             const descripcionInput = document.getElementById('edit_DSC_DESCRIPCION');
             const estadoSelect = document.getElementById('edit_ESTADO');
-            const urlInput = document.getElementById('edit_IMG_URL');
+            const currentImage = document.getElementById('editCurrentImage');
             const editForm = document.getElementById('editForm');
 
             if (nombreInput) nombreInput.value = slider.DSC_NOMBRE || '';
             if (descripcionInput) descripcionInput.value = slider.DSC_DESCRIPCION || '';
             if (estadoSelect) estadoSelect.value = slider.ESTADO || 1;
-            if (urlInput) urlInput.value = slider.IMG_URL || '';
+            if (currentImage && slider.IMG_URL) currentImage.src = slider.IMG_URL;
+
+            // Limpiar vista previa de nueva imagen
+            const editPreview = document.getElementById('editPreview');
+            const editImagePreview = document.getElementById('editImagePreview');
+            if (editPreview) editPreview.src = '';
+            if (editImagePreview) editImagePreview.classList.add('hidden');
+
+            // Limpiar input de archivo
+            const fileInput = document.getElementById('edit_IMG_URL');
+            if (fileInput) fileInput.value = '';
 
             if (editForm && slider.ID_SLIDER) {
                 editForm.action = '/sliders/' + slider.ID_SLIDER;
@@ -360,15 +444,12 @@
             const nombreElement = document.getElementById('view_DSC_NOMBRE');
             const estadoElement = document.getElementById('view_ESTADO');
             const descripcionElement = document.getElementById('view_DSC_DESCRIPCION');
-            const urlElement = document.getElementById('view_IMG_URL');
             const previewElement = document.getElementById('view_IMG_PREVIEW');
             const createdAtElement = document.getElementById('view_CREATED_AT');
-            const updatedAtElement = document.getElementById('view_UPDATED_AT');
 
             if (nombreElement) nombreElement.textContent = slider.DSC_NOMBRE || 'No disponible';
             if (estadoElement) estadoElement.textContent = (slider.ESTADO == 1 ? 'Activo' : 'Inactivo') || 'No disponible';
             if (descripcionElement) descripcionElement.textContent = slider.DSC_DESCRIPCION || 'No disponible';
-            if (urlElement) urlElement.textContent = slider.IMG_URL || 'No disponible';
 
             if (previewElement && slider.IMG_URL) {
                 previewElement.src = slider.IMG_URL;
@@ -382,13 +463,6 @@
                 createdAtElement.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES');
             } else if (createdAtElement) {
                 createdAtElement.textContent = 'No disponible';
-            }
-
-            if (updatedAtElement && slider.updated_at) {
-                const date = new Date(slider.updated_at);
-                updatedAtElement.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES');
-            } else if (updatedAtElement) {
-                updatedAtElement.textContent = 'No disponible';
             }
 
             modal.classList.remove('hidden');
