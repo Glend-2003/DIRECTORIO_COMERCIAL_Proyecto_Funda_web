@@ -20,7 +20,8 @@
                     <nav class="hidden md:flex gap-6">
                         <a href="{{ route('directorio.index') }}"
                             class="text-slate-600 hover:text-blue-600 transition">Inicio</a>
-                        <a href="{{ route('cliente.categorias.index') }}" class="text-slate-600 hover:text-blue-600 transition">Categorías</a>
+                        <a href="{{ route('categoriasCliente.index') }}"
+                        class="text-slate-600 hover:text-blue-600 transition">Categorías</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Comercios</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Contacto</a>
                     </nav>

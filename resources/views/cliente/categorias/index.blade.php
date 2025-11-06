@@ -19,7 +19,7 @@
                     <nav class="hidden md:flex gap-6">
                         <a href="{{ route('directorio.index') }}"
                             class="text-slate-600 hover:text-blue-600 transition">Inicio</a>
-                        <a href="{{ route('categorias.cliente') }}" class="text-blue-600 font-medium">Categorías</a>
+                         <a href="{{ route('categorias.index') }}" class="text-blue-600 font-medium">Categorías</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Comercios</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Contacto</a>
                     </nav>
@@ -66,7 +66,7 @@
         <!-- Search Bar -->
         <div class="bg-white border-b">
             <div class="container mx-auto px-4 py-4">
-                <form method="GET" action="{{ route('categorias.listado') }}" class="relative max-w-xl">
+                <form method="GET" action="{{ route('categorias.index') }}" class="relative max-w-xl">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -75,7 +75,7 @@
                     <input type="text" name="buscar" placeholder="Buscar comercios..." value="{{ request('buscar') }}"
                         class="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     @if (request('buscar'))
-                        <a href="{{ route('categorias.listado', array_diff_key(request()->query(), ['buscar' => ''])) }}"
+                        <a href="{{ route('categorias.index', array_diff_key(request()->query(), ['buscar' => ''])) }}"
                             class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -95,61 +95,66 @@
                 <!-- Sidebar -->
                 <aside class="lg:col-span-1">
                     <!-- Categorías -->
-                    <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                        <div class="p-4 border-b">
-                            <h3 class="font-semibold text-slate-900">Categorías</h3>
-                        </div>
-                        <div class="p-2">
-                            <a href="{{ route('categorias.listado') }}"
-                                class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ !request('categoria') ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                        </path>
-                                    </svg>
-                                    <span class="text-sm">Todas las categorías</span>
-                                </div>
-                                <span
-                                    class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $totalComercios }}</span>
-                            </a>
+<div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+    <div class="p-4 border-b">
+        <h3 class="font-semibold text-slate-900">Categorías</h3>
+    </div>
+    <div class="p-2">
+        <a href="{{ route('categorias.index') }}"
+            class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ !request('categoria') ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                    </path>
+                </svg>
+                <span class="text-sm">Todas las categorías</span>
+            </div>
+            <span class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $totalComercios }}</span>
+        </a>
 
-                            @foreach ($categorias as $cat)
-                                <a href="{{ route('categorias.listado', array_merge(request()->query(), ['categoria' => $cat->DSC_NOMBRE])) }}"
-                                    class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ request('categoria') == $cat->DSC_NOMBRE ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
-                                    <div class="flex items-center gap-3">
-                                        @if ($cat->IMG_URL)
-                                            <img src="{{ asset($cat->IMG_URL) }}" alt="{{ $cat->DSC_NOMBRE }}"
-                                                class="w-5 h-5 object-cover rounded">
-                                        @else
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
-                                                </path>
-                                            </svg>
-                                        @endif
-                                        <span class="text-sm">{{ $cat->DSC_NOMBRE }}</span>
-                                    </div>
-                                    <span
-                                        class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $cat->comercios_count }}</span>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
+        @foreach ($categorias as $cat)
+            <a href="{{ route('categorias.index', array_merge(request()->query(), ['categoria' => $cat->DSC_NOMBRE])) }}"
+                class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ request('categoria') == $cat->DSC_NOMBRE ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
+                <div class="flex items-center gap-3">
+                    @if ($cat->IMG_URL && file_exists(public_path($cat->IMG_URL)))
+                        <img src="{{ asset($cat->IMG_URL) }}" 
+                             alt="{{ $cat->DSC_NOMBRE }}"
+                             class="w-5 h-5 object-cover rounded"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <svg class="w-5 h-5" style="display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                            </path>
+                        </svg>
+                    @else
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                            </path>
+                        </svg>
+                    @endif
+                    <span class="text-sm">{{ $cat->DSC_NOMBRE }}</span>
+                </div>
+                <span class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $cat->comercios_count }}</span>
+            </a>
+        @endforeach
+    </div>
+</div>
 
                     <!-- Filtros -->
                     <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mt-4">
                         <div class="p-4 border-b flex items-center justify-between">
                             <h3 class="font-semibold text-slate-900">Filtros</h3>
                             @if (request()->hasAny(['ubicacion']))
-                                <a href="{{ route('categorias.listado', ['categoria' => request('categoria')]) }}"
+                                <a href="{{ route('categorias.index', ['categoria' => request('categoria')]) }}"
                                     class="text-xs text-blue-600 hover:text-blue-700">
                                     Limpiar
                                 </a>
                             @endif
                         </div>
                         <div class="p-4">
-                            <form method="GET" action="{{ route('categorias.listado') }}">
+                            <form method="GET" action="{{ route('categorias.index') }}">
                                 <!-- Ubicación -->
                                 <div class="mb-4">
                                     <label class="text-sm text-slate-700 mb-2 block">Ubicación</label>
@@ -158,7 +163,7 @@
                                             value="{{ request('ubicacion') }}"
                                             class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                                         @if (request('ubicacion'))
-                                            <a href="{{ route('categorias.listado', array_diff_key(request()->query(), ['ubicacion' => ''])) }}"
+                                            <a href="{{ route('categorias.index', array_diff_key(request()->query(), ['ubicacion' => ''])) }}"
                                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -188,7 +193,7 @@
                                         @if (request('ubicacion'))
                                             <span class="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
                                                 📍 {{ request('ubicacion') }}
-                                                <a href="{{ route('categorias.listado', array_diff_key(request()->query(), ['ubicacion' => ''])) }}"
+                                                <a href="{{ route('categorias.index', array_diff_key(request()->query(), ['ubicacion' => ''])) }}"
                                                     class="hover:text-slate-900">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -223,7 +228,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
                             </svg>
-                            <form method="GET" action="{{ route('categorias.listado') }}" id="ordenForm">
+                            <form method="GET" action="{{ route('categorias.index') }}" id="ordenForm">
                                 <select name="orden" onchange="document.getElementById('ordenForm').submit()"
                                     class="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     <option value="reciente" {{ request('orden', 'reciente') == 'reciente' ? 'selected' : '' }}>
@@ -329,7 +334,7 @@
                                     No hay comercios que coincidan con los filtros seleccionados. Intenta ajustar tus
                                     criterios de búsqueda.
                                 </p>
-                                <a href="{{ route('categorias.listado') }}"
+                                <a href="{{ route('categorias.index') }}"
                                     class="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                                     Limpiar Filtros
                                 </a>
