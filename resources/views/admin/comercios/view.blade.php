@@ -26,6 +26,12 @@
 
             <div class="border-t pt-6"></div>
 
+            <div>
+                <label class="text-sm font-medium text-slate-500">Categorías</label>
+                <div id="view_categorias" class="flex flex-wrap gap-2 mt-2">
+                </div>
+            </div>
+
             <!-- Información de Contacto -->
             <div>
                 <h4 class="text-sm font-semibold text-slate-900 mb-3">Información de Contacto</h4>
@@ -66,17 +72,22 @@
 
             <div class="border-t pt-6"></div>
 
-            <!-- Coordenadas -->
+            <!-- MAPA DE UBICACIÓN -->
             <div>
-                <h4 class="text-sm font-semibold text-slate-900 mb-3">Ubicación GPS</h4>
+                <h4 class="text-sm font-semibold text-slate-900 mb-3"> Ubicación GPS</h4>
+                
+                <!-- Mapa -->
+                <div id="viewMap" class="w-full h-64 rounded-lg border-2 border-slate-300 mb-4"></div>
+                
+                <!-- Coordenadas -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="text-sm text-slate-500">Latitud</label>
-                        <p id="view_NUM_LATITUD" class="text-slate-900 mt-1"></p>
+                        <p id="view_NUM_LATITUD" class="text-slate-900 mt-1 font-mono text-sm"></p>
                     </div>
                     <div>
                         <label class="text-sm text-slate-500">Longitud</label>
-                        <p id="view_NUM_LONGITUD" class="text-slate-900 mt-1"></p>
+                        <p id="view_NUM_LONGITUD" class="text-slate-900 mt-1 font-mono text-sm"></p>
                     </div>
                 </div>
             </div>
@@ -87,7 +98,7 @@
             </div>
 
             <div class="border-t pt-6"></div>
-
+            
             <!-- Metadata -->
             <div>
                 <h4 class="text-sm font-semibold text-slate-900 mb-3">Información del Sistema</h4>

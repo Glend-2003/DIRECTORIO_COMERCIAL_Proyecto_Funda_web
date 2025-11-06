@@ -8,6 +8,25 @@
     <title>@yield('title', 'Panel Administrativo')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <!-- 🗺️ LEAFLET CSS - OBLIGATORIO PARA MAPAS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+    
+    <!-- 🗺️ LEAFLET JS - OBLIGATORIO PARA MAPAS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+    
+    <style>
+        /* Asegurar que los contenedores de mapas tengan altura */
+        .leaflet-container {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+    </style>
 </head>
 
 <body class="bg-slate-50">
@@ -64,8 +83,8 @@
                     <span>Comercios</span>
                 </a>
 
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 cursor-not-allowed">
+                <a href="{{ route('productos.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('productos.*') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -78,6 +97,7 @@
         <!-- Main Content -->
         <main class="flex-1 p-8">
             @yield('content')
+            @stack('scripts')
         </main>
     </div>
 </body>

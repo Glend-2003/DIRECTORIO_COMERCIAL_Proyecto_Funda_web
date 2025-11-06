@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categoria extends Model
 {
-     use HasFactory;
+    use HasFactory;
 
     protected $table = 'tb_categoria';
     protected $primaryKey = 'ID_CATEGORIA';
@@ -30,4 +30,19 @@ class Categoria extends Model
         'FEC_CREACION' => 'datetime',
         'NUM_ESTADO' => 'integer',
     ];
+
+    /**
+     * Relación muchos a muchos con Comercio
+     */
+    public function comercios()
+{
+    return $this->belongsToMany(
+        Comercio::class,
+        'tb_categoria_comercio',
+        'ID_CATEGORIA',      
+        'ID_COMERCIO'        
+    )
+    ->using(CategoriaComercio::class)
+    ->withPivot('FEC_CREACION', 'NUM_ESTADO');
+}
 }
