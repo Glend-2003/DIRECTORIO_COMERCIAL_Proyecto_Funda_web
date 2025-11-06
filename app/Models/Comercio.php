@@ -51,4 +51,10 @@ class Comercio extends Model
     ->using(CategoriaComercio::class)
     ->withPivot('FEC_CREACION', 'NUM_ESTADO');
 }
+
+public function galeria()
+{
+    return $this->hasMany(GaleriaComercio::class, 'ID_COMERCIO', 'ID_COMERCIO')
+        ->orderBy('DSC_ORDEN', 'asc');
+}
 }

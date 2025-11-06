@@ -9,6 +9,7 @@ use App\Http\Controllers\DirectorioController;
 use App\Http\Controllers\CategoriaClienteController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\GaleriaProductoController;
+use App\Http\Controllers\GaleriaComercioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,11 +55,25 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('productos', ProductoController::class);
 
+    // Rutas de Galería de Productos
     Route::prefix('productos/{producto}/galeria')->name('productos.galeria.')->group(function () {
         Route::get('/', [GaleriaProductoController::class, 'index'])->name('index');
         Route::post('/', [GaleriaProductoController::class, 'store'])->name('store');
+        Route::post('/orden', [GaleriaProductoController::class, 'updateOrder'])->name('updateOrder');
+        Route::delete('/{imagen}', [GaleriaProductoController::class, 'destroy'])->name('destroy');
     });
+
+    // Rutas de Galería de Comercios
+    // Rutas de Galería de Comercios (agregar después de las rutas de productos)
+Route::prefix('comercios/{comercio}/galeria')->name('comercios.galeria.')->group(function () {
+    Route::get('/', [GaleriaComercioController::class, 'index'])->name('index');
+    Route::post('/', [GaleriaComercioController::class, 'store'])->name('store');
+    Route::post('/orden', [GaleriaComercioController::class, 'updateOrder'])->name('updateOrder');
+    Route::delete('/{imagen}', [GaleriaComercioController::class, 'destroy'])->name('destroy');
 });
+});
+
+
 
 // Rutas de autenticación (login manual - ruta oculta)
 require __DIR__.'/auth.php';
