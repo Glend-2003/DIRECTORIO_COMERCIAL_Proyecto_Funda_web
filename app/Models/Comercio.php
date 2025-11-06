@@ -57,4 +57,12 @@ public function galeria()
     return $this->hasMany(GaleriaComercio::class, 'ID_COMERCIO', 'ID_COMERCIO')
         ->orderBy('DSC_ORDEN', 'asc');
 }
+
+public function productos()
+{
+    return $this->hasMany(Producto::class, 'ID_COMERCIO', 'ID_COMERCIO')
+        ->where('NUM_ESTADO', 1);
+}
+
+
 }

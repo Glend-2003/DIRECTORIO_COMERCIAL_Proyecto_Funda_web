@@ -65,4 +65,24 @@ class CategoriaClienteController extends Controller
 
         return view('cliente.categorias.index', compact('categorias', 'comercios', 'totalComercios'));
     }
+
+    // Mostrar detalles de un comercio específico
+    public function show($id)
+{
+    try {
+        $comercio = Comercio::with(['categorias', 'galeria' => function($query) {
+            $query->where('NUM_ESTADO', 1)->orderBy('DSC_ORDEN');
+        }, 'productos' => function($query) {
+            $query->where('NUM_ESTADO', 1);
+        }])
+        ->where('NUM_ESTADO', 1)
+        ->findOrFail($id);
+        
+        return view('cliente.comercio.show', compact('comercio'));
+        
+    } catch (\Exception $e) {
+        return redirect()->route('categorias.index')
+            ->with('error', 'Comercio no encontrado');
+    }
+}
 }

@@ -24,6 +24,8 @@ Route::get('/directorio', [DirectorioController::class, 'index'])->name('directo
 // Rutas para categorías del cliente (PÚBLICAS)
 Route::resource('categoriasCliente', CategoriaClienteController::class);
 
+Route::get('/comercio/{id}', [CategoriaClienteController::class, 'show'])->name('comercio.show');
+
 /*
 |--------------------------------------------------------------------------
 | Rutas de Administración

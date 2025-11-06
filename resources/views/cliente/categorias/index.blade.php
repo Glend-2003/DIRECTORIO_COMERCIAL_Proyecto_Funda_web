@@ -298,7 +298,7 @@
                                                         {{ $comercio->NUM_TELEFONO }}
                                                     </div>
                                                 </div>
-                                                <a href="#"
+                                                <a href="{{ route('comercio.show', $comercio->ID_COMERCIO) }}"
                                                     class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-sm text-slate-700 hover:bg-slate-50 transition">
                                                     Ver Detalles
                                                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor"
