@@ -27,27 +27,7 @@
     </div>
 
     <!-- Mensajes de éxito/error -->
-    @if(session('success'))
-    <div id="successAlert" class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between">
-        <span>{{ session('success') }}</span>
-        <button onclick="this.parentElement.remove()" class="text-green-600 hover:text-green-800">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div id="errorAlert" class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between">
-        <span>{{ session('error') }}</span>
-        <button onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-    </div>
-    @endif
+    @include('admin.componentes.alertasExitoError')
 
     <!-- Card con Tabla -->
     <div class="bg-white rounded-lg border">
@@ -97,11 +77,20 @@
                                 </div>
                             @endif
                         </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-                                General
+
+                        <td>
+                <div id="view_categorias" class="flex flex-wrap gap-2 mt-2">
+                    @if($comercio->categorias->isNotEmpty())
+                        @foreach($comercio->categorias as $categoria)
+                            <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                                {{ $categoria->DSC_NOMBRE }}
                             </span>
-                        </td>
+                        @endforeach
+                    @else
+                        <span class="text-sm text-slate-500">Sin categorías</span>
+                    @endif
+            </td>
+                        
                         <td class="px-6 py-4">
                             <div class="text-sm text-slate-900">{{ $comercio->NUM_TELEFONO ?? '-' }}</div>
                             <div class="text-xs text-slate-500">{{ $comercio->DSC_CORREO ?? '-' }}</div>
@@ -119,44 +108,57 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
+
+                                 <!-- Botón Galería (NUEVO) -->
+        <a href="{{ route('comercios.galeria.index', $comercio->ID_COMERCIO) }}"
+           class="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+           title="Gestionar galería">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+        </a>    
+
                                 <!-- Botón Ver -->
                                 <button type="button" 
-                                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors view-btn"
-                                        title="Ver detalles"
-                                        data-id="{{ $comercio->ID_COMERCIO }}"
-                                        data-nombre="{{ $comercio->DSC_COMERCIO }}"
-                                        data-telefono="{{ $comercio->NUM_TELEFONO }}"
-                                        data-email="{{ $comercio->DSC_CORREO }}"
-                                        data-direccion="{{ $comercio->DSC_DIRECCION }}"
-                                        data-facebook="{{ $comercio->DSC_FACEBOOK }}"
-                                        data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
-                                        data-latitud="{{ $comercio->NUM_LATITUD }}"
-                                        data-longitud="{{ $comercio->NUM_LONGITUD }}"
-                                        data-imagen="{{ $comercio->IMG_DESTACADA }}"
-                                        data-fecha="{{ $comercio->FEC_CREACION }}"
-                                        data-estado="{{ $comercio->NUM_ESTADO }}">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
+                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors view-btn"
+                                    title="Ver detalles"
+                                    data-id="{{ $comercio->ID_COMERCIO }}"
+                                    data-nombre="{{ $comercio->DSC_COMERCIO }}"
+                                    data-telefono="{{ $comercio->NUM_TELEFONO }}"
+                                    data-email="{{ $comercio->DSC_CORREO }}"
+                                    data-direccion="{{ $comercio->DSC_DIRECCION }}"
+                                    data-facebook="{{ $comercio->DSC_FACEBOOK }}"
+                                    data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
+                                    data-latitud="{{ $comercio->NUM_LATITUD }}"
+                                    data-longitud="{{ $comercio->NUM_LONGITUD }}"
+                                    data-imagen="{{ $comercio->IMG_DESTACADA }}"
+                                    data-fecha="{{ $comercio->FEC_CREACION }}"
+                                    data-estado="{{ $comercio->NUM_ESTADO }}"
+                                    data-categorias-nombres="{{ $comercio->categorias->pluck('DSC_NOMBRE')->implode(', ') }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
                                 </button>
                                 
                                 <!-- Botón Editar -->
                                 <button type="button" 
-                                        class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors edit-btn"
-                                        title="Editar"
-                                        data-id="{{ $comercio->ID_COMERCIO }}"
-                                        data-nombre="{{ $comercio->DSC_COMERCIO }}"
-                                        data-telefono="{{ $comercio->NUM_TELEFONO }}"
-                                        data-email="{{ $comercio->DSC_CORREO }}"
-                                        data-direccion="{{ $comercio->DSC_DIRECCION }}"
-                                        data-facebook="{{ $comercio->DSC_FACEBOOK }}"
-                                        data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
-                                        data-latitud="{{ $comercio->NUM_LATITUD }}"
-                                        data-longitud="{{ $comercio->NUM_LONGITUD }}"
-                                        data-estado="{{ $comercio->NUM_ESTADO }}">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors edit-btn"
+                                    title="Editar"
+                                    data-id="{{ $comercio->ID_COMERCIO }}"
+                                    data-nombre="{{ $comercio->DSC_COMERCIO }}"
+                                    data-telefono="{{ $comercio->NUM_TELEFONO }}"
+                                    data-email="{{ $comercio->DSC_CORREO }}"
+                                    data-direccion="{{ $comercio->DSC_DIRECCION }}"
+                                    data-facebook="{{ $comercio->DSC_FACEBOOK }}"
+                                    data-instagram="{{ $comercio->DSC_INSTAGRAM }}"
+                                    data-latitud="{{ $comercio->NUM_LATITUD }}"
+                                    data-longitud="{{ $comercio->NUM_LONGITUD }}"
+                                    data-estado="{{ $comercio->NUM_ESTADO }}"
+                                    data-imagen="{{ $comercio->IMG_DESTACADA }}"
+                                    data-categorias="{{ $comercio->categorias->pluck('ID_CATEGORIA')->implode(',') }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
                                 </button>
                                 
@@ -211,7 +213,7 @@
 @include('admin.comercios.edit')
 @include('admin.comercios.create')
 @include('admin.comercios.view')
-@include('admin.comercios.delete')
+@include('admin.componentes.delete')
 
 <script>
 // Variable para almacenar el ID del comercio a eliminar
@@ -248,7 +250,9 @@ function openEditModal(button) {
         DSC_INSTAGRAM: button.getAttribute('data-instagram'),
         NUM_LATITUD: button.getAttribute('data-latitud'),
         NUM_LONGITUD: button.getAttribute('data-longitud'),
-        NUM_ESTADO: button.getAttribute('data-estado')
+        NUM_ESTADO: button.getAttribute('data-estado'),
+        IMG_DESTACADA: button.getAttribute('data-imagen'),
+        categorias: button.getAttribute('data-categorias') ? button.getAttribute('data-categorias').split(',') : []
     };
     
     console.log('Datos para editar:', comercio);
@@ -263,9 +267,43 @@ function openEditModal(button) {
     document.getElementById('edit_NUM_LATITUD').value = comercio.NUM_LATITUD || '';
     document.getElementById('edit_NUM_LONGITUD').value = comercio.NUM_LONGITUD || '';
     document.getElementById('edit_NUM_ESTADO').value = comercio.NUM_ESTADO || '1';
+    document.getElementById('edit_IMG_DESTACADA').value = comercio.IMG_DESTACADA || '';
+    
+    // Cargar categorías
+    loadCategoriasForEdit(comercio.categorias);
     
     document.getElementById('editModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+}
+
+// Nueva función para cargar categorías en el modal de editar
+function loadCategoriasForEdit(categoriasSeleccionadas) {
+    const container = document.getElementById('edit_categorias_container');
+    container.innerHTML = ''; // Limpiar contenido previo
+    
+    @if(isset($categorias) && count($categorias) > 0)
+        const categorias = @json($categorias);
+        
+        categorias.forEach(categoria => {
+            const isChecked = categoriasSeleccionadas.includes(categoria.ID_CATEGORIA.toString());
+            
+            const label = document.createElement('label');
+            label.className = 'flex items-center space-x-3 cursor-pointer hover:bg-slate-50 p-2 rounded';
+            
+            label.innerHTML = `
+                <input type="checkbox" 
+                    name="categorias[]" 
+                    value="${categoria.ID_CATEGORIA}"
+                    class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                    ${isChecked ? 'checked' : ''}>
+                <span class="text-sm text-slate-700">${categoria.DSC_NOMBRE}</span>
+            `;
+            
+            container.appendChild(label);
+        });
+    @else
+        container.innerHTML = '<p class="text-sm text-slate-500">No hay categorías disponibles</p>';
+    @endif
 }
 
 function closeEditModal() {
@@ -286,7 +324,9 @@ function openViewModal(button) {
         NUM_LATITUD: button.getAttribute('data-latitud'),
         NUM_LONGITUD: button.getAttribute('data-longitud'),
         IMG_DESTACADA: button.getAttribute('data-imagen'),
-        FEC_CREACION: button.getAttribute('data-fecha')
+        FEC_CREACION: button.getAttribute('data-fecha'),
+        NUM_ESTADO: button.getAttribute('data-estado'),
+        categorias: button.getAttribute('data-categorias-nombres') || ''
     };
     
     console.log('Datos para ver:', comercio);
@@ -316,24 +356,42 @@ function openViewModal(button) {
         document.getElementById('view_FEC_CREACION').textContent = 'N/A';
     }
     
-    // Imagen destacada
     if (comercio.IMG_DESTACADA) {
         document.getElementById('view_imagen_container').classList.remove('hidden');
-        document.getElementById('view_IMG_DESTACADA').src = '/storage/' + comercio.IMG_DESTACADA;
+        document.getElementById('view_IMG_DESTACADA').src = comercio.IMG_DESTACADA; 
     } else {
         document.getElementById('view_imagen_container').classList.add('hidden');
     }
     
+    // Estado
+    if (comercio.NUM_ESTADO == '1') {
+        document.getElementById('view_NUM_ESTADO').textContent = 'Activo';
+        document.getElementById('view_NUM_ESTADO').className = 'text-green-600 font-semibold mt-1';
+    } else {
+        document.getElementById('view_NUM_ESTADO').textContent = 'Inactivo';
+        document.getElementById('view_NUM_ESTADO').className = 'text-red-600 font-semibold mt-1';
+    }
+    
+    // Categorías
+    const categoriasContainer = document.getElementById('view_categorias');
+    categoriasContainer.innerHTML = '';
+    
+    if (comercio.categorias) {
+        const categoriasArray = comercio.categorias.split(',');
+        categoriasArray.forEach(categoria => {
+            if (categoria.trim()) {
+                const badge = document.createElement('span');
+                badge.className = 'px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full';
+                badge.textContent = categoria.trim();
+                categoriasContainer.appendChild(badge);
+            }
+        });
+    } else {
+        categoriasContainer.innerHTML = '<span class="text-sm text-slate-500">Sin categorías</span>';
+    }
+    
     document.getElementById('viewModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-
-    if (comercio.NUM_ESTADO == '1') {
-    document.getElementById('view_NUM_ESTADO').textContent = 'Activo';
-    document.getElementById('view_NUM_ESTADO').className = 'text-green-600 font-semibold mt-1';
-} else {
-    document.getElementById('view_NUM_ESTADO').textContent = 'Inactivo';
-    document.getElementById('view_NUM_ESTADO').className = 'text-red-600 font-semibold mt-1';
-}
 }
 
 function closeViewModal() {
@@ -441,5 +499,293 @@ document.addEventListener('keydown', function(e) {
 });
 
 console.log('JavaScript de comercios cargado correctamente');
+
+let createMap, editMap, viewMap;
+let createMarker, editMarker, viewMarker;
+
+// Coordenadas por defecto (Barva, Heredia, Costa Rica)
+const defaultLat = 10.0297;
+const defaultLng = -84.1303;
+
+// ==================== MAPA DE CREAR ====================
+function initCreateMap() {
+    // Limpiar mapa existente si hay
+    if (createMap) {
+        createMap.remove();
+    }
+    
+    // Crear el mapa centrado en Barva
+    createMap = L.map('createMap').setView([defaultLat, defaultLng], 13);
+    
+    // Agregar capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 8
+    }).addTo(createMap);
+    
+    // Crear marcador inicial personalizado
+    const customIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+    createMarker = L.marker([defaultLat, defaultLng], {
+        draggable: true,
+        icon: customIcon
+    }).addTo(createMap);
+    
+    // Popup inicial
+    createMarker.bindPopup('<b>📍 Nueva ubicación</b><br>Arrastra el marcador o haz clic en el mapa').openPopup();
+    
+    // Actualizar coordenadas al crear
+    updateCreateCoordinates(defaultLat, defaultLng);
+    
+    // Evento: clic en el mapa
+    createMap.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        
+        // Mover el marcador
+        createMarker.setLatLng([lat, lng]);
+        createMarker.bindPopup('<b>✓ Ubicación seleccionada</b>').openPopup();
+        
+        // Actualizar inputs
+        updateCreateCoordinates(lat, lng);
+    });
+    
+    // Evento: arrastrar el marcador
+    createMarker.on('dragstart', function() {
+        createMarker.closePopup();
+    });
+    
+    createMarker.on('dragend', function(e) {
+        const lat = e.target.getLatLng().lat;
+        const lng = e.target.getLatLng().lng;
+        updateCreateCoordinates(lat, lng);
+        createMarker.bindPopup('<b>✓ Ubicación actualizada</b>').openPopup();
+    });
+    
+    // Forzar renderizado correcto
+    setTimeout(() => {
+        createMap.invalidateSize();
+        createMap.setView([defaultLat, defaultLng], 13);
+    }, 200);
+}
+
+function updateCreateCoordinates(lat, lng) {
+    document.getElementById('create_NUM_LATITUD').value = lat.toFixed(8);
+    document.getElementById('create_NUM_LONGITUD').value = lng.toFixed(8);
+}
+
+// ==================== MAPA DE EDITAR ====================
+function initEditMap(lat, lng) {
+    // Limpiar mapa existente
+    if (editMap) {
+        editMap.remove();
+    }
+    
+    // Validar y usar coordenadas
+    const mapLat = (lat && !isNaN(lat)) ? parseFloat(lat) : defaultLat;
+    const mapLng = (lng && !isNaN(lng)) ? parseFloat(lng) : defaultLng;
+    
+    console.log('Inicializando mapa de edición con:', mapLat, mapLng);
+    
+    // Crear el mapa
+    editMap = L.map('editMap').setView([mapLat, mapLng], 15);
+    
+    // Agregar capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 8
+    }).addTo(editMap);
+    
+    // Icono personalizado
+    const customIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+    // Crear marcador
+    editMarker = L.marker([mapLat, mapLng], {
+        draggable: true,
+        icon: customIcon
+    }).addTo(editMap);
+    
+    editMarker.bindPopup('<b>📍 Ubicación actual</b><br>Arrastra para cambiar').openPopup();
+    
+    // Evento: clic en el mapa
+    editMap.on('click', function(e) {
+        const newLat = e.latlng.lat;
+        const newLng = e.latlng.lng;
+        
+        // Mover el marcador
+        editMarker.setLatLng([newLat, newLng]);
+        editMarker.bindPopup('<b>✓ Nueva ubicación</b>').openPopup();
+        
+        // Actualizar inputs
+        updateEditCoordinates(newLat, newLng);
+    });
+    
+    // Evento: arrastrar el marcador
+    editMarker.on('dragstart', function() {
+        editMarker.closePopup();
+    });
+    
+    editMarker.on('dragend', function(e) {
+        const newLat = e.target.getLatLng().lat;
+        const newLng = e.target.getLatLng().lng;
+        updateEditCoordinates(newLat, newLng);
+        editMarker.bindPopup('<b>✓ Ubicación actualizada</b>').openPopup();
+    });
+    
+    // Forzar renderizado correcto
+    setTimeout(() => {
+        editMap.invalidateSize();
+        editMap.setView([mapLat, mapLng], 15);
+    }, 200);
+}
+
+function updateEditCoordinates(lat, lng) {
+    document.getElementById('edit_NUM_LATITUD').value = lat.toFixed(8);
+    document.getElementById('edit_NUM_LONGITUD').value = lng.toFixed(8);
+}
+
+// ==================== MAPA DE VER ====================
+function initViewMap(lat, lng) {
+    // Limpiar mapa existente
+    if (viewMap) {
+        viewMap.remove();
+    }
+    
+    // Validar y usar coordenadas
+    const mapLat = (lat && !isNaN(lat)) ? parseFloat(lat) : defaultLat;
+    const mapLng = (lng && !isNaN(lng)) ? parseFloat(lng) : defaultLng;
+    
+    console.log('Inicializando mapa de vista con:', mapLat, mapLng);
+    
+    // Crear el mapa (solo lectura pero con navegación)
+    viewMap = L.map('viewMap', {
+        dragging: true,
+        touchZoom: true,
+        scrollWheelZoom: false,
+        doubleClickZoom: true,
+        boxZoom: false,
+        keyboard: false,
+        zoomControl: true
+    }).setView([mapLat, mapLng], 16);
+    
+    // Agregar capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        minZoom: 8
+    }).addTo(viewMap);
+    
+    // Icono personalizado verde
+    const customIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
+    // Crear marcador (no arrastrable)
+    viewMarker = L.marker([mapLat, mapLng], {
+        icon: customIcon
+    }).addTo(viewMap);
+    
+    viewMarker.bindPopup('<b>📍 Ubicación del comercio</b>').openPopup();
+    
+    // Forzar renderizado correcto
+    setTimeout(() => {
+        viewMap.invalidateSize();
+        viewMap.setView([mapLat, mapLng], 16);
+    }, 200);
+}
+
+// ==================== INTEGRACIÓN CON MODALES ====================
+// Sobrescribir las funciones de abrir/cerrar modales para incluir mapas
+
+// Guardar las funciones originales
+const _originalOpenCreateModal = openCreateModal;
+const _originalCloseCreateModal = closeCreateModal;
+const _originalOpenEditModal = openEditModal;
+const _originalCloseEditModal = closeEditModal;
+const _originalOpenViewModal = openViewModal;
+const _originalCloseViewModal = closeViewModal;
+
+// CREAR: Nueva función con mapa
+openCreateModal = function() {
+    _originalOpenCreateModal();
+    setTimeout(() => {
+        initCreateMap();
+    }, 200);
+};
+
+// CREAR: Cerrar y limpiar mapa
+closeCreateModal = function() {
+    if (createMap) {
+        createMap.remove();
+        createMap = null;
+    }
+    _originalCloseCreateModal();
+};
+
+// EDITAR: Nueva función con mapa
+openEditModal = function(button) {
+    _originalOpenEditModal(button);
+    
+    const lat = button.getAttribute('data-latitud');
+    const lng = button.getAttribute('data-longitud');
+    
+    setTimeout(() => {
+        initEditMap(lat, lng);
+    }, 200);
+};
+
+// EDITAR: Cerrar y limpiar mapa
+closeEditModal = function() {
+    if (editMap) {
+        editMap.remove();
+        editMap = null;
+    }
+    _originalCloseEditModal();
+};
+
+// VER: Nueva función con mapa
+openViewModal = function(button) {
+    _originalOpenViewModal(button);
+    
+    const lat = button.getAttribute('data-latitud');
+    const lng = button.getAttribute('data-longitud');
+    
+    setTimeout(() => {
+        initViewMap(lat, lng);
+    }, 200);
+};
+
+// VER: Cerrar y limpiar mapa
+closeViewModal = function() {
+    if (viewMap) {
+        viewMap.remove();
+        viewMap = null;
+    }
+    _originalCloseViewModal();
+};
+
+console.log('✅ Sistema de mapas Leaflet cargado correctamente');
+console.log('✅ Mapas: Crear (rojo) | Editar (azul) | Ver (verde)');
 </script>
 @endsection

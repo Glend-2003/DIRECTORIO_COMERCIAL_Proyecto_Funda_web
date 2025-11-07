@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Categoria; 
 use App\Models\Comercio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +14,12 @@ class ComercioController extends Controller
     public function index()
     {
         $comercios = Comercio::latest()->paginate(10);
-        return view('admin.comercios.index', compact('comercios'));
+
+        $categorias = Categoria::where('NUM_ESTADO', 1)
+            ->orderBy('DSC_NOMBRE')
+            ->get();
+            
+        return view('admin.comercios.index', compact('comercios', 'categorias'));
     }
 
     /**
@@ -22,7 +27,12 @@ class ComercioController extends Controller
      */
     public function create()
     {
-        return view('admin.comercios.create');
+        // Cargar categorías activas para el formulario
+        $categorias = Categoria::where('NUM_ESTADO', 1)
+            ->orderBy('DSC_NOMBRE')
+            ->get();
+            
+        return view('admin.comercios.create', compact('categorias'));
     }
 
     /**
@@ -39,7 +49,9 @@ public function store(Request $request)
             'DSC_FACEBOOK' => 'nullable|string|max:255',
             'NUM_LATITUD' => 'required|numeric|between:-90,90',
             'NUM_LONGITUD' => 'required|numeric|between:-180,180',
-            'IMG_DESTACADA' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'IMG_DESTACADA' => 'required|url|max:500',
+            'categorias' => 'required|array|min:1',
+            'categorias.*' => 'exists:tb_categoria,ID_CATEGORIA',
         ], [
             'DSC_COMERCIO.required' => 'El nombre del comercio es obligatorio',
             'DSC_COMERCIO.max' => 'El nombre no puede tener más de 500 caracteres',
@@ -56,10 +68,12 @@ public function store(Request $request)
             'NUM_LONGITUD.required' => 'La longitud es obligatoria',
             'NUM_LONGITUD.numeric' => 'La longitud debe ser un número',
             'NUM_LONGITUD.between' => 'La longitud debe estar entre -180 y 180',
-            'IMG_DESTACADA.required' => 'La imagen destacada es obligatoria',
-            'IMG_DESTACADA.image' => 'El archivo debe ser una imagen',
-            'IMG_DESTACADA.mimes' => 'Solo se permiten imágenes en formato JPEG, PNG, JPG o GIF',
-            'IMG_DESTACADA.max' => 'La imagen no debe pesar más de 2MB',
+            'IMG_DESTACADA.required' => 'La URL de la imagen es obligatoria',
+            'IMG_DESTACADA.url' => 'La imagen debe ser una URL válida',
+            'IMG_DESTACADA.max' => 'La URL de la imagen no puede tener más de 500 caracteres',
+            'categorias.required' => 'Debes seleccionar al menos una categoría',
+            'categorias.min' => 'Debes seleccionar al menos una categoría',
+            'categorias.*.exists' => 'Una o más categorías seleccionadas no existen',
         ]);
 
         if ($validator->fails()) {
@@ -70,23 +84,24 @@ public function store(Request $request)
         }
 
         try {
-            $data = $request->except('IMG_DESTACADA');
-
-            // Forzar el estado a 1 (Activo)
+            // Separar datos del comercio y categorías
+            $data = $request->except('categorias');
             $data['NUM_ESTADO'] = 1;
-            
-            // Manejar la imagen
-            if ($request->hasFile('IMG_DESTACADA')) {
-                $imagen = $request->file('IMG_DESTACADA');
-                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-                $imagen->move(public_path('images/comercios'), $nombreImagen);
-                $data['IMG_DESTACADA'] = 'images/comercios/' . $nombreImagen;
+
+            // Crear el comercio
+            $comercio = Comercio::create($data);
+
+            $categoriasSync = [];
+            foreach ($request->categorias as $categoriaId) {
+            $categoriasSync[$categoriaId] = ['FEC_CREACION' => now(),
+            'NUM_ESTADO' => 1];
             }
 
-            Comercio::create($data);
+            $comercio->categorias()->attach($request->categorias);
 
             return redirect()->route('comercios.index')
-                ->with('success', 'Comercio creado exitosamente');
+                ->with('success', 'Comercio creado exitosamente con sus categorías');
+                
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Error al crear el comercio: ' . $e->getMessage())
@@ -99,7 +114,7 @@ public function store(Request $request)
      */
     public function show($id)
     {
-        $comercio = Comercio::findOrFail($id);
+        $comercio = Comercio::with('categorias')->findOrFail($id);
         return view('admin.comercios.show', compact('comercio'));
     }
 
@@ -108,14 +123,20 @@ public function store(Request $request)
      */
     public function edit($id)
     {
-        $comercio = Comercio::findOrFail($id);
-        return view('admin.comercios.edit', compact('comercio'));
+        $comercio = Comercio::with('categorias')->findOrFail($id);
+        
+        $categorias = Categoria::where('NUM_ESTADO', 1)
+            ->orderBy('DSC_NOMBRE')
+            ->get();
+            
+        return view('admin.comercios.edit', compact('comercio', 'categorias'));
     }
+
 
     /**
      * Actualizar comercio
      */
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'DSC_COMERCIO' => 'required|string|max:500',
@@ -126,8 +147,10 @@ public function store(Request $request)
             'DSC_FACEBOOK' => 'nullable|string|max:255',
             'NUM_LATITUD' => 'required|numeric|between:-90,90',
             'NUM_LONGITUD' => 'required|numeric|between:-180,180',
-            'IMG_DESTACADA' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'IMG_DESTACADA' => 'nullable|url|max:500',
             'NUM_ESTADO' => 'required|integer|in:0,1',
+            'categorias' => 'required|array|min:1',
+            'categorias.*' => 'exists:tb_categoria,ID_CATEGORIA',
         ], [
             'DSC_COMERCIO.required' => 'El nombre del comercio es obligatorio',
             'DSC_COMERCIO.max' => 'El nombre no puede tener más de 500 caracteres',
@@ -144,11 +167,13 @@ public function store(Request $request)
             'NUM_LONGITUD.required' => 'La longitud es obligatoria',
             'NUM_LONGITUD.numeric' => 'La longitud debe ser un número',
             'NUM_LONGITUD.between' => 'La longitud debe estar entre -180 y 180',
-            'IMG_DESTACADA.image' => 'El archivo debe ser una imagen',
-            'IMG_DESTACADA.mimes' => 'Solo se permiten imágenes en formato JPEG, PNG, JPG o GIF',
-            'IMG_DESTACADA.max' => 'La imagen no debe pesar más de 2MB',
             'NUM_ESTADO.required' => 'El estado es obligatorio',
             'NUM_ESTADO.in' => 'El estado debe ser Activo o Inactivo',
+            'IMG_DESTACADA.url' => 'La imagen debe ser una URL válida',
+            'IMG_DESTACADA.max' => 'La URL de la imagen no puede tener más de 500 caracteres',
+            'categorias.required' => 'Debes seleccionar al menos una categoría',
+            'categorias.min' => 'Debes seleccionar al menos una categoría',
+            'categorias.*.exists' => 'Una o más categorías seleccionadas no existen',
         ]);
 
         if ($validator->fails()) {
@@ -160,25 +185,21 @@ public function store(Request $request)
 
         try {
             $comercio = Comercio::findOrFail($id);
-            $data = $request->except('IMG_DESTACADA');
+            
+            $data = $request->except('categorias');
+            $comercio->update($data);
 
-            // Manejar la imagen
-            if ($request->hasFile('IMG_DESTACADA')) {
-                // Eliminar imagen anterior si existe
-                if ($comercio->IMG_DESTACADA && file_exists(public_path($comercio->IMG_DESTACADA))) {
-                    unlink(public_path($comercio->IMG_DESTACADA));
-                }
-                
-                $imagen = $request->file('IMG_DESTACADA');
-                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-                $imagen->move(public_path('images/comercios'), $nombreImagen);
-                $data['IMG_DESTACADA'] = 'images/comercios/' . $nombreImagen;
+            $categoriasSync = [];
+            foreach ($request->categorias as $categoriaId) {
+            $categoriasSync[$categoriaId] = ['FEC_CREACION' => now(),
+            'NUM_ESTADO' => 1];
             }
 
-            $comercio->update($data);
+            $comercio->categorias()->sync($request->categorias);
 
             return redirect()->route('comercios.index')
                 ->with('success', 'Comercio actualizado exitosamente');
+                
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Error al actualizar el comercio: ' . $e->getMessage())
@@ -189,14 +210,18 @@ public function store(Request $request)
     /**
      * Eliminar comercio
      */
-    public function destroy($id)
+        public function destroy($id)
     {
         try {
             $comercio = Comercio::findOrFail($id);
+            
+            $comercio->categorias()->detach();
+            
             $comercio->delete();
 
             return redirect()->route('comercios.index')
                 ->with('success', 'Comercio eliminado exitosamente');
+                
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Error al eliminar el comercio: ' . $e->getMessage());

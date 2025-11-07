@@ -1,0 +1,230 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Galería de ' . $comercio->DSC_NOMBRE_COMERCIO)
+
+@section('content')
+<div class="space-y-6">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center text-sm text-slate-600 mb-6">
+        <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Dashboard</a>
+        <span class="mx-2 text-slate-400">></span>
+        <a href="{{ route('comercios.index') }}" class="hover:text-slate-900 transition-colors">Comercios</a>
+        <span class="mx-2 text-slate-400">></span>
+        <span class="text-slate-900 font-medium">{{ $comercio->DSC_NOMBRE_COMERCIO }}</span>
+        <span class="mx-2 text-slate-400">></span>
+        <span class="text-slate-900 font-medium">Galería</span>
+    </nav>
+
+    <!-- Header con información del comercio -->
+    <div class="bg-white rounded-lg border p-6">
+        <div class="flex items-start justify-between">
+            <div class="flex items-center gap-4">
+                @if($comercio->IMG_LOGO)
+                    <img src="{{ asset($comercio->IMG_LOGO) }}" 
+                         alt="{{ $comercio->DSC_NOMBRE_COMERCIO }}" 
+                         class="w-20 h-20 rounded-lg object-cover border border-slate-200">
+                @else
+                    <div class="w-20 h-20 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                @endif
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-1">{{ $comercio->DSC_NOMBRE_COMERCIO }}</h2>
+                    <p class="text-slate-600">Gestiona las imágenes de la galería del comercio</p>
+                    <p class="text-sm text-slate-500 mt-1">
+                        <span class="font-medium">{{ $imagenesGaleria->count() }}</span> de <span class="font-medium">6</span> imágenes
+                    </p>
+                </div>
+            </div>
+            <a href="{{ route('comercios.index') }}" 
+               class="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Volver a comercios
+            </a>
+        </div>
+    </div>
+
+    <!-- Mensajes de éxito/error -->
+    @include('admin.componentes.alertasExitoError')
+
+    <!-- Zona de subida de imágenes -->
+    @if($imagenesGaleria->count() < 6)
+    <div class="bg-white rounded-lg border p-6">
+        <h3 class="text-lg font-semibold text-slate-900 mb-4">Subir nuevas imágenes</h3>
+        
+        <form action="{{ route('comercios.galeria.store', $comercio->ID_COMERCIO) }}" 
+              method="POST" 
+              enctype="multipart/form-data" 
+              id="uploadForm">
+            @csrf
+            
+            <!-- Drag & Drop Zone -->
+            <div id="dropzone" 
+                 class="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer bg-slate-50">
+                <svg class="w-12 h-12 mx-auto mb-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                <p class="text-lg font-medium text-slate-700 mb-1">Arrastra imágenes aquí o haz clic para seleccionar</p>
+                <p class="text-sm text-slate-500">PNG, JPG, GIF, WEBP hasta 2MB</p>
+                <p class="text-xs text-slate-400 mt-2">Puedes subir hasta {{ 6 - $imagenesGaleria->count() }} imágenes más</p>
+                
+                <input type="file" 
+                       name="imagenes[]" 
+                       id="fileInput" 
+                       multiple 
+                       accept="image/*" 
+                       class="hidden"
+                       max="{{ 6 - $imagenesGaleria->count() }}">
+            </div>
+            
+            <!-- Preview de imágenes seleccionadas -->
+            <div id="previewContainer" class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 hidden">
+            </div>
+            
+            <div class="mt-4 flex justify-end">
+                <button type="submit" 
+                        id="uploadButton"
+                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                    Subir imágenes
+                </button>
+            </div>
+        </form>
+    </div>
+    @else
+    <div class="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg">
+        <p class="font-medium">Has alcanzado el límite de 6 imágenes</p>
+        <p class="text-sm">Elimina algunas imágenes si deseas subir nuevas</p>
+    </div>
+    @endif
+
+    <!-- Grid de imágenes de la galería -->
+    <div class="bg-white rounded-lg border p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-slate-900">Imágenes de la galería</h3>
+            @if($imagenesGaleria->count() > 0)
+            <p class="text-sm text-slate-600">Arrastra para reordenar</p>
+            @endif
+        </div>
+
+        @if($imagenesGaleria->count() > 0)
+        <div id="galeriaGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            @foreach($imagenesGaleria as $imagen)
+            <div class="galeria-item group relative bg-slate-50 rounded-lg overflow-hidden border border-slate-200 hover:border-blue-500 transition-all cursor-move"
+                 data-id="{{ $imagen->ID_GALERIA_COMERCIO }}">
+                
+                <!-- Número de orden -->
+                <div class="absolute top-2 left-2 bg-slate-900/80 text-white text-xs font-bold px-2 py-1 rounded z-10">
+                    #{{ $imagen->DSC_ORDEN }}
+                </div>
+                
+                <!-- Imagen -->
+                <div class="aspect-square overflow-hidden">
+                    <img src="{{ asset($imagen->IMG_URL) }}" 
+                         alt="Imagen {{ $imagen->DSC_ORDEN }}" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200">
+                </div>
+                
+                <!-- Acciones -->
+                <div class="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/60 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div class="flex gap-2">
+                        <!-- Vista previa -->
+                        <button type="button"
+                                onclick="openImageModal('{{ asset($imagen->IMG_URL) }}')"
+                                class="p-2 bg-white text-slate-700 rounded-lg hover:bg-slate-100 transition-colors"
+                                title="Ver imagen">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                        
+                        <!-- Eliminar -->
+                        <button type="button"
+                                onclick="confirmDelete({{ $imagen->ID_GALERIA_COMERCIO }})"
+                                class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                title="Eliminar">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Formulario oculto para eliminar -->
+                <form id="deleteForm{{ $imagen->ID_GALERIA_COMERCIO }}" 
+                      action="{{ route('comercios.galeria.destroy', [$comercio->ID_COMERCIO, $imagen->ID_GALERIA_COMERCIO]) }}" 
+                      method="POST" 
+                      class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            </div>
+            @endforeach
+        </div>
+        @else
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <p class="text-slate-500 mb-2">No hay imágenes en la galería</p>
+            <p class="text-sm text-slate-400">Sube las primeras imágenes usando el área de arriba</p>
+        </div>
+        @endif
+    </div>
+</div>
+
+<!-- Modal para vista previa de imagen -->
+<div id="imageModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="relative max-w-4xl w-full">
+        <button onclick="closeImageModal()" 
+                class="absolute -top-12 right-0 text-white hover:text-slate-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        <img id="modalImage" src="" alt="" class="w-full h-auto rounded-lg">
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div id="deleteModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-slate-900">Eliminar imagen</h3>
+                <p class="text-sm text-slate-600">Esta acción no se puede deshacer</p>
+            </div>
+        </div>
+        
+        <p class="text-slate-700 mb-6">¿Estás seguro de que deseas eliminar esta imagen de la galería?</p>
+        
+        <div class="flex gap-3 justify-end">
+            <button onclick="closeDeleteModal()" 
+                    class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium">
+                Cancelar
+            </button>
+            <button onclick="executeDelete()" 
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium">
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+@endsection
+
+@push('scripts')
+    @include('admin.comercios.galeria.scripts')
+@endpush
