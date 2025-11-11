@@ -12,6 +12,7 @@ use App\Http\Controllers\GaleriaProductoController;
 use App\Http\Controllers\GaleriaComercioController;
 use App\Http\Controllers\ProductoClienteController;
 
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas - Directorio Comercial
