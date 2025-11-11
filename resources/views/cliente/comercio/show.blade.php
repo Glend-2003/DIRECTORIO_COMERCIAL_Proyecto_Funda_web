@@ -2,12 +2,10 @@
 
 @section('title', $comercio->DSC_NOMBRE_COMERCIO . ' - Directorio Comercial')
 
-<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 @section('content')
 <div class="min-h-screen bg-slate-50">
-    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
@@ -29,7 +27,6 @@
         </div>
     </header>
 
-    <!-- Breadcrumb -->
     <div class="bg-white border-b">
         <div class="container mx-auto px-4 py-3">
             <nav class="flex" aria-label="Breadcrumb">
@@ -71,7 +68,6 @@
         </div>
     </div>
 
-    <!-- Hero Section -->
     <div class="relative h-[400px] overflow-hidden">
         <img src="{{ asset($comercio->IMG_DESTACADA) }}" 
              alt="{{ $comercio->DSC_NOMBRE_COMERCIO }}"
@@ -97,9 +93,7 @@
         </div>
     </div>
 
-    <!-- Content -->
     <div class="container mx-auto px-4 py-8">
-        <!-- Tabs Navigation -->
         <div class="bg-white rounded-lg border border-slate-200 mb-8">
             <div class="flex overflow-x-auto">
                 <button onclick="showTab('info')" 
@@ -125,10 +119,8 @@
             </div>
         </div>
 
-        <!-- Tab: Información -->
         <div id="content-info" class="tab-content">
             <div class="max-w-4xl mx-auto space-y-6">
-                <!-- Información de Contacto -->
                 <div class="bg-white rounded-lg border border-slate-200 p-6">
                     <h3 class="text-lg font-semibold text-slate-900 mb-4">Información de Contacto</h3>
                     <div class="grid md:grid-cols-2 gap-4">
@@ -185,7 +177,6 @@
                     </div>
                 </div>
 
-                <!-- Redes Sociales -->
                 @if($comercio->DSC_FACEBOOK || $comercio->DSC_INSTAGRAM)
                 <div class="bg-white rounded-lg border border-slate-200 p-6">
                     <h3 class="text-lg font-semibold text-slate-900 mb-4">Redes Sociales</h3>
@@ -219,15 +210,12 @@
                 </div>
                 @endif
 
-                <!-- Ubicación GPS con Mapa Leaflet -->
                 @if($comercio->NUM_LATITUD && $comercio->NUM_LONGITUD)
                 <div class="bg-white rounded-lg border border-slate-200 p-6">
                     <h3 class="text-lg font-semibold text-slate-900 mb-4">Ubicación GPS</h3>
                     
-                    <!-- Mapa -->
                     <div id="comercioMap" class="w-full h-80 rounded-lg border-2 border-slate-300 mb-4"></div>
                     
-                    <!-- Coordenadas -->
                     <div class="grid md:grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-slate-500 font-medium">Latitud</p>
@@ -243,7 +231,6 @@
             </div>
         </div>
 
-        <!-- Tab: Productos -->
         <div id="content-products" class="tab-content hidden">
             <div class="max-w-6xl mx-auto">
                 <div class="mb-6">
@@ -254,7 +241,9 @@
                 @if($comercio->productos->count() > 0)
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($comercio->productos as $producto)
-                    <div class="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition cursor-pointer">
+                    {{-- CORRECCIÓN APLICADA AQUÍ: Se cambió el div por <a> para hacer la tarjeta clicable --}}
+                    <a href="{{ route('producto.show', ['comercio' => $comercio->ID_COMERCIO, 'producto' => $producto->ID_PRODUCTO]) }}" 
+                       class="block bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition">
                         <div class="relative h-48">
                             <img src="{{ asset($producto->IMG_IMAGEN_DESTACADA) }}" 
                                  alt="{{ $producto->DSC_NOMBRE }}"
@@ -268,7 +257,7 @@
                                 <span class="text-blue-600 font-semibold">₡{{ number_format($producto->MONTO_PRECIO, 0, ',', '.') }}</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                     @endforeach
                 </div>
                 @else
@@ -282,7 +271,6 @@
             </div>
         </div>
 
-        <!-- Tab: Galería -->
         <div id="content-gallery" class="tab-content hidden">
             <div class="max-w-6xl mx-auto">
                 <div class="mb-6">
@@ -313,7 +301,6 @@
             </div>
         </div>
 
-        <!-- Tab: Contacto -->
         <div id="content-contact" class="tab-content hidden">
             <div class="max-w-2xl mx-auto">
                 <div class="bg-white rounded-lg border border-slate-200 p-8">
@@ -325,23 +312,23 @@
                             <div>
                                 <label class="text-sm text-slate-700 mb-2 block">Nombre completo</label>
                                 <input type="text" placeholder="Tu nombre" 
-                                       class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                             <div>
                                 <label class="text-sm text-slate-700 mb-2 block">Teléfono</label>
                                 <input type="text" placeholder="Tu teléfono" 
-                                       class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
                         <div>
                             <label class="text-sm text-slate-700 mb-2 block">Correo electrónico</label>
                             <input type="email" placeholder="tu@email.com" 
-                                   class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
                             <label class="text-sm text-slate-700 mb-2 block">Mensaje</label>
                             <textarea placeholder="Escribe tu mensaje aquí..." rows="6" 
-                                      class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                            class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
                         <button type="submit" 
                                 class="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium">
@@ -353,7 +340,6 @@
         </div>
     </div>
 
-    <!-- Gallery Modal -->
     <div id="galleryModal" class="fixed inset-0 bg-black/95 z-50 hidden items-center justify-center">
         <button onclick="closeGallery()" 
                 class="absolute top-4 right-4 text-white hover:text-slate-300 transition">
@@ -383,7 +369,6 @@
         <div id="imageCounter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white"></div>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-slate-900 text-white py-12 mt-12">
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-4 gap-8">
@@ -431,7 +416,6 @@
 </footer>
 </div>
 
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>

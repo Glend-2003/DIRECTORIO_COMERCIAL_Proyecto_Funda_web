@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoriaClienteController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\GaleriaProductoController;
 use App\Http\Controllers\GaleriaComercioController;
+use App\Http\Controllers\ProductoClienteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,8 @@ Route::get('/directorio', [DirectorioController::class, 'index'])->name('directo
 Route::resource('categoriasCliente', CategoriaClienteController::class);
 
 Route::get('/comercio/{id}', [CategoriaClienteController::class, 'show'])->name('comercio.show');
+
+Route::get('/comercio/{comercio}/producto/{producto}', [ProductoClienteController::class, 'show'])->name('producto.show');
 
 /*
 |--------------------------------------------------------------------------
