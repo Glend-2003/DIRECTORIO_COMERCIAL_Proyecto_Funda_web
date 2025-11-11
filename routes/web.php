@@ -58,7 +58,6 @@ Route::middleware('auth')->group(function () {
     
     // Rutas de administración de categorías (protegidas)
     Route::resource('categorias', CategoriaController::class);
-    
     Route::resource('productos', ProductoController::class);
 
     // Rutas de Galería de Productos

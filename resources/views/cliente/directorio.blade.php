@@ -43,30 +43,37 @@
         </div>
 
         <!-- Hero Slider Dinámico -->
-        <!-- Hero Slider Dinámico Corregido -->
         <div class="relative overflow-hidden bg-slate-900 h-[500px]" id="heroSlider">
             @if ($sliders->count() > 0)
-                @foreach ($sliders as $index => $slider)
-                    <div
-                        class="slide absolute inset-0 transition-all duration-500 ease-in-out {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}">
-                        <img src="{{ $slider->IMG_URL }}" alt="{{ $slider->DSC_NOMBRE }}"
-                            class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-slate-900/40"></div>
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="container mx-auto px-4">
-                                <div class="max-w-2xl text-white">
-                                    <h1 class="text-5xl font-bold text-white mb-4">{{ $slider->DSC_NOMBRE }}</h1>
-                                    <p class="text-white/90 text-xl mb-6">{{ $slider->DSC_DESCRIPCION }}</p>
-                                    <button
-                                        class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-lg">
-                                        Explorar Ahora
-                                    </button>
-                                </div>
-                            </div>
+        @foreach ($sliders as $index => $slider)
+            <div
+                class="slide absolute inset-0 transition-all duration-500 ease-in-out {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}">
+                <img src="{{ $slider->IMG_URL }}" alt="{{ $slider->DSC_NOMBRE }}"
+                    class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-slate-900/40"></div>
+                <div class="absolute inset-0 flex items-center">
+                    <div class="container mx-auto px-4">
+                        <div class="max-w-2xl text-white">
+                            <h1 class="text-5xl font-bold text-white mb-4">{{ $slider->DSC_NOMBRE }}</h1>
+                            <p class="text-white/90 text-xl mb-6">{{ $slider->DSC_DESCRIPCION }}</p>
+                            
+                            @if($slider->URL_WEB)
+                                <a href="{{ $slider->URL_WEB }}" 
+                                   target="_blank"
+                                   class="inline-block px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-lg">
+                                    Explorar Ahora
+                                </a>
+                            @else
+                                <button class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-lg">
+                                    Explorar Ahora
+                                </button>
+                            @endif
                         </div>
                     </div>
-                @endforeach
-            @else
+                </div>
+            </div>
+        @endforeach
+    @else
                 <!-- Slider por defecto si no hay sliders en la base de datos -->
                 <div class="slide absolute inset-0 transition-all duration-500 ease-in-out opacity-100 z-10">
                     <img src="https://images.unsplash.com/photo-1464854860390-e95991b46441?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"

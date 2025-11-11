@@ -8,7 +8,8 @@
             <div class="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
                 <h3 class="text-xl font-bold text-slate-900">Crear Nuevo Slider</h3>
                 <button type="button" onclick="closeCreateModal()" class="text-slate-400 hover:text-slate-600">
-                    <svg class= "w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- CORREGIDO: Quité el espacio extra -->
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -48,8 +49,8 @@
                     <select name="NUM_ESTADO"
                         class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('NUM_ESTADO') border-red-500 @enderror"
                         required>
-                        <option value="1" {{ old('NUM_ESTADO') == 1 ? 'selected' : '' }}>Activo</option>
-                        <option value="0" {{ old('NUM_ESTADO') == 0 ? 'selected' : '' }}>Inactivo</option>
+                        <option value="1" {{ old('NUM_ESTADO') == '1' ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ old('NUM_ESTADO') == '0' ? 'selected' : '' }}>Inactivo</option>
                     </select>
                     @error('NUM_ESTADO')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -60,24 +61,34 @@
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Imagen del Slider *
                     </label>
-                    <input type="file" 
-                           name="IMG_URL" 
-                           id="create_IMG_URL"
-                           accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
-                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 @error('IMG_URL') border-red-500 @enderror"
-                           required>
+                    <input type="file" name="IMG_URL" id="create_IMG_URL"
+                        accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 @error('IMG_URL') border-red-500 @enderror"
+                        required>
                     <p class="mt-1 text-sm text-slate-500">
                         Formatos aceptados: JPEG, PNG, JPG, GIF, WEBP. Tamaño máximo: 5MB
                     </p>
                     @error('IMG_URL')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    
+
                     <!-- Vista previa de imagen -->
                     <div id="createImagePreview" class="mt-3 hidden">
                         <p class="text-sm font-medium text-slate-700 mb-2">Vista previa:</p>
                         <img id="createPreview" class="max-w-xs rounded-lg border shadow-sm">
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        URL Web
+                    </label>
+                    <input type="text" name="URL_WEB" value="{{ old('URL_WEB') }}"
+                        placeholder="https://ejemplo.com o deja vacío si no aplica"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('URL_WEB') border-red-500 @enderror">
+                    @error('URL_WEB')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -146,15 +157,22 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        URL Web <!-- CORREGIDO: Quité el * -->
+                    </label>
+                    <input type="url" name="URL_WEB" id="edit_URL_WEB" placeholder="https://ejemplo.com"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div>
                     <!-- Imagen Actual -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-slate-700 mb-2">
                             Imagen Actual
                         </label>
                         <div class="flex items-center gap-4">
-                            <img id="editCurrentImage" src="" 
-                                 alt="Imagen actual" 
-                                 class="h-20 w-auto rounded-lg border shadow-sm">
+                            <img id="editCurrentImage" src="" alt="Imagen actual"
+                                class="h-20 w-auto rounded-lg border shadow-sm">
                             <span class="text-sm text-slate-500">
                                 Imagen actual del slider
                             </span>
@@ -166,15 +184,13 @@
                         <label class="block text-sm font-medium text-slate-700 mb-2">
                             Nueva Imagen (Opcional)
                         </label>
-                        <input type="file" 
-                               name="IMG_URL" 
-                               id="edit_IMG_URL"
-                               accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
-                               class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <input type="file" name="IMG_URL" id="edit_IMG_URL"
+                            accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+                            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         <p class="mt-1 text-sm text-slate-500">
                             Deje vacío para mantener la imagen actual. Formatos: JPEG, PNG, JPG, GIF, WEBP. Máx: 5MB
                         </p>
-                        
+
                         <!-- Vista previa de nueva imagen -->
                         <div id="editImagePreview" class="mt-3 hidden">
                             <p class="text-sm font-medium text-slate-700 mb-2">Vista previa de nueva imagen:</p>
@@ -238,13 +254,18 @@
 
             <div class="border-t pt-6"></div>
 
-            <!-- Vista Previa -->
+            <!-- url web -->
             <div>
                 <label class="text-sm font-medium text-slate-500">Vista Previa</label>
                 <div class="mt-2">
                     <img id="view_IMG_PREVIEW" src="" alt="Vista previa"
                         class="max-w-full h-auto rounded-lg border">
                 </div>
+            </div>
+
+            <div>
+                <label class="text-sm font-medium text-slate-500">Url Web</label>
+                <p id="view_URL_WEB" class="text-lg font-semibold text-slate-900 mt-1"></p>
             </div>
 
             <div class="border-t pt-6"></div>
@@ -319,15 +340,15 @@
             const file = e.target.files[0];
             const preview = document.getElementById('createPreview');
             const imagePreview = document.getElementById('createImagePreview');
-            
+
             if (file) {
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     preview.src = e.target.result;
                     imagePreview.classList.remove('hidden');
                 }
-                
+
                 reader.readAsDataURL(file);
             } else {
                 imagePreview.classList.add('hidden');
@@ -339,15 +360,15 @@
             const file = e.target.files[0];
             const preview = document.getElementById('editPreview');
             const imagePreview = document.getElementById('editImagePreview');
-            
+
             if (file) {
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     preview.src = e.target.result;
                     imagePreview.classList.remove('hidden');
                 }
-                
+
                 reader.readAsDataURL(file);
             } else {
                 imagePreview.classList.add('hidden');
@@ -391,12 +412,17 @@
             const descripcionInput = document.getElementById('edit_DSC_DESCRIPCION');
             const estadoSelect = document.getElementById('edit_ESTADO');
             const currentImage = document.getElementById('editCurrentImage');
+            const urlInput = document.getElementById('edit_URL_WEB');
             const editForm = document.getElementById('editForm');
 
             if (nombreInput) nombreInput.value = slider.DSC_NOMBRE || '';
             if (descripcionInput) descripcionInput.value = slider.DSC_DESCRIPCION || '';
-            if (estadoSelect) estadoSelect.value = slider.NUM_ESTADO || 1;
-            if (currentImage && slider.IMG_URL) currentImage.src = slider.IMG_URL;
+            if (estadoSelect) estadoSelect.value = slider.NUM_ESTADO || '1';
+            if (currentImage && slider.IMG_URL) {
+                currentImage.src = slider.IMG_URL;
+                currentImage.style.display = 'block';
+            }
+            if (urlInput) urlInput.value = slider.URL_WEB || '';
 
             // Limpiar vista previa de nueva imagen
             const editPreview = document.getElementById('editPreview');
@@ -430,6 +456,14 @@
         }
     }
 
+    function closeEditModal() {
+        const modal = document.getElementById('editModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    }
+
     // Funciones para el modal de ver
     function openViewModal(slider) {
         console.log('Opening view modal with data:', slider);
@@ -445,11 +479,14 @@
             const estadoElement = document.getElementById('view_ESTADO');
             const descripcionElement = document.getElementById('view_DSC_DESCRIPCION');
             const previewElement = document.getElementById('view_IMG_PREVIEW');
+            const urlElement = document.getElementById('view_URL_WEB');
             const createdAtElement = document.getElementById('view_CREATED_AT');
 
             if (nombreElement) nombreElement.textContent = slider.DSC_NOMBRE || 'No disponible';
-            if (estadoElement) estadoElement.textContent = (slider.NUM_ESTADO == 1 ? 'Activo' : 'Inactivo') || 'No disponible';
+            if (estadoElement) estadoElement.textContent = (slider.NUM_ESTADO == 1 ? 'Activo' : 'Inactivo') ||
+                'No disponible';
             if (descripcionElement) descripcionElement.textContent = slider.DSC_DESCRIPCION || 'No disponible';
+            if (urlElement) urlElement.textContent = slider.URL_WEB || 'No disponible';
 
             if (previewElement && slider.IMG_URL) {
                 previewElement.src = slider.IMG_URL;
@@ -460,7 +497,8 @@
 
             if (createdAtElement && slider.created_at) {
                 const date = new Date(slider.created_at);
-                createdAtElement.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES');
+                createdAtElement.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString(
+                'es-ES');
             } else if (createdAtElement) {
                 createdAtElement.textContent = 'No disponible';
             }

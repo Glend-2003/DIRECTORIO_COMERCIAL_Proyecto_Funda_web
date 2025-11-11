@@ -14,6 +14,7 @@ class Slider extends Model
         'DSC_NOMBRE',
         'DSC_DESCRIPCION',
         'IMG_URL',
+        'URL_WEB',
         'NUM_ESTADO'
     ];
 }
