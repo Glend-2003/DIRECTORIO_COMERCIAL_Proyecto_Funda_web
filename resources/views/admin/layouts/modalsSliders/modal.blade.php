@@ -8,7 +8,7 @@
             <div class="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
                 <h3 class="text-xl font-bold text-slate-900">Crear Nuevo Slider</h3>
                 <button type="button" onclick="closeCreateModal()" class="text-slate-400 hover:text-slate-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class= "w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -45,13 +45,13 @@
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Estado *
                     </label>
-                    <select name="ESTADO"
-                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('ESTADO') border-red-500 @enderror"
+                    <select name="NUM_ESTADO"
+                        class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('NUM_ESTADO') border-red-500 @enderror"
                         required>
-                        <option value="1" {{ old('ESTADO') == 1 ? 'selected' : '' }}>Activo</option>
-                        <option value="0" {{ old('ESTADO') == 0 ? 'selected' : '' }}>Inactivo</option>
+                        <option value="1" {{ old('NUM_ESTADO') == 1 ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ old('NUM_ESTADO') == 0 ? 'selected' : '' }}>Inactivo</option>
                     </select>
-                    @error('ESTADO')
+                    @error('NUM_ESTADO')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -137,7 +137,7 @@
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Estado *
                     </label>
-                    <select name="ESTADO" id="edit_ESTADO"
+                    <select name="NUM_ESTADO" id="edit_ESTADO"
                         class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required>
                         <option value="1">Activo</option>
@@ -395,7 +395,7 @@
 
             if (nombreInput) nombreInput.value = slider.DSC_NOMBRE || '';
             if (descripcionInput) descripcionInput.value = slider.DSC_DESCRIPCION || '';
-            if (estadoSelect) estadoSelect.value = slider.ESTADO || 1;
+            if (estadoSelect) estadoSelect.value = slider.NUM_ESTADO || 1;
             if (currentImage && slider.IMG_URL) currentImage.src = slider.IMG_URL;
 
             // Limpiar vista previa de nueva imagen
@@ -448,7 +448,7 @@
             const createdAtElement = document.getElementById('view_CREATED_AT');
 
             if (nombreElement) nombreElement.textContent = slider.DSC_NOMBRE || 'No disponible';
-            if (estadoElement) estadoElement.textContent = (slider.ESTADO == 1 ? 'Activo' : 'Inactivo') || 'No disponible';
+            if (estadoElement) estadoElement.textContent = (slider.NUM_ESTADO == 1 ? 'Activo' : 'Inactivo') || 'No disponible';
             if (descripcionElement) descripcionElement.textContent = slider.DSC_DESCRIPCION || 'No disponible';
 
             if (previewElement && slider.IMG_URL) {

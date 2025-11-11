@@ -27,7 +27,7 @@ class ControllerSlider extends Controller
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
             'IMG_URL' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'ESTADO' => 'required|boolean',
+            'NUM_ESTADO' => 'required|boolean',
         ]);
 
         try {
@@ -127,7 +127,7 @@ class ControllerSlider extends Controller
                 'DSC_NOMBRE' => $request->DSC_NOMBRE,
                 'DSC_DESCRIPCION' => $request->DSC_DESCRIPCION,
                 'IMG_URL' => $imageUrl,
-                'ESTADO' => $request->ESTADO,
+                'NUM_ESTADO' => $request->NUM_ESTADO,
             ]);
 
             Log::info('Slider creado exitosamente en BD con URL de Cloudinary');
@@ -167,11 +167,11 @@ Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudin
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
             'IMG_URL' => 'sometimes|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'ESTADO' => 'required|boolean',
+            'NUM_ESTADO' => 'required|boolean',
         ]);
 
         $slider = Slider::findOrFail($id);
-        $data = $request->only(['DSC_NOMBRE', 'DSC_DESCRIPCION', 'ESTADO']);
+        $data = $request->only(['DSC_NOMBRE', 'DSC_DESCRIPCION', 'NUM_ESTADO']);
 
         try {
             // Si se sube una nueva imagen
