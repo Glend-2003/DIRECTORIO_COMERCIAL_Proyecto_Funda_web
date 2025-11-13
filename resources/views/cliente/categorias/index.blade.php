@@ -4,30 +4,8 @@
 
 @section('content')
     <div class="min-h-screen bg-slate-50">
-        <!-- Header -->
-        <header class="bg-white shadow-sm sticky top-0 z-40">
-            <div class="container mx-auto px-4 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                            </path>
-                        </svg>
-                        <span class="text-slate-900 font-semibold text-lg">Directorio Comercial</span>
-                    </div>
-                    <nav class="hidden md:flex gap-6">
-                        <a href="{{ route('directorio.index') }}"
-                            class="text-slate-600 hover:text-blue-600 transition">Inicio</a>
-                        <a href="{{ route('categorias.index') }}" class="text-blue-600 font-medium">Categorías</a>
-                        <a href="#" class="text-slate-600 hover:text-blue-600 transition">Comercios</a>
-                        <a href="#" class="text-slate-600 hover:text-blue-600 transition">Contacto</a>
-                    </nav>
-                </div>
-            </div>
-        </header>
+        @include('components.header')
 
-        <!-- Breadcrumb -->
         <div class="bg-white border-b">
             <div class="container mx-auto px-4 py-3">
                 <nav class="flex" aria-label="Breadcrumb">
@@ -62,10 +40,10 @@
             </div>
         </div>
 
-        <!-- Search Bar -->
         <div class="bg-white border-b">
             <div class="container mx-auto px-4 py-4">
-                <form method="GET" action="{{ route('categorias.index') }}" class="relative max-w-xl">
+                {{-- CAMBIO 1: Acción del formulario de búsqueda --}}
+                <form method="GET" action="{{ route('categoriasCliente.index') }}" class="relative max-w-xl">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -74,7 +52,8 @@
                     <input type="text" name="buscar" placeholder="Buscar comercios..." value="{{ request('buscar') }}"
                         class="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     @if (request('buscar'))
-                        <a href="{{ route('categorias.index', array_diff_key(request()->query(), ['buscar' => ''])) }}"
+                        {{-- CAMBIO 2: Limpiar búsqueda, preservando otros filtros --}}
+                        <a href="{{ route('categoriasCliente.index', array_diff_key(request()->query(), array_flip(['buscar']))) }}"
                             class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,16 +70,14 @@
 
         <div class="container mx-auto px-4 py-8">
             <div class="grid lg:grid-cols-4 gap-8">
-                <!-- Sidebar -->
                 <aside class="lg:col-span-1">
-                    <!-- Categorías -->
                     <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
                         <div class="p-4 border-b">
                             <h3 class="font-semibold text-slate-900">Categorías</h3>
                         </div>
                         <div class="p-2">
-                            <!-- Botón "Ver Todas" -->
-                            <a href="{{ route('categoriasCliente.index') }}"
+                            {{-- CAMBIO 3: Botón "Ver Todas" debe preservar otros filtros --}}
+                            <a href="{{ route('categoriasCliente.index', array_diff_key(request()->query(), array_flip(['categoria']))) }}"
                                 class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ !request('categoria') ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
                                 <div class="flex items-center gap-3">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,17 +91,14 @@
                                     class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $totalComercios }}</span>
                             </a>
 
-                            <!-- Lista de Categorías -->
                             @foreach ($categorias as $cat)
                                 <a href="{{ route('categoriasCliente.index', array_merge(request()->query(), ['categoria' => $cat->DSC_NOMBRE])) }}"
                                     class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ request('categoria') == $cat->DSC_NOMBRE ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
                                     <div class="flex items-center gap-3">
                                         @if ($cat->IMG_URL)
-                                            <!-- Mostrar imagen de la categoría -->
                                             <img src="{{ $cat->IMG_URL }}" alt="{{ $cat->DSC_NOMBRE }}"
                                                 class="w-5 h-5 object-cover rounded"
                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                            <!-- Icono de fallback que se muestra si la imagen no carga -->
                                             <svg class="w-5 h-5" style="display:none;" fill="none"
                                                 stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -132,7 +106,6 @@
                                                 </path>
                                             </svg>
                                         @else
-                                            <!-- Icono por defecto si no hay imagen -->
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -148,20 +121,26 @@
                             @endforeach
                         </div>
                     </div>
-                    <!-- Filtros -->
                     <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mt-4">
                         <div class="p-4 border-b flex items-center justify-between">
                             <h3 class="font-semibold text-slate-900">Filtros</h3>
-                            @if (request()->hasAny(['ubicacion']))
-                                <a href="{{ route('categorias.index', ['categoria' => request('categoria')]) }}"
+                            @php
+                                $currentQuery = request()->query();
+                                $paramsToRemove = ['ubicacion', 'buscar'];
+                                $cleanUrlParams = array_diff_key($currentQuery, array_flip($paramsToRemove));
+                                $cleanUrlParams['orden'] = request('orden', 'reciente');
+                            @endphp
+                            {{-- CAMBIO 4: Limpiar filtros avanzados, manteniendo categoría y orden --}}
+                            @if (request()->hasAny(['ubicacion', 'buscar']))
+                                <a href="{{ route('categoriasCliente.index', $cleanUrlParams) }}"
                                     class="text-xs text-blue-600 hover:text-blue-700">
                                     Limpiar
                                 </a>
                             @endif
                         </div>
                         <div class="p-4">
-                            <form method="GET" action="{{ route('categorias.index') }}">
-                                <!-- Ubicación -->
+                            {{-- CAMBIO 5: Acción del formulario de ubicación --}}
+                            <form method="GET" action="{{ route('categoriasCliente.index') }}">
                                 <div class="mb-4">
                                     <label class="text-sm text-slate-700 mb-2 block">Ubicación</label>
                                     <div class="relative">
@@ -169,7 +148,8 @@
                                             value="{{ request('ubicacion') }}"
                                             class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                                         @if (request('ubicacion'))
-                                            <a href="{{ route('categorias.index', array_diff_key(request()->query(), ['ubicacion' => ''])) }}"
+                                            {{-- CAMBIO 6: Limpiar ubicación, preservando otros filtros --}}
+                                            <a href="{{ route('categoriasCliente.index', array_diff_key(request()->query(), array_flip(['ubicacion']))) }}"
                                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
@@ -191,7 +171,6 @@
                                 </button>
                             </form>
 
-                            <!-- Filtros Activos -->
                             @if (request('ubicacion'))
                                 <div class="mt-4 pt-4 border-t">
                                     <p class="text-xs text-slate-600 mb-2">Filtros activos:</p>
@@ -200,7 +179,7 @@
                                             <span
                                                 class="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
                                                 📍 {{ request('ubicacion') }}
-                                                <a href="{{ route('categorias.index', array_diff_key(request()->query(), ['ubicacion' => ''])) }}"
+                                                <a href="{{ route('categoriasCliente.index', array_diff_key(request()->query(), array_flip(['ubicacion']))) }}"
                                                     class="hover:text-slate-900">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
@@ -217,9 +196,7 @@
                     </div>
                 </aside>
 
-                <!-- Main Content -->
                 <div class="lg:col-span-3">
-                    <!-- Header con ordenamiento -->
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <div>
                             <h2 class="text-2xl font-bold text-slate-900">
@@ -236,7 +213,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
                             </svg>
-                            <form method="GET" action="{{ route('categorias.index') }}" id="ordenForm">
+                            {{-- CAMBIO 7: Acción del formulario de ordenamiento --}}
+                            <form method="GET" action="{{ route('categoriasCliente.index') }}" id="ordenForm">
                                 <select name="orden" onchange="document.getElementById('ordenForm').submit()"
                                     class="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     <option value="reciente"
@@ -256,7 +234,6 @@
                         </div>
                     </div>
 
-                    <!-- Results -->
                     @if ($comercios->count() > 0)
                         <div class="space-y-6">
                             @foreach ($comercios as $comercio)
@@ -324,14 +301,12 @@
                             @endforeach
                         </div>
 
-                        <!-- Paginación -->
                         @if ($comercios->hasPages())
                             <div class="mt-8">
                                 {{ $comercios->links() }}
                             </div>
                         @endif
                     @else
-                        <!-- No results -->
                         <div class="bg-white rounded-lg border border-slate-200 p-12 text-center">
                             <div class="max-w-md mx-auto">
                                 <svg class="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" stroke="currentColor"
@@ -344,7 +319,8 @@
                                     No hay comercios que coincidan con los filtros seleccionados. Intenta ajustar tus
                                     criterios de búsqueda.
                                 </p>
-                                <a href="{{ route('categorias.index') }}"
+                                {{-- Limpia todos los filtros al no haber resultados --}}
+                                <a href="{{ route('categoriasCliente.index') }}"
                                     class="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                                     Limpiar Filtros
                                 </a>
@@ -355,7 +331,6 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <footer class="bg-slate-900 text-white py-12 mt-12">
             <div class="container mx-auto px-4">
                 <div class="grid md:grid-cols-4 gap-8">
