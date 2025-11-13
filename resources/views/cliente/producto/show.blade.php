@@ -47,13 +47,7 @@
     </div>
     <!-- Content -->
     <div class="container mx-auto px-6 py-12">
-        <a href="{{ route('comercio.show', $comercio->ID_COMERCIO) }}" 
-           class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-md transition mb-6">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Volver a {{ $comercio->DSC_NOMBRE_COMERCIO }}
-        </a>
+     
 
         <div class="grid lg:grid-cols-2 gap-10 max-w-7xl mx-auto">
             <!-- Images Section -->
@@ -119,36 +113,6 @@
                     </div>
                 </div>
 
-                <!-- Additional Info -->
-                @if(isset($producto->tiempo_preparacion) || isset($producto->porciones) || isset($producto->tipo))
-                <div class="bg-white rounded-xl border border-slate-200 p-8 mt-6 shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Información Adicional</h3>
-                    <div class="space-y-3 text-sm">
-                        @if(isset($producto->tiempo_preparacion))
-                        <div class="flex justify-between py-2 border-b">
-                            <span class="text-slate-600">Tiempo de preparación</span>
-                            <span class="text-slate-900">{{ $producto->tiempo_preparacion }}</span>
-                        </div>
-                        @endif
-                        @if(isset($producto->porciones))
-                        <div class="flex justify-between py-2 border-b">
-                            <span class="text-slate-600">Porciones</span>
-                            <span class="text-slate-900">{{ $producto->porciones }}</span>
-                        </div>
-                        @endif
-                        @if(isset($producto->tipo))
-                        <div class="flex justify-between py-2 border-b">
-                            <span class="text-slate-600">Tipo</span>
-                            <span class="text-slate-900">{{ $producto->tipo }}</span>
-                        </div>
-                        @endif
-                        <div class="flex justify-between py-2">
-                            <span class="text-slate-600">Disponibilidad</span>
-                            <span class="text-green-600 font-medium">En stock</span>
-                        </div>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
 
@@ -169,7 +133,7 @@
                         <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ $item->DSC_NOMBRE }}</h3>
                         <div class="flex items-center justify-between">
                             <span class="text-blue-600 font-semibold">₡{{ number_format($item->MONTO_PRECIO, 0, ',', '.') }}</span>
-                            <a href="{{ route('producto.show', [$comercio->ID_COMERCIO, $item->ID_COMERCIO]) }}" 
+                            <a href="{{ route('producto.show', ['comercio' => $comercio->ID_COMERCIO, 'producto' => $item->ID_PRODUCTO]) }}"  
                                class="px-3 py-1 text-sm border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition">
                                 Ver Detalles
                             </a>
@@ -214,6 +178,7 @@
 
         <div id="imageCounter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white"></div>
     </div>
+    @include('components.footer')
 </div>
 
 <script>
