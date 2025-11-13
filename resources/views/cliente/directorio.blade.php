@@ -29,19 +29,6 @@
             </div>
         </header>
 
-        <!-- Breadcrumb -->
-        <div class="bg-white border-b">
-            <div class="container mx-auto px-4 py-3">
-                <nav class="flex" aria-label="Breadcrumb">
-                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                        <li class="inline-flex items-center">
-                            <a href="{{ route('directorio.index') }}" class="text-slate-600 hover:text-blue-600">Inicio</a>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-
         <!-- Hero Slider Dinámico -->
         <!-- Hero Slider Dinámico Corregido -->
         <div class="relative overflow-hidden bg-slate-900 h-[500px]" id="heroSlider">
