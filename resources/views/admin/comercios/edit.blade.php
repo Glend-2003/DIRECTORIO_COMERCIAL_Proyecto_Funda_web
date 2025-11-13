@@ -166,17 +166,24 @@
                     </select>
                 </div>
 
-                <!-- Imagen Destacada (URL) -->
+                <!-- Vista previa de imagen actual -->
+                <div id="edit_imagen_preview_container" class="hidden">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Imagen Actual
+                    </label>
+                    <img id="edit_imagen_preview" src="" alt="Imagen actual" class="w-32 h-32 object-cover rounded-lg border border-slate-200">
+                </div>
+
+                <!-- Imagen Destacada (Archivo) -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
-                        URL de la Imagen Destacada
+                        Cambiar Imagen Destacada
                     </label>
-                    <input type="text" 
-                           id="edit_IMG_DESTACADA"
+                    <input type="file" 
                            name="IMG_DESTACADA" 
-                           placeholder="https://ejemplo.com/imagen.jpg"
-                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                    <p class="mt-1 text-xs text-slate-500">Ingresa la URL completa de la imagen. Deja vacío para mantener la imagen actual.</p>
+                           accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+                           class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800">
+                    <p class="mt-1 text-xs text-slate-500">Formatos permitidos: JPG, PNG, GIF, WEBP. Tamaño máximo: 2MB. Deja vacío para mantener la imagen actual.</p>
                 </div>
             </div>
 

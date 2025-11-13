@@ -267,7 +267,14 @@ function openEditModal(button) {
     document.getElementById('edit_NUM_LATITUD').value = comercio.NUM_LATITUD || '';
     document.getElementById('edit_NUM_LONGITUD').value = comercio.NUM_LONGITUD || '';
     document.getElementById('edit_NUM_ESTADO').value = comercio.NUM_ESTADO || '1';
-    document.getElementById('edit_IMG_DESTACADA').value = comercio.IMG_DESTACADA || '';
+    
+    // Mostrar imagen actual si existe
+    if (comercio.IMG_DESTACADA) {
+        document.getElementById('edit_imagen_preview_container').classList.remove('hidden');
+        document.getElementById('edit_imagen_preview').src = '/' + comercio.IMG_DESTACADA;
+    } else {
+        document.getElementById('edit_imagen_preview_container').classList.add('hidden');
+    }
     
     // Cargar categorías
     loadCategoriasForEdit(comercio.categorias);
