@@ -40,13 +40,25 @@
                 </svg>
                 <span class="text-slate-900 font-semibold">Panel Administrativo</span>
             </div>
+            
+            <!-- Botón de Cerrar Sesión -->
+            <form method="POST" action="{{ route('logout') }}" class="inline">
+                @csrf
+                <button type="submit" class="flex items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </form>
         </div>
     </header>
 
     <div class="flex">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r min-h-screen">
-            <div class="p-4 space-y-1">
+        <aside class="w-64 bg-white border-r min-h-screen flex flex-col">
+            <div class="p-4 space-y-1 flex-1">
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,6 +104,7 @@
                     <span>Productos</span>
                 </a>
             </div>
+
         </aside>
 
         <!-- Main Content -->
@@ -99,9 +112,7 @@
             @yield('content')
             @stack('scripts')
         </main>
-        
     </div>
-
 </body>
-@include('components.footer')
+
 </html>

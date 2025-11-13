@@ -73,5 +73,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::get('/directorio', [DirectorioController::class, 'index'])->name('directorio.index');
+
 // Rutas de autenticación (login manual - ruta oculta)
 require __DIR__.'/auth.php';

@@ -22,7 +22,8 @@
                             class="text-slate-600 hover:text-blue-600 transition">Inicio</a>
                         <a href="{{ route('categoriasCliente.index') }}"
                             class="text-slate-600 hover:text-blue-600 transition">Categorías</a>
-                       
+                        <a href="#" class="text-slate-600 hover:text-blue-600 transition">Comercios</a>
+                        <a href="#" class="text-slate-600 hover:text-blue-600 transition">Contacto</a>
                     </nav>
                 </div>
             </div>
@@ -221,162 +222,82 @@
             </div>
         </div>
 
-        <!-- Categories -->
-        <div class="bg-white py-12">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold text-slate-900">Categorías Populares</h2>
-                    <p class="text-slate-600 mt-2">Explora negocios por categoría</p>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Category 1 - Restaurantes -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-orange-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Restaurantes</h3>
-                            <p class="text-slate-500 text-sm">45 comercios</p>
-                        </div>
-                    </div>
-
-                    <!-- Category 2 - Hoteles -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                    </path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Hoteles</h3>
-                            <p class="text-slate-500 text-sm">28 comercios</p>
-                        </div>
-                    </div>
-
-                    <!-- Category 3 - Barberías -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-purple-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Barberías</h3>
-                            <p class="text-slate-500 text-sm">32 comercios</p>
-                        </div>
-                    </div>
-
-                    <!-- Category 4 - Moda -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Moda</h3>
-                            <p class="text-slate-500 text-sm">56 comercios</p>
-                        </div>
-                    </div>
-
-                    <!-- Category 5 - Cafeterías -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-amber-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Cafeterías</h3>
-                            <p class="text-slate-500 text-sm">38 comercios</p>
-                        </div>
-                    </div>
-
-                    <!-- Category 6 - Tecnología -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-indigo-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Tecnología</h3>
-                            <p class="text-slate-500 text-sm">24 comercios</p>
-                        </div>
-                    </div>
-
-                    <!-- Category 7 - Alimentación -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                                    </path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Alimentación</h3>
-                            <p class="text-slate-500 text-sm">67 comercios</p>
-                        </div>
-                    </div>
-
-                    <!-- Category 8 - Entretenimiento -->
-                    <div
-                        class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group">
-                        <div class="p-6 text-center">
-                            <div
-                                class="bg-rose-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
-                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-slate-900 mb-1">Entretenimiento</h3>
-                            <p class="text-slate-500 text-sm">19 comercios</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- Categories -->
+<div class="bg-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-slate-900">Categorías Populares</h2>
+            <p class="text-slate-600 mt-2">Explora negocios por categoría</p>
         </div>
 
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            @foreach($categoriasPopulares as $categoria)
+            <a href="{{ route('categoriasCliente.index', ['categoria' => $categoria->DSC_NOMBRE]) }}"
+                class="bg-white rounded-lg border border-slate-200 hover:shadow-lg transition cursor-pointer group block">
+                <div class="p-6 text-center">
+                    <div class="bg-{{ $loop->index % 2 == 0 ? 'orange' : 'blue' }}-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+                        <!-- Icono: podemos usar un icono por defecto o guardar iconos en la base de datos -->
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-slate-900 mb-1">{{ $categoria->DSC_NOMBRE }}</h3>
+                    <p class="text-slate-500 text-sm">{{ $categoria->comercios_count }} comercio{{ $categoria->comercios_count != 1 ? 's' : '' }}</p>
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
+</div>
+
         <!-- Footer -->
-       @include('components.footer')
+        <footer class="bg-slate-900 text-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="grid md:grid-cols-4 gap-8">
+
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                </path>
+                            </svg>
+                            <span class="font-semibold">Directorio Comercial</span>
+                        </div>
+                        <p class="text-slate-400 text-sm">
+                            Tu plataforma confiable para descubrir los mejores negocios locales.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white mb-4">Contacto</h3>
+                        <ul class="space-y-2 text-slate-400 text-sm">
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                    </path>
+                                </svg>
+                                +506 88955772
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Guápiles, Costa Rica
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400 text-sm">
+                    © 2025 Directorio Comercial. Todos los derechos reservados.
+                </div>
+            </div>
+        </footer>
     </div>
 
     @push('scripts')
