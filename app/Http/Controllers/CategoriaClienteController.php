@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use App\Models\Comercio;
 use Illuminate\Http\Request;
+use App\Models\Producto;
+use App\Models\Slider;
 
 class CategoriaClienteController extends Controller
 {
@@ -14,13 +16,12 @@ class CategoriaClienteController extends Controller
     public function index(Request $request)
     {
         // Obtener todas las categorías activas con conteo de comercios
-        $categorias = Categoria::where('tb_categoria.NUM_ESTADO', 1)  
-    ->withCount(['comercios' => function ($query) {
-        $query->where('tb_comercio.NUM_ESTADO', 1);  
-    }])
+        $categorias = Categoria::where('tb_categoria.NUM_ESTADO', 1)
+            ->withCount(['comercios' => function ($query) {
+                $query->where('tb_comercio.NUM_ESTADO', 1);
+            }])
             ->orderBy('DSC_NOMBRE')
             ->get();
-
         $totalComercios = Comercio::where('NUM_ESTADO', 1)->count();
 
         $query = Comercio::with('categorias')
@@ -63,26 +64,29 @@ class CategoriaClienteController extends Controller
         // Paginar resultados
         $comercios = $query->paginate(9)->withQueryString();
 
-        return view('cliente.categorias.index', compact('categorias', 'comercios', 'totalComercios'));
+        return view('cliente.categorias.index', compact(
+            'categorias',
+            'comercios',
+            'totalComercios'
+        ));
     }
 
     // Mostrar detalles de un comercio específico
     public function show($id)
-{
-    try {
-        $comercio = Comercio::with(['categorias', 'galeria' => function($query) {
-            $query->where('NUM_ESTADO', 1)->orderBy('DSC_ORDEN');
-        }, 'productos' => function($query) {
-            $query->where('NUM_ESTADO', 1);
-        }])
-        ->where('NUM_ESTADO', 1)
-        ->findOrFail($id);
-        
-        return view('cliente.comercio.show', compact('comercio'));
-        
-    } catch (\Exception $e) {
-        return redirect()->route('categorias.index')
-            ->with('error', 'Comercio no encontrado');
+    {
+        try {
+            $comercio = Comercio::with(['categorias', 'galeria' => function ($query) {
+                $query->where('NUM_ESTADO', 1)->orderBy('DSC_ORDEN');
+            }, 'productos' => function ($query) {
+                $query->where('NUM_ESTADO', 1);
+            }])
+                ->where('NUM_ESTADO', 1)
+                ->findOrFail($id);
+
+            return view('cliente.comercio.show', compact('comercio'));
+        } catch (\Exception $e) {
+            return redirect()->route('categorias.index')
+                ->with('error', 'Comercio no encontrado');
+        }
     }
-}
 }

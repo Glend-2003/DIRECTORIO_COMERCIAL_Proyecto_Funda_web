@@ -72,7 +72,7 @@
 
                         <td class="px-6 py-4">
                             <div class="text-sm text-slate-900">
-                              {{ $producto->comercio->DSC_NOMBRE_COMERCIO ?? 'Sin comercio' }}
+                                {{ $producto->comercio->DSC_COMERCIO ?? 'Sin comercio' }}
                             </div>
                         </td>
 

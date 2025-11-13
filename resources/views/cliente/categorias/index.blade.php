@@ -19,7 +19,7 @@
                     <nav class="hidden md:flex gap-6">
                         <a href="{{ route('directorio.index') }}"
                             class="text-slate-600 hover:text-blue-600 transition">Inicio</a>
-                         <a href="{{ route('categorias.index') }}" class="text-blue-600 font-medium">Categorías</a>
+                        <a href="{{ route('categorias.index') }}" class="text-blue-600 font-medium">Categorías</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Comercios</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 transition">Contacto</a>
                     </nav>
@@ -33,8 +33,7 @@
                 <nav class="flex" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-3">
                         <li class="inline-flex items-center">
-                            <a href="{{ route('directorio.index') }}"
-                                class="text-slate-600 hover:text-blue-600">Inicio</a>
+                            <a href="{{ route('directorio.index') }}" class="text-slate-600 hover:text-blue-600">Inicio</a>
                         </li>
                         <li>
                             <div class="flex items-center">
@@ -95,53 +94,60 @@
                 <!-- Sidebar -->
                 <aside class="lg:col-span-1">
                     <!-- Categorías -->
-<div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
-    <div class="p-4 border-b">
-        <h3 class="font-semibold text-slate-900">Categorías</h3>
-    </div>
-    <div class="p-2">
-        <a href="{{ route('categorias.index') }}"
-            class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ !request('categoria') ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
-            <div class="flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                    </path>
-                </svg>
-                <span class="text-sm">Todas las categorías</span>
-            </div>
-            <span class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $totalComercios }}</span>
-        </a>
+                    <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="font-semibold text-slate-900">Categorías</h3>
+                        </div>
+                        <div class="p-2">
+                            <!-- Botón "Ver Todas" -->
+                            <a href="{{ route('categoriasCliente.index') }}"
+                                class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ !request('categoria') ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                        </path>
+                                    </svg>
+                                    <span class="text-sm">Todas las categorías</span>
+                                </div>
+                                <span
+                                    class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $totalComercios }}</span>
+                            </a>
 
-        @foreach ($categorias as $cat)
-            <a href="{{ route('categorias.index', array_merge(request()->query(), ['categoria' => $cat->DSC_NOMBRE])) }}"
-                class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ request('categoria') == $cat->DSC_NOMBRE ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
-                <div class="flex items-center gap-3">
-                    @if ($cat->IMG_URL && file_exists(public_path($cat->IMG_URL)))
-                        <img src="{{ asset($cat->IMG_URL) }}" 
-                             alt="{{ $cat->DSC_NOMBRE }}"
-                             class="w-5 h-5 object-cover rounded"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <svg class="w-5 h-5" style="display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
-                            </path>
-                        </svg>
-                    @else
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
-                            </path>
-                        </svg>
-                    @endif
-                    <span class="text-sm">{{ $cat->DSC_NOMBRE }}</span>
-                </div>
-                <span class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $cat->comercios_count }}</span>
-            </a>
-        @endforeach
-    </div>
-</div>
-
+                            <!-- Lista de Categorías -->
+                            @foreach ($categorias as $cat)
+                                <a href="{{ route('categoriasCliente.index', array_merge(request()->query(), ['categoria' => $cat->DSC_NOMBRE])) }}"
+                                    class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition {{ request('categoria') == $cat->DSC_NOMBRE ? 'bg-blue-50 text-blue-600' : 'text-slate-700' }}">
+                                    <div class="flex items-center gap-3">
+                                        @if ($cat->IMG_URL)
+                                            <!-- Mostrar imagen de la categoría -->
+                                            <img src="{{ $cat->IMG_URL }}" alt="{{ $cat->DSC_NOMBRE }}"
+                                                class="w-5 h-5 object-cover rounded"
+                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                            <!-- Icono de fallback que se muestra si la imagen no carga -->
+                                            <svg class="w-5 h-5" style="display:none;" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                                </path>
+                                            </svg>
+                                        @else
+                                            <!-- Icono por defecto si no hay imagen -->
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                                </path>
+                                            </svg>
+                                        @endif
+                                        <span class="text-sm">{{ $cat->DSC_NOMBRE }}</span>
+                                    </div>
+                                    <span
+                                        class="px-2 py-1 text-xs bg-slate-100 text-slate-600 rounded-full">{{ $cat->comercios_count }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
                     <!-- Filtros -->
                     <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mt-4">
                         <div class="p-4 border-b flex items-center justify-between">
@@ -191,7 +197,8 @@
                                     <p class="text-xs text-slate-600 mb-2">Filtros activos:</p>
                                     <div class="flex flex-wrap gap-2">
                                         @if (request('ubicacion'))
-                                            <span class="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
+                                            <span
+                                                class="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs">
                                                 📍 {{ request('ubicacion') }}
                                                 <a href="{{ route('categorias.index', array_diff_key(request()->query(), ['ubicacion' => ''])) }}"
                                                     class="hover:text-slate-900">
@@ -224,17 +231,20 @@
                             </p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
                             </svg>
                             <form method="GET" action="{{ route('categorias.index') }}" id="ordenForm">
                                 <select name="orden" onchange="document.getElementById('ordenForm').submit()"
                                     class="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="reciente" {{ request('orden', 'reciente') == 'reciente' ? 'selected' : '' }}>
+                                    <option value="reciente"
+                                        {{ request('orden', 'reciente') == 'reciente' ? 'selected' : '' }}>
                                         Más recientes
                                     </option>
-                                    <option value="nombre_asc" {{ request('orden') == 'nombre_asc' ? 'selected' : '' }}>A-Z
+                                    <option value="nombre_asc" {{ request('orden') == 'nombre_asc' ? 'selected' : '' }}>
+                                        A-Z
                                     </option>
                                     <option value="nombre_desc" {{ request('orden') == 'nombre_desc' ? 'selected' : '' }}>
                                         Z-A</option>
@@ -254,8 +264,8 @@
                                     class="bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition cursor-pointer">
                                     <div class="grid md:grid-cols-3 gap-0">
                                         <div class="relative h-48 md:h-auto">
-                                            <img src="{{ $comercio->IMG_DESTACADA }}" alt="{{ $comercio->DSC_COMERCIO }}"
-                                                class="w-full h-full object-cover"
+                                            <img src="{{ $comercio->IMG_DESTACADA }}"
+                                                alt="{{ $comercio->DSC_COMERCIO }}" class="w-full h-full object-cover"
                                                 onerror="this.src='https://images.unsplash.com/photo-1464854860390-e95991b46441?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400'">
                                         </div>
                                         <div class="md:col-span-2 p-6">

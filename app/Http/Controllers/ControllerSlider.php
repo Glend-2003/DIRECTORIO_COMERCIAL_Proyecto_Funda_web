@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Slider;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use CloudinaryLabs\CloudinaryLaraxel\Facades\Cloudinary;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -27,6 +27,7 @@ class ControllerSlider extends Controller
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
             'IMG_URL' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'URL_WEB' => 'nullable|url|max:255',
             'NUM_ESTADO' => 'required|boolean',
         ]);
 
@@ -123,12 +124,19 @@ class ControllerSlider extends Controller
             Log::info('Creando slider con URL de Cloudinary: ' . $imageUrl);
 
             // Crear slider con URL de Cloudinary
-            Slider::create([
+            $slider = Slider::create([
                 'DSC_NOMBRE' => $request->DSC_NOMBRE,
                 'DSC_DESCRIPCION' => $request->DSC_DESCRIPCION,
                 'IMG_URL' => $imageUrl,
+                'URL_WEB' => $request->URL_WEB,
                 'NUM_ESTADO' => $request->NUM_ESTADO,
             ]);
+
+            Log::info('=== VERIFICACIÓN FINAL ===');
+            Log::info('Slider creado con ID: ' . $slider->ID_SLIDER);
+            Log::info('URL de imagen: ' . $slider->IMG_URL);
+            Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudinary.com') ? 'Sí' : 'No'));
+            Log::info('URL_WEB: ' . $slider->URL_WEB);
 
             Log::info('Slider creado exitosamente en BD con URL de Cloudinary');
 
@@ -141,12 +149,6 @@ class ControllerSlider extends Controller
                 ->withInput()
                 ->with('error', 'Error al crear el slider: ' . $e->getMessage());
         }
-
-        // Después de crear el slider, agrega:
-Log::info('=== VERIFICACIÓN FINAL ===');
-Log::info('Slider creado con ID: ' . $slider->ID_SLIDER);
-Log::info('URL de imagen: ' . $slider->IMG_URL);
-Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudinary.com') ? 'Sí' : 'No'));
     }
 
     public function show($id)
@@ -167,11 +169,18 @@ Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudin
             'DSC_NOMBRE' => 'required|string|max:100',
             'DSC_DESCRIPCION' => 'nullable|string',
             'IMG_URL' => 'sometimes|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'URL_WEB' => 'nullable|url|max:255',
             'NUM_ESTADO' => 'required|boolean',
         ]);
 
         $slider = Slider::findOrFail($id);
-        $data = $request->only(['DSC_NOMBRE', 'DSC_DESCRIPCION', 'NUM_ESTADO']);
+        
+        $data = $request->only([
+            'DSC_NOMBRE', 
+            'DSC_DESCRIPCION', 
+            'NUM_ESTADO',
+            'URL_WEB'  // Asegurar que URL_WEB está incluido
+        ]);
 
         try {
             // Si se sube una nueva imagen
@@ -180,7 +189,16 @@ Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudin
 
                 // Subir nueva imagen a Cloudinary
                 $cloudinaryUrl = env('CLOUDINARY_URL');
+                
+                if (empty($cloudinaryUrl)) {
+                    throw new Exception('CLOUDINARY_URL no está configurada');
+                }
+                
                 preg_match('/cloudinary:\/\/(.*):(.*)@(.*)/', $cloudinaryUrl, $matches);
+
+                if (count($matches) !== 4) {
+                    throw new Exception('Formato de CLOUDINARY_URL inválido');
+                }
 
                 $apiKey = $matches[1];
                 $apiSecret = $matches[2];
@@ -216,6 +234,8 @@ Log::info('¿Es URL de Cloudinary?: ' . (str_contains($slider->IMG_URL, 'cloudin
             }
 
             $slider->update($data);
+            
+            Log::info('Slider actualizado - URL_WEB: ' . $slider->URL_WEB);
 
             return redirect()->route('sliders.index')
                 ->with('success', 'Slider actualizado correctamente.');
