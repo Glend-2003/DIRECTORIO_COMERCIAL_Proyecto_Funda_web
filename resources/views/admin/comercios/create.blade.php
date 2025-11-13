@@ -159,6 +159,7 @@
                                readonly>
                     </div>
                 </div>
+                
                 <!-- Imagen Destacada -->
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
