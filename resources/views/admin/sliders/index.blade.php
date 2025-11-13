@@ -72,11 +72,13 @@
                     <thead class="bg-slate-50 border-b">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
+                                Imagen</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                                 Nombre</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                                 Descripción</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
-                                Imagen</th>
+                                URL Web</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                                 Estado</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">
@@ -92,26 +94,55 @@
                                     'DSC_DESCRIPCION' => $slider->DSC_DESCRIPCION,
                                     'IMG_URL' => $slider->IMG_URL,
                                     'NUM_ESTADO' => $slider->NUM_ESTADO,
+                                    'URL_WEB' => $slider->URL_WEB,
                                     'created_at' => $slider->created_at,
                                     'updated_at' => $slider->updated_at
                                 ];
                             @endphp
                             <tr class="hover:bg-slate-50 slider-row"
-                                data-search="{{ strtolower($slider->DSC_NOMBRE . ' ' . $slider->DSC_DESCRIPCION . ' ' . ($slider->NUM_ESTADO == 1 ? 'activo' : 'inactivo')) }}">
-                                <td class="px-6 py-4">
-                                    <div class="font-medium text-slate-900">{{ $slider->DSC_NOMBRE }}</div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="text-sm text-slate-600">{{ Str::limit($slider->DSC_DESCRIPCION, 50) }}</div>
-                                </td>
+                                data-search="{{ strtolower($slider->DSC_NOMBRE . ' ' . $slider->DSC_DESCRIPCION . ' ' . $slider->URL_WEB . ' ' . ($slider->NUM_ESTADO == 1 ? 'activo' : 'inactivo')) }}">
+                                <!-- Columna Imagen -->
                                 <td class="px-6 py-4">
                                     @if ($slider->IMG_URL)
                                         <img src="{{ $slider->IMG_URL }}" alt="{{ $slider->DSC_NOMBRE }}"
-                                            class="h-10 w-auto object-cover rounded">
+                                            class="h-12 w-16 object-cover rounded-lg border shadow-sm">
                                     @else
-                                        <span class="text-slate-400">Sin imagen</span>
+                                        <span class="text-slate-400 text-sm">Sin imagen</span>
                                     @endif
                                 </td>
+                                
+                                <!-- Columna Nombre -->
+                                <td class="px-6 py-4">
+                                    <div class="font-medium text-slate-900">{{ $slider->DSC_NOMBRE }}</div>
+                                </td>
+                                
+                                <!-- Columna Descripción -->
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-slate-600 max-w-xs">
+                                        @if($slider->DSC_DESCRIPCION)
+                                            {{ Str::limit($slider->DSC_DESCRIPCION, 60) }}
+                                        @else
+                                            <span class="text-slate-400">Sin descripción</span>
+                                        @endif
+                                    </div>
+                                </td>
+                                
+                                <!-- Columna URL Web - NUEVA COLUMNA -->
+                                <td class="px-6 py-4">
+                                    @if($slider->URL_WEB)
+                                        <a href="{{ $slider->URL_WEB }}" 
+                                           target="_blank"
+                                           class="text-blue-600 hover:text-blue-800 hover:underline text-sm break-all max-w-xs inline-block">
+                                            {{ Str::limit($slider->URL_WEB, 40) }}
+                                        </a>
+                                        <br>
+                                        <span class="text-xs text-slate-500">Haz clic para visitar</span>
+                                    @else
+                                        <span class="text-slate-400 text-sm">No especificada</span>
+                                    @endif
+                                </td>
+                                
+                                <!-- Columna Estado -->
                                 <td class="px-6 py-4">
                                     @if ($slider->NUM_ESTADO == 1)
                                         <span
@@ -135,6 +166,8 @@
                                         </span>
                                     @endif
                                 </td>
+                                
+                                <!-- Columna Acciones -->
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-end gap-2">
                                         <!-- Botón Ver -->
@@ -178,7 +211,7 @@
                             </tr>
                         @empty
                             <tr id="emptyRow">
-                                <td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                                <td colspan="6" class="px-6 py-12 text-center text-slate-500"> <!-- Cambiado a colspan="6" -->
                                     <svg class="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

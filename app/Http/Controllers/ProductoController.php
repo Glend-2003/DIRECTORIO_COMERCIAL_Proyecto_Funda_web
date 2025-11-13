@@ -15,11 +15,11 @@ class ProductoController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    $productos = Producto::with('comercio')->latest()->paginate(10);
-    $comercios = Comercio::orderBy('DSC_COMERCIO')->get();
-    return view('admin.productos.index', compact('productos', 'comercios'));
-}
+    {
+        $productos = Producto::with('comercio')->latest()->paginate(10);
+        $comercios = Comercio::orderBy('DSC_COMERCIO')->get();
+        return view('admin.productos.index', compact('productos', 'comercios'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -34,7 +34,7 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-         $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'ID_COMERCIO' => 'required|integer',
             'DSC_NOMBRE' => 'required|string|max:500',
             'DSC_PRODUCTO' => 'nullable|string|max:500',
@@ -57,7 +57,7 @@ class ProductoController extends Controller
         }
 
         try {
-            $data = $request->all(); 
+            $data = $request->all();
             // Estado activo por defecto
             $data['NUM_ESTADO'] = 1;
 
@@ -65,13 +65,13 @@ class ProductoController extends Controller
             if ($request->hasFile('IMG_IMAGEN_DESTACADA')) {
                 $imagen = $request->file('IMG_IMAGEN_DESTACADA');
                 $nombreImagen = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-                
+
                 // Crear directorio si no existe
                 $rutaCarpeta = public_path('images/productos');
                 if (!File::exists($rutaCarpeta)) {
                     File::makeDirectory($rutaCarpeta, 0755, true);
                 }
-                
+
                 $imagen->move($rutaCarpeta, $nombreImagen);
                 $data['IMG_IMAGEN_DESTACADA'] = 'images/productos/' . $nombreImagen;
             }
@@ -80,7 +80,6 @@ class ProductoController extends Controller
 
             return redirect()->route('productos.index')
                 ->with('success', 'Producto creado exitosamente');
-                
         } catch (\Exception $e) {
             return redirect()->route('productos.index')
                 ->with('error', 'Error al crear el Producto: ' . $e->getMessage())
@@ -133,7 +132,7 @@ class ProductoController extends Controller
 
         try {
             $producto = Producto::findOrFail($id);
-            $data = $request->all(); 
+            $data = $request->all();
 
             // Manejar la imagen
             if ($request->hasFile('IMG_IMAGEN_DESTACADA')) {
@@ -142,16 +141,16 @@ class ProductoController extends Controller
                 if ($producto->IMG_IMAGEN_DESTACADA && File::exists(public_path($producto->IMG_IMAGEN_DESTACADA))) {
                     File::delete(public_path($producto->IMG_IMAGEN_DESTACADA));
                 }
-                
+
                 // ... (código para subir la nueva imagen)
                 $imagen = $request->file('IMG_IMAGEN_DESTACADA');
                 $nombreImagen = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-                
+
                 $rutaCarpeta = public_path('images/productos');
                 if (!File::exists($rutaCarpeta)) {
                     File::makeDirectory($rutaCarpeta, 0755, true);
                 }
-                
+
                 $imagen->move($rutaCarpeta, $nombreImagen);
                 $data['IMG_IMAGEN_DESTACADA'] = 'images/productos/' . $nombreImagen;
             }
@@ -161,7 +160,6 @@ class ProductoController extends Controller
 
             return redirect()->route('productos.index')
                 ->with('success', 'Producto actualizado exitosamente');
-                
         } catch (\Exception $e) {
             return redirect()->route('productos.index')
                 ->with('error', 'Error al actualizar el Producto: ' . $e->getMessage())
@@ -176,21 +174,19 @@ class ProductoController extends Controller
     {
         try {
             $producto = Producto::findOrFail($id);
-            
+
             // Eliminar imagen si existe
             if ($producto->IMG_IMAGEN_DESTACADA && File::exists(public_path($producto->IMG_IMAGEN_DESTACADA))) {
                 File::delete(public_path($producto->IMG_IMAGEN_DESTACADA));
             }
-            
+
             $producto->delete();
 
             return redirect()->route('productos.index')
                 ->with('success', 'Producto eliminado exitosamente');
-                
         } catch (\Exception $e) {
             return redirect()->route('productos.index')
                 ->with('error', 'Error al eliminar el Producto: ' . $e->getMessage());
         }
-    
     }
 }
