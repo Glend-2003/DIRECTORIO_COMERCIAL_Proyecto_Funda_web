@@ -50,7 +50,7 @@
 
     <div class="relative h-[400px] overflow-hidden">
         <img src="{{ asset($comercio->IMG_DESTACADA) }}" 
-             alt="{{ $comercio->DSC_NOMBRE_COMERCIO }}"
+             alt="{{ $comercio->DSC_COMERCIO }}"
              class="w-full h-full object-cover"
              onerror="this.src='https://images.unsplash.com/photo-1464854860390-e95991b46441?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080'">
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
@@ -61,7 +61,7 @@
                     {{ $comercio->categorias->first()->DSC_NOMBRE }}
                 </span>
                 @endif
-                <h1 class="text-4xl font-bold text-white mb-2">{{ $comercio->DSC_NOMBRE_COMERCIO }}</h1>
+                <h1 class="text-4xl font-bold text-white mb-2">{{ $comercio->DSC_COMERCIO }}</h1>
                 <div class="flex items-center gap-2 text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
