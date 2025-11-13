@@ -11,17 +11,20 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\GaleriaProductoController;
 use App\Http\Controllers\GaleriaComercioController;
 use App\Http\Controllers\ProductoClienteController;
-
+use App\Http\Controllers\DashboardController;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas - Directorio Comercial
 |--------------------------------------------------------------------------
 */
 
-// Página principal - Directorio Comercial (usando el controlador)
 Route::get('/', [DirectorioController::class, 'index'])->name('directorio.home');
 Route::get('/directorio', [DirectorioController::class, 'index'])->name('directorio.index');
+
+// Nueva ruta para búsqueda - DEBE IR ANTES de las rutas con parámetros
+Route::get('/directorio/buscar', [DirectorioController::class, 'buscar'])->name('directorio.buscar');
 
 // Rutas para categorías del cliente (PÚBLICAS)
 Route::resource('categoriasCliente', CategoriaClienteController::class);
@@ -29,23 +32,16 @@ Route::resource('categoriasCliente', CategoriaClienteController::class);
 Route::get('/comercio/{id}', [CategoriaClienteController::class, 'show'])->name('comercio.show');
 
 Route::get('/comercio/{comercio}/producto/{producto}', [ProductoClienteController::class, 'show'])->name('producto.show');
-
 /*
 |--------------------------------------------------------------------------
 | Rutas de Administración
 |--------------------------------------------------------------------------
 */
 
-// Dashboard - requiere autenticación
-Route::get('/dashboard', function () {
-    $totalComercios = \App\Models\Comercio::where('NUM_ESTADO', 1)->count();
-    $comerciosRecientes = \App\Models\Comercio::where('NUM_ESTADO', 1)
-        ->latest()
-        ->take(5)
-        ->get();
-
-    return view('admin.dashboard', compact('totalComercios', 'comerciosRecientes'));
-})->middleware('auth')->name('dashboard');
+// Dashboard - requiere autenticación (ACTUALIZADA)
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
 
 // Rutas protegidas de administración
 Route::middleware('auth')->group(function () {
@@ -58,7 +54,6 @@ Route::middleware('auth')->group(function () {
     
     // Rutas de administración de categorías (protegidas)
     Route::resource('categorias', CategoriaController::class);
-    
     Route::resource('productos', ProductoController::class);
 
     // Rutas de Galería de Productos
@@ -70,16 +65,13 @@ Route::middleware('auth')->group(function () {
     });
 
     // Rutas de Galería de Comercios
-    // Rutas de Galería de Comercios (agregar después de las rutas de productos)
-Route::prefix('comercios/{comercio}/galeria')->name('comercios.galeria.')->group(function () {
-    Route::get('/', [GaleriaComercioController::class, 'index'])->name('index');
-    Route::post('/', [GaleriaComercioController::class, 'store'])->name('store');
-    Route::post('/orden', [GaleriaComercioController::class, 'updateOrder'])->name('updateOrder');
-    Route::delete('/{imagen}', [GaleriaComercioController::class, 'destroy'])->name('destroy');
+    Route::prefix('comercios/{comercio}/galeria')->name('comercios.galeria.')->group(function () {
+        Route::get('/', [GaleriaComercioController::class, 'index'])->name('index');
+        Route::post('/', [GaleriaComercioController::class, 'store'])->name('store');
+        Route::post('/orden', [GaleriaComercioController::class, 'updateOrder'])->name('updateOrder');
+        Route::delete('/{imagen}', [GaleriaComercioController::class, 'destroy'])->name('destroy');
+    });
 });
-});
-
-
 
 // Rutas de autenticación (login manual - ruta oculta)
 require __DIR__.'/auth.php';

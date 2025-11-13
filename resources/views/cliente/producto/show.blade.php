@@ -5,29 +5,7 @@
 @section('content')
 <div class="min-h-screen bg-slate-50">
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                        </path>
-                    </svg>
-                    <span class="text-slate-900 font-semibold text-lg">Directorio Comercial</span>
-                </div>
-                <nav class="hidden md:flex gap-6">
-                    <a href="{{ route('directorio.index') }}" class="text-slate-600 hover:text-blue-600 transition">Inicio</a>
-                    <a href="{{ route('categorias.index') }}" class="text-slate-600 hover:text-blue-600 transition">Categorías</a>
-                    <a href="#" class="text-slate-600 hover:text-blue-600 transition">Comercios</a>
-                    <a href="#" class="text-slate-600 hover:text-blue-600 transition">Contacto</a>
-                </nav>
-                <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition">
-                    Registrar Comercio
-                </button>
-            </div>
-        </div>
-    </header>
+    @include('components.header')
 
     <!-- Breadcrumb -->
    <div class="bg-white border-b">
@@ -42,7 +20,7 @@
                             <svg class="w-4 h-4 text-slate-400 mx-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <a href="{{ route('categorias.index') }}" class="text-slate-600 hover:text-blue-600">Categorías</a>
+                            <a href="{{ route('categoriasCliente.index') }}" class="text-slate-600 hover:text-blue-600">Categorías</a>
                         </div>
                     </li>
                     <li>
@@ -51,7 +29,7 @@
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                             </svg>
                             <a href="{{ route('comercio.show', $comercio->ID_COMERCIO) }}" class="text-slate-600 hover:text-blue-600">
-                                {{ $comercio->DSC_NOMBRE_COMERCIO }}
+                                {{ $comercio->DSC_COMERCIO }}
                             </a>
                         </div>
                     </li>
@@ -69,13 +47,7 @@
     </div>
     <!-- Content -->
     <div class="container mx-auto px-6 py-12">
-        <a href="{{ route('comercio.show', $comercio->ID_COMERCIO) }}" 
-           class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-md transition mb-6">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Volver a {{ $comercio->DSC_NOMBRE_COMERCIO }}
-        </a>
+     
 
         <div class="grid lg:grid-cols-2 gap-10 max-w-7xl mx-auto">
             <!-- Images Section -->
@@ -141,36 +113,6 @@
                     </div>
                 </div>
 
-                <!-- Additional Info -->
-                @if(isset($producto->tiempo_preparacion) || isset($producto->porciones) || isset($producto->tipo))
-                <div class="bg-white rounded-xl border border-slate-200 p-8 mt-6 shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Información Adicional</h3>
-                    <div class="space-y-3 text-sm">
-                        @if(isset($producto->tiempo_preparacion))
-                        <div class="flex justify-between py-2 border-b">
-                            <span class="text-slate-600">Tiempo de preparación</span>
-                            <span class="text-slate-900">{{ $producto->tiempo_preparacion }}</span>
-                        </div>
-                        @endif
-                        @if(isset($producto->porciones))
-                        <div class="flex justify-between py-2 border-b">
-                            <span class="text-slate-600">Porciones</span>
-                            <span class="text-slate-900">{{ $producto->porciones }}</span>
-                        </div>
-                        @endif
-                        @if(isset($producto->tipo))
-                        <div class="flex justify-between py-2 border-b">
-                            <span class="text-slate-600">Tipo</span>
-                            <span class="text-slate-900">{{ $producto->tipo }}</span>
-                        </div>
-                        @endif
-                        <div class="flex justify-between py-2">
-                            <span class="text-slate-600">Disponibilidad</span>
-                            <span class="text-green-600 font-medium">En stock</span>
-                        </div>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
 
@@ -191,7 +133,7 @@
                         <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ $item->DSC_NOMBRE }}</h3>
                         <div class="flex items-center justify-between">
                             <span class="text-blue-600 font-semibold">₡{{ number_format($item->MONTO_PRECIO, 0, ',', '.') }}</span>
-                            <a href="{{ route('producto.show', [$comercio->ID_COMERCIO, $item->ID_COMERCIO]) }}" 
+                            <a href="{{ route('producto.show', ['comercio' => $comercio->ID_COMERCIO, 'producto' => $item->ID_PRODUCTO]) }}"  
                                class="px-3 py-1 text-sm border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50 transition">
                                 Ver Detalles
                             </a>
@@ -236,6 +178,7 @@
 
         <div id="imageCounter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white"></div>
     </div>
+    @include('components.footer')
 </div>
 
 <script>
