@@ -20,9 +20,11 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 |--------------------------------------------------------------------------
 */
 
-// Página principal - Directorio Comercial (usando el controlador)
 Route::get('/', [DirectorioController::class, 'index'])->name('directorio.home');
 Route::get('/directorio', [DirectorioController::class, 'index'])->name('directorio.index');
+
+// Nueva ruta para búsqueda - DEBE IR ANTES de las rutas con parámetros
+Route::get('/directorio/buscar', [DirectorioController::class, 'buscar'])->name('directorio.buscar');
 
 // Rutas para categorías del cliente (PÚBLICAS)
 Route::resource('categoriasCliente', CategoriaClienteController::class);
@@ -30,7 +32,6 @@ Route::resource('categoriasCliente', CategoriaClienteController::class);
 Route::get('/comercio/{id}', [CategoriaClienteController::class, 'show'])->name('comercio.show');
 
 Route::get('/comercio/{comercio}/producto/{producto}', [ProductoClienteController::class, 'show'])->name('producto.show');
-
 /*
 |--------------------------------------------------------------------------
 | Rutas de Administración
