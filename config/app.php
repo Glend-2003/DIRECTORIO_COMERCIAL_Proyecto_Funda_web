@@ -69,6 +69,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Cloudinary Configuration
+    |--------------------------------------------------------------------------
+    |
+    | An HTTP or HTTPS URL to your cloudinary account.
+    | This will be found in your cloudinary dashboard.
+    |
+    */
+    'cloud_url' => env('CLOUDINARY_URL'),
+
+    /**
+     * Upload Preset From Cloudinary
+     *
+     * @link https://cloudinary.com/documentation/upload_presets
+     */
+    'upload_preset' => env('CLOUDINARY_UPLOAD_PRESET'),
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     |
