@@ -221,7 +221,6 @@
                 @if($comercio->productos->count() > 0)
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($comercio->productos as $producto)
-                    {{-- CORRECCIÓN APLICADA AQUÍ: Se cambió el div por <a> para hacer la tarjeta clicable --}}
                     <a href="{{ route('producto.show', ['comercio' => $comercio->ID_COMERCIO, 'producto' => $producto->ID_PRODUCTO]) }}" 
                        class="block bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg transition">
                         <div class="relative h-48">
@@ -287,34 +286,38 @@
                     <h2 class="text-2xl font-bold text-slate-900 mb-2">Contáctanos</h2>
                     <p class="text-slate-600 mb-6">¿Tienes alguna pregunta? Envíanos un mensaje.</p>
 
-                    <form class="space-y-4">
+                    <form id="contactForm" class="space-y-4">
+                        @csrf
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label class="text-sm text-slate-700 mb-2 block">Nombre completo</label>
-                                <input type="text" placeholder="Tu nombre" 
+                                <label class="text-sm text-slate-700 mb-2 block">Nombre completo *</label>
+                                <input type="text" name="nombre" id="nombre" placeholder="Tu nombre" required
                                         class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="text-sm text-slate-700 mb-2 block">Teléfono</label>
-                                <input type="text" placeholder="Tu teléfono" 
+                                <label class="text-sm text-slate-700 mb-2 block">Teléfono *</label>
+                                <input type="text" name="telefono" id="telefono" placeholder="Tu teléfono" required
                                         class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
                         <div>
-                            <label class="text-sm text-slate-700 mb-2 block">Correo electrónico</label>
-                            <input type="email" placeholder="tu@email.com" 
+                            <label class="text-sm text-slate-700 mb-2 block">Correo electrónico (Gmail) *</label>
+                            <input type="email" name="correo" id="correo" placeholder="tu@gmail.com" required
                                     class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <small class="text-slate-500">Solo se aceptan correos de Gmail</small>
                         </div>
                         <div>
-                            <label class="text-sm text-slate-700 mb-2 block">Mensaje</label>
-                            <textarea placeholder="Escribe tu mensaje aquí..." rows="6" 
+                            <label class="text-sm text-slate-700 mb-2 block">Mensaje *</label>
+                            <textarea name="mensaje" id="mensaje" placeholder="Escribe tu mensaje aquí..." rows="6" required
                                             class="w-full px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
-                        <button type="submit" 
-                                class="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium">
+                        <button type="submit" id="btnEnviar"
+                    class="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-medium">
                             Enviar Mensaje
                         </button>
                     </form>
+
+                    <div id="alertContainer" class="mt-4"></div>
                 </div>
             </div>
         </div>
@@ -447,6 +450,73 @@ function showTab(tabName) {
             comercioMap.invalidateSize();
         }, 100);
     }
+}
+</script>
+
+<script>
+// Formulario de contacto
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btnEnviar = document.getElementById('btnEnviar');
+    const alertContainer = document.getElementById('alertContainer');
+    
+    // Validar que el correo sea de Gmail
+    const correo = document.getElementById('correo').value;
+    if (!correo.endsWith('@gmail.com')) {
+        mostrarAlerta('El correo debe ser de Gmail (@gmail.com)', 'error');
+        return;
+    }
+    
+    // Deshabilitar botón
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = 'Enviando...';
+    
+    const formData = new FormData(this);
+    
+    try {
+        const response = await fetch('{{ route("comercio.contacto.enviar", $comercio->ID_COMERCIO) }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json',
+            },
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            mostrarAlerta(data.message, 'success');
+            document.getElementById('contactForm').reset();
+        } else {
+            mostrarAlerta(data.message, 'error');
+        }
+    } catch (error) {
+        mostrarAlerta('Error al enviar el mensaje. Por favor intenta nuevamente.', 'error');
+    } finally {
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = 'Enviar Mensaje';
+    }
+});
+
+function mostrarAlerta(mensaje, tipo) {
+    const alertContainer = document.getElementById('alertContainer');
+    const bgColor = tipo === 'success' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800';
+    const icon = tipo === 'success' ? 
+        '<svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>' :
+        '<svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>';
+    
+    alertContainer.innerHTML = `
+        <div class="flex items-center gap-3 p-4 border rounded-lg ${bgColor}">
+            ${icon}
+            <span>${mensaje}</span>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        alertContainer.innerHTML = '';
+    }, 5000);
 }
 </script>
 
