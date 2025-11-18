@@ -48,18 +48,20 @@ RUN php artisan storage:link
 RUN php artisan route:cache
 
 # -----------------------------------------
-# Instalar Caddy sin apt-key
+# Install Caddy (Official Debian Repo)
 # -----------------------------------------
-RUN apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
+RUN apt-get update && apt-get install -y curl gnupg2 ca-certificates
 
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' \
+# Add GPG key
+RUN curl -1sLf https://dl.cloudsmith.io/public/caddy/stable/gpg.key \
     -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' \
-    | sed -e 's#deb #deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] #' \
-    | tee /etc/apt/sources.list.d/caddy-stable.list
+# Add repo
+RUN curl -1sLf https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt \
+    | tee /etc/apt/sources.list.d/caddy.list
 
 RUN apt-get update && apt-get install -y caddy
+
 
 # -----------------------------------------
 # Copiar Caddyfile
