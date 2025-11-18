@@ -43,16 +43,22 @@ RUN chmod -R 775 storage bootstrap/cache
 RUN php artisan storage:link
 
 # -----------------------------------------
-# Cache SOLO de rutas (no config)
+# Cache routes
 # -----------------------------------------
 RUN php artisan route:cache
 
 # -----------------------------------------
-# Instalar Caddy
+# Instalar Caddy sin apt-key
 # -----------------------------------------
 RUN apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | apt-key add -
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' \
+    -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' \
+    | sed -e 's#deb #deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] #' \
+    | tee /etc/apt/sources.list.d/caddy-stable.list
+
 RUN apt-get update && apt-get install -y caddy
 
 # -----------------------------------------
