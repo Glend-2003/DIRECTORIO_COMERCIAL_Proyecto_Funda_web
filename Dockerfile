@@ -1,42 +1,83 @@
+# -----------------------------------------
+# Imagen base PHP con extensiones
+# -----------------------------------------
 FROM php:8.2-fpm
 
-# Dependencias
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev libpng-dev libonig-dev libxml2-dev curl supervisor \
+    git unzip libzip-dev libpng-dev libonig-dev libxml2-dev curl gnupg \
     && docker-php-ext-install pdo_mysql zip
 
-# Node 20
+# -----------------------------------------
+# Instalar Node.js 20
+# -----------------------------------------
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-# Composer
+# -----------------------------------------
+# Instalar Composer
+# -----------------------------------------
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# -----------------------------------------
+# Copiar proyecto
+# -----------------------------------------
 WORKDIR /var/www/html
 COPY . .
 
+# -----------------------------------------
+# Copiar archivo .env y generar key
+# -----------------------------------------
+COPY .env.example .env
+
+RUN sed -i "s/APP_ENV=.*/APP_ENV=production/" .env
+RUN sed -i "s/APP_DEBUG=.*/APP_DEBUG=false/" .env
+
+RUN php artisan key:generate --force
+
+# -----------------------------------------
+# Instalación Laravel
+# -----------------------------------------
 RUN composer install --no-dev --optimize-autoloader
 
+# -----------------------------------------
+# Build de Vite
+# -----------------------------------------
 RUN rm -rf node_modules package-lock.json
 RUN npm install
 RUN npm run build
 
+# -----------------------------------------
+# Permisos y Storage
+# -----------------------------------------
 RUN chmod -R 775 storage bootstrap/cache
 RUN php artisan storage:link
+
+# -----------------------------------------
+# Cachear rutas
+# -----------------------------------------
 RUN php artisan route:cache
 
-# ------- FIX PHP-FPM SOCKET -------
-RUN sed -i "s|listen = .*|listen = /run/php/php-fpm.sock|" /usr/local/etc/php-fpm.d/www.conf
-RUN mkdir -p /run/php
+# -----------------------------------------
+# Instalar Caddy
+# -----------------------------------------
+RUN apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
 
-# ------- INSTALAR CADDY SIN REPOS ----------------
-RUN curl -L -o caddy.deb "https://github.com/caddyserver/caddy/releases/download/v2.7.6/caddy_2.7.6_linux_amd64.deb" \
-    && dpkg -i caddy.deb \
-    && rm caddy.deb
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' \
+    -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 
-# Copiar configs
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' \
+    | sed -e 's#deb #deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] #' \
+    | tee /etc/apt/sources.list.d/caddy-stable.list
+
+RUN apt-get update && apt-get install -y caddy
+
+# -----------------------------------------
+# Copiar Caddyfile
+# -----------------------------------------
 COPY Caddyfile /etc/caddy/Caddyfile
 
+# -----------------------------------------
+# Exponer puerto y ejecutar
+# -----------------------------------------
 EXPOSE 80
-CMD ["supervisord", "-n"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
