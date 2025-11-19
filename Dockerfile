@@ -1,65 +1,42 @@
-# -----------------------------------------
-# Imagen base PHP con extensiones
-# -----------------------------------------
 FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev libpng-dev libonig-dev libxml2-dev curl gnupg \
     && docker-php-ext-install pdo_mysql zip
 
-# -----------------------------------------
-# Instalar Node.js 20
-# -----------------------------------------
+# Node 20
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-# -----------------------------------------
-# Instalar Composer
-# -----------------------------------------
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# -----------------------------------------
-# Copiar proyecto
-# -----------------------------------------
 WORKDIR /var/www/html
 COPY . .
 
-# -----------------------------------------
-# Copiar archivo .env y generar key
-# -----------------------------------------
+# Crear .env
 COPY .env.example .env
-
 RUN sed -i "s/APP_ENV=.*/APP_ENV=production/" .env
 RUN sed -i "s/APP_DEBUG=.*/APP_DEBUG=false/" .env
 
-RUN php artisan key:generate --force
-
 # -----------------------------------------
-# Instalación Laravel
+# INSTALAR DEPENDENCIAS LARAVEL **ANTES** DE ARTISAN
 # -----------------------------------------
 RUN composer install --no-dev --optimize-autoloader
 
-# -----------------------------------------
+# AHORA sí se puede ejecutar artisan
+RUN php artisan key:generate --force
+
 # Build de Vite
-# -----------------------------------------
 RUN rm -rf node_modules package-lock.json
 RUN npm install
 RUN npm run build
 
-# -----------------------------------------
-# Permisos y Storage
-# -----------------------------------------
 RUN chmod -R 775 storage bootstrap/cache
 RUN php artisan storage:link
-
-# -----------------------------------------
-# Cachear rutas
-# -----------------------------------------
 RUN php artisan route:cache
 
-# -----------------------------------------
-# Instalar Caddy
-# -----------------------------------------
+# Caddy
 RUN apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
 
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' \
@@ -71,13 +48,7 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' \
 
 RUN apt-get update && apt-get install -y caddy
 
-# -----------------------------------------
-# Copiar Caddyfile
-# -----------------------------------------
 COPY Caddyfile /etc/caddy/Caddyfile
 
-# -----------------------------------------
-# Exponer puerto y ejecutar
-# -----------------------------------------
 EXPOSE 80
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
