@@ -37,15 +37,21 @@ RUN php artisan storage:link
 RUN php artisan route:cache
 
 # Caddy
-RUN apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
+# -----------------------------------------
+# Instalar Caddy sin que falle el repo
+# -----------------------------------------
+RUN apt-get update && apt-get install -y curl
 
+# Importar clave
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' \
-    -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    | gpg --dearmor -o /usr/share/keyrings/caddy.gpg
 
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' \
-    | sed -e 's#deb #deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] #' \
-    | tee /etc/apt/sources.list.d/caddy-stable.list
+# Agregar repo correctamente
+RUN echo "deb [signed-by=/usr/share/keyrings/caddy.gpg] \
+https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main" \
+    > /etc/apt/sources.list.d/caddy.list
 
+# Instalar Caddy
 RUN apt-get update && apt-get install -y caddy
 
 COPY Caddyfile /etc/caddy/Caddyfile
