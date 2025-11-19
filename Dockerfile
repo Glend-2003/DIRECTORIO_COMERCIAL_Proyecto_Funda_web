@@ -29,8 +29,8 @@ COPY . .
 
 # Crear .env
 RUN cp .env.example .env \
-    && sed -i "s/APP_ENV=.*/APP_ENV=production/" .env \
-    && sed -i "s/APP_DEBUG=.*/APP_DEBUG=false/" .env
+    && sed -i "s/APP_ENV=.*/APP_ENV=production/" .env.example \
+    && sed -i "s/APP_DEBUG=.*/APP_DEBUG=false/" .env.example
 
 # Instalar dependencias PHP
 RUN composer install --no-dev --optimize-autoloader
